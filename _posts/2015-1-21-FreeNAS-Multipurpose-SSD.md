@@ -16,6 +16,7 @@ Before going crazy and adding lots of L2ARC keep in mind RAM requirements. As a 
 So now to the meat and potatoes of how to get this done. To begin with, create a pool in FreeNAS normally. Do not add the SSDs to the pool. In my case, it's an 8 Disk RaidZ2.
 
 Now SSH into your FreeNAS and determine what geom your SSDs are on, in my case they are da8 and da9. First thing to do is initialize these disks with a partition table.
+
 ```
 [root@freenas] ~# gpart create -s gpt da8
 da8 created
@@ -24,6 +25,7 @@ da9 created
 ```
 
 Next create the ZIL partitions, in my case 30 GiB. I'm creating partitions using the same [commands](https://github.com/freenas/freenas/blob/a77b818f2498257a5c7617c8895a07cf0a6c1643/gui/middleware/notifier.py) used by the FreeNAS GUI. The `-a 4k` makes sure the partitions are 4k alligned. The `-b 128` startsthe first partition at 128 bytes into the disk. I believe this has to do with making sure that EFI or BIOS don't try to boot from this drive. `-t freebsd-zfs` sets the partition type. And `-s 30G` sets the size.
+
 ```
 [root@freenas] ~# gpart add -a 4k -b 128 -t freebsd-zfs -s 30G da8
 da8p1 added
@@ -32,6 +34,7 @@ da9p1 added
 ```
 
 Now create the L2ARC partitions. Omitting the size parameter will make the partition use what's left of the disk.
+
 ```
 [root@freenas] ~# gpart add -a 4k -t freebsd-zfs da8
 da8p2 added
@@ -42,11 +45,13 @@ da9p2 added
 Sometimes the disk number assignments are unreliable. This is why FreeNAS always uses the partition GUIDs to create pools. I intend to do the same thing here. Start by getting the GUIDs for your new partitions with `gpart show da8`. Make note of the rawuuid value for your two partitions.
 
 Add your ZIL mirror to your pool using the UUIDs you recorded.
+
 ```
 [root@freenas] ~# zpool add tank log mirror gptid/<guid for da8p1> gptid/<guid for da9p1>
 ```
 
 Add your L2ARC devices to your pool.
+
 ```
 [root@freenas] ~# zpool add tank cache gptid/<guid for da8p2>
 [root@freenas] ~# zpool add tank cache gptid/<guid for da9p2>
