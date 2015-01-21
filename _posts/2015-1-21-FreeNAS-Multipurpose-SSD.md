@@ -3,7 +3,7 @@ layout: post
 title: Using one pair of SSDs for both ZIL and L2ARC in FreeNAS
 ---
 
-I'm a big fan of ZFS, and a big fan of FreeNAS. But some times the options avaliable in the FreeNAS GUI can't quite do everything. Using one disk for more than one purpose is one of those things. At $dayjob we're going to be using a new FreeNAS server for iSCSI datastores for VMWare. This is one ofthose instances where a ZIL can really improve performance because there is potential for a lot of synchronious writes from VMs hosting databases.
+I'm a big fan of ZFS, and a big fan of FreeNAS. But some times the options avaliable in the FreeNAS GUI can't quite do everything. Using one disk for more than one purpose is one of those things. At $dayjob we're going to be using a new FreeNAS server for iSCSI datastores for VMWare. This is one of those instances where a ZIL can really improve performance because there is potential for a lot of synchronious writes from VMs hosting databases.
 
 In the past, conventional wisdom was to use dedicated SLC SSDs for ZIL, but that seems to be dated information. SLC SSDs are pretty hard to find now, and all the info I can find indicates that enterprise grade MLCs can outperform and outlast the SLCs of a couple years ago. With that info in hand, we specced our new storage system with 2 Intel S3700 SSD's. These drives come in a minimum size of 100GB, way more than anyone needs for a ZIL.
 
