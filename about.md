@@ -4,12 +4,12 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+Devops enginner posting about the technologies I use and things that interest me.
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself. 
+These days I'm managing Ubuntu, FreeBSD and Windows servers, leveraging [SaltStack](http://www.saltstack.com/) and PowerShell whenever possible to build stable and repeatable configurations.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[clint@clintarmstrong.net](mailto:clint@clintarmstrong.net)
