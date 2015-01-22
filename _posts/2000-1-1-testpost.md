@@ -12,4 +12,7 @@ revokedusers:
     uid: 1050
 {% endhighlight %}
 
-Test 3
+Test 4
+
+{% highlight javascript %}
+/* Some pointless Javascript */ var rawr = [“r”, “a”, “w”, “r”]; {% endhighlight %}
