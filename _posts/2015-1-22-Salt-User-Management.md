@@ -38,3 +38,68 @@ revokedusers:
     fullname: Robb Stark
     uid: 2001
 ```
+
+It should be fairly self-explanatory how this works. Tywin is added to every server. Tyrion is only added to webservers and Cersei is only added to database servers. Robb has been fired and his access to all servers has been revoked.
+
+Now the logic for adding these users.
+
+```
+# /srv/states/users/init.sls
+{% if pillar['revokedusers'] != None %}
+{% for user, args in pillar['revokedusers'].iteritems() %}
+{{user}}:
+  user.absent: []
+  group.absent: []
+
+{{user}}_root_key:
+  ssh_auth.absent:
+    - user: root
+    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+
+{{user}}_key:
+  ssh_auth.absent:
+    - user: {{user}}
+    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+{% endfor %}
+{% endif %}
+
+# Add users
+{% for user, args in pillar['users'].iteritems() %}
+{{user}}:
+  group.present:
+    - gid: {{ args['uid'] }}
+  user.present:
+    - fullname: {{ args['fullname'] }}
+    - uid: {{ args['uid'] }}
+    - gid: {{ args['uid'] }}
+    - shell: /bin/bash
+    {% if grains['os'] == 'Ubuntu' %}
+    - groups:
+      - sudo
+      - adm
+      - dip
+      - cdrom
+      - plugdev
+    {% endif %}
+
+{{user}}_root_key:
+  ssh_auth.present:
+    - user: root
+    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+
+{{user}}_key:
+  ssh_auth.present:
+    - user: {{user}}
+    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+{% endfor %}
+
+# Allow sudoers to sudo without passwords.
+# This is to avoid having to manage passwords in addition to keys
+/etc/sudoers.d/sudonopasswd:
+  file.managed:
+    - source: salt://users/files/sudoers.d/sudonopasswd
+    - user: root
+    - group: root
+    - mode: 440
+```
+
