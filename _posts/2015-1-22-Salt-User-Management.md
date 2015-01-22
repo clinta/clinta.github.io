@@ -14,3 +14,27 @@ base:
     - users
 ```
 
+And define your users:
+
+```sls
+# /srv/pillar/users.sls
+users:
+  tywin:
+    fullname: Tywin Lannister
+    uid: 1100
+  {% if salt['pillar.get']('role', 'default') == 'webserver' %}
+  tyrion:
+    fullname: Tyrion Lannister
+    uid: 1101
+  {% endif %}
+  {% if salt['pillar.get']('role', 'default') == 'database' %}
+  cersei:
+    fullname: Cersei Lannister
+    uid: 1102
+  {% endif %}
+
+revokedusers:
+  robb:
+    fullname: Robb Stark
+    uid: 2001
+```
