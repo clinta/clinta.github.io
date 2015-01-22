@@ -7,18 +7,15 @@ One of the great things about a configuration management solution like Salt is t
 
 Start by defining a users pillar:
 
-```sls /srv/pillar/top.sls
-
+```sls 
 base:
   '*':
     - users
- 
 ```
 
 And define your users:
 
-```sls /srv/pillar/users.sls
-
+```sls
 users:
   tywin:
     fullname: Tywin Lannister
@@ -38,15 +35,13 @@ revokedusers:
   robb:
     fullname: Robb Stark
     uid: 2001
-
 ```
 
 It should be fairly self-explanatory how this works. Tywin is added to every server. Tyrion is only added to webservers and Cersei is only added to database servers. Robb has been fired and his access to all servers has been revoked.
 
 Now the logic for adding these users.
 
-```sls /srv/states/users/init.sls
-
+```sls
 {% if pillar['revokedusers'] != None %}
 {% for user, args in pillar['revokedusers'].iteritems() %}
 {{user}}:
@@ -103,7 +98,6 @@ Now the logic for adding these users.
     - user: root
     - group: root
     - mode: 440
-
 ```
 
 The first section removes any revoked users, and removed revoked users ssh keys from the root account, as well as their own.
