@@ -5,11 +5,11 @@ title: Test Post
 
 Just testing syntax highlighting here, bear with me.
 
-{% highlight sls %}
+{% highlight salt %}
 revokedusers:
   baduser:
     fullname: Bad User
     uid: 1050
 {% endhighlight %}
 
-Test 2
+Test 3
