@@ -7,7 +7,7 @@ One of the great things about a configuration management solution like Salt is t
 
 Start by defining a users pillar:
 
-```sls 
+``` 
 # /srv/pillar/top.sls
 base:
   '*':
@@ -16,7 +16,7 @@ base:
 
 And define your users:
 
-```sls
+```
 # /srv/pillar/users.sls
 users:
   tywin:
@@ -43,7 +43,7 @@ It should be fairly self-explanatory how this works. Tywin is added to every ser
 
 Now the logic for adding these users.
 
-```sls
+```
 # /srv/states/users/init.sls
 {% if pillar['revokedusers'] != None %}
 {% for user, args in pillar['revokedusers'].iteritems() %}
