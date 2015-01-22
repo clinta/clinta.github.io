@@ -101,6 +101,6 @@ Now the logic for adding these users.
 
 The first section removes any revoked users, and removed revoked users ssh keys from the root account, as well as their own.
 
-The second section adds any users in the users pillar to the system. It also adds their keys to the root account. This isn't ideal, but I've not found any other way to allow users to edit files over scp. running `vim scp://root@server//etc/file` is very useful, and simply doesn't work with sudo.
+The second section adds any users in the users pillar to the system. It also adds their keys to the root account. This isn't ideal, but I've not found any other way to allow users to edit files over scp. Running `vim scp://root@server//etc/file` is very useful, and simply doesn't work with sudo.
 
 Lastly, hashing passwords and putting that value into the pillar to define it wouldn't be difficult. But it does make it difficult for users to change their passwords. And with encrypted ssh keys, it seems unnecessary to me. So I push out a final config to allow users to sudo without a password, since no password is defined in the first place.
