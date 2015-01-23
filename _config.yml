@@ -6,7 +6,7 @@
 name: Clint A.
 
 # Short bio or description (displayed in the header)
-description: Devops for days.
+description: Stuff I do
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/jekyll-logo.png
@@ -25,7 +25,7 @@ footer-links:
   instagram: 
   linkedin: 
   pinterest: 
-  rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
+  rss: yes
   twitter: clinta
   stackoverflow: users/3367124/clint
 
