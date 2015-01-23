@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-Devops enginner posting about the technologies I use and things that interest me.
+Devops engineer posting about the technologies I use and things that interest me.
 
 ### More Information
 
