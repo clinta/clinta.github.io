@@ -7,7 +7,8 @@ One of the great things about a configuration management solution like Salt is t
 
 Start by defining a users pillar:
 
-```sls /srv/pillar/top.sls
+```sls 
+# /srv/pillar/top.sls
 base:
   '*':
     - users
