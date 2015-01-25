@@ -39,7 +39,7 @@ cp syslinux-6.03/efi64/com32/elflink/ldlinux/ldlinux.e64 /var/lib/tftpboot/efi64
 cp syslinux-6.03/efi64/com32/lib/libcom32.c32 /var/lib/tftpboot/efi64/
 cp syslinux-6.03/efi64/com32/libutil/libutil.c32 /var/lib/tftpboot/efi64/
 cp syslinux-6.03/efi64/com32/menu/vesamenu.c32 /var/lib/tftpboot/efi64/
-cp syslinux-6.03/efi64/com32/modules/pxechn.c32/var/lib/tftpboot/efi64/
+cp syslinux-6.03/efi64/com32/modules/pxechn.c32 /var/lib/tftpboot/efi64/
 ```
 
 Now that our boot kernels are in place, configure DHCP to pass the kernel to the clients. This can be tricky, and the method will depend on your DHCP server. When a client sends a DHCP request, it includes information about itself. Option 93 includes the architecture of the client. 0 indicates a bios client, 9 and 7 indicate a 64 bit EFI client. 6 identifies an ia64 client, but I don't have any of those either. Using the DHCP templates provided on the [syslinux wiki](http://www.syslinux.org/wiki/index.php/PXELINUX#UEFI), I've customized my DHCP server.
