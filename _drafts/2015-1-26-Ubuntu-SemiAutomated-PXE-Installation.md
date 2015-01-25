@@ -67,7 +67,7 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 ```
 
-With this in place, our clients can now pxe boot, but they'll just boot to a blank screen and do nothing. They need a configuration to tell them what to do. pxelinux looks for a configuration file in the pxelinux.cfg directory. You can create configuration files for individual machines by creating files with a fliename that matches the MAC address of the booting client. Any client that doesn't have a matching config will use the default file. In this example, we're just going to make the default file.
+With this in place, our clients can now pxe boot, but they'll just get an error saying that the configuraiton file can't be found. They need a configuration to tell them what to do. pxelinux looks for a configuration file in the pxelinux.cfg directory. You can create configuration files for individual machines by creating files with a fliename that matches the MAC address of the booting client. Any client that doesn't have a matching config will use the default file. In this example, we're just going to make the default file.
 
 ```bash
 mkdir /var/lib/tftpboot/bios/pxelinux.cfg
@@ -103,7 +103,7 @@ Now it's time to add the Ubuntu mini CD. I like to stick with LTS releases of Ub
 Grab the mini ISO and extract the files into your tftpboot directory. I choose to maintain a pretty strict hierarchy so that I can add more distributions later.
 
 ```bash
-wget -o ubuntu-14.04-x64-mini.iso http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso
+wget -O ubuntu-14.04-x64-mini.iso http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso
 mkdir /mnt/iso
 mount ubuntu-14.04-x64-mini.iso /mnt/iso
 mkdir -p /var/lib/tftpboot/images/ubuntu/14.04/
