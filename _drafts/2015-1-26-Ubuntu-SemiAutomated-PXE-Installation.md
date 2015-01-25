@@ -108,6 +108,7 @@ mkdir /mnt/iso
 mount ubuntu-14.04-x64-mini.iso /mnt/iso
 mkdir -p /var/lib/tftpboot/images/ubuntu/14.04/
 cp -r /mnt/iso /var/lib/tftpboot/images/ubuntu/14.04/amd64
+umount /mnt/iso
 ```
 
 Now we can add an option to our PXE Configuraiton to boot to this image.
@@ -138,6 +139,7 @@ At this point you can PXE boot and run an interactive installation using the min
 Next step is to begin automating the installation. In Debian and Ubuntu, automation is done via preseed files. This [example](https://help.ubuntu.com/lts/installation-guide/example-preseed.txt) is fairly well documented in the comments and will serve as a good starting point. Start by putting this file in your tftp directory.
 
 ```bash
+mkdir /var/lib/tftpboot/preseeds
 wget -O /var/lib/tftpboot/preseeds/ubuntu.preseed https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
 ```
 
@@ -176,4 +178,23 @@ In this demo I'm going to install it on the same server that is doing DHCP, but 
 apt-get install apt-cacher-ng
 ```
 
+After install apt-cacher-ng will be running automatically on port 3142. You can visit http://<apt-cacher-ip>:3142 for instructions on configuring apt, as well as a link to view the cache statistics. To use this for during the install process, you need to add a line to your preseed configuration.
 
+```
+# /var/lib/tftpboot/preseeds/ubuntu.preseed
+[...]
+d-i mirror/http/proxy string http://192.168.1.1:3142/
+```
+
+If you watch the statistics page while doing another install, you'll notice an almost 100% miss rate. But once you do the second install it will go much faster and you'll see more packages hitting the cache. Now that you have a cache setup, you should probably follow the instructions for configuring your clients to utilize it for faster updates.
+
+Now is when I ran into one more [bug](https://bugs.launchpad.net/ubuntu/+source/debian-installer/+bug/568704) that frustrated things though. While this setting should only be setting a proxy for apt, it sets the proxy for all http, which means if you use any scripts in your preseed file that require http, they will be proxied and probably will not work. One place I had to work around this was adding a PPA as a source for an additional package to be installed. Because the signing key could not be pulled over http, I had to download the key and serve it via tftp.
+
+At this point you should have a fairly robust system for performing Ubuntu installations via PXE.
+
+One last tip is how to add entries for other PXE servers you may have on your network. Perhaps a Windows Deployment server, or a FOG server. To enable chain booting you can add simple menu entries to your `pxelinux.cfg/default` file.
+
+```
+# add some stuff
+
+```
