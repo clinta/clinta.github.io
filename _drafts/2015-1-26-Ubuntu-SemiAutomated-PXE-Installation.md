@@ -29,7 +29,7 @@ cp syslinux-6.03/bios/com32/elflink/ldlinux/ldlinux.c32 /var/lib/tftpboot/bios/
 cp syslinux-6.03/bios/com32/lib/libcom32.c32 /var/lib/tftpboot/bios/
 cp syslinux-6.03/bios/com32/libutil/libutil.c32 /var/lib/tftpboot/bios/
 cp syslinux-6.03/bios/com32/menu/vesamenu.c32 /var/lib/tftpboot/bios/
-syslinux-6.03/bios/com32/modules/pxechn.c32 /var/lib/tftpboot/bios/
+cp syslinux-6.03/bios/com32/modules/pxechn.c32 /var/lib/tftpboot/bios/
 ```
 
 ```bash
