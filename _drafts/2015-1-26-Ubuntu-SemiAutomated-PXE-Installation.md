@@ -127,12 +127,23 @@ LABEL BootLocal
   ENDTEXT
 LABEL Ubuntu 14.04 (64-bit)
   KERNEL tftp://192.168.1.1/images/ubuntu/14.04/amd64/linux
+  APPEND vga=788 initrd=tftp://192.168.1.1/images/ubuntu/14.04/amd64/initrd.gz
   TEXT HELP
   Boot to the Ubuntu 14.04 64-bit automatic installation
   ENDTEXT
 ```
 
 At this point you can PXE boot and run an interactive installation using the mini installer. The system will be installed fully up to date, with all packages pulled direct from the internet. All the installer questions will be asked normally just like if you had booted from the CD.
+
+Next step is to begin automating the installation. In Debian and Ubuntu, automation is done via preseed files. This [example](https://help.ubuntu.com/lts/installation-guide/example-preseed.txt) is fairly well documented in the comments and will serve as a good starting point. Start by putting this file in your tftp directory.
+
+```bash
+wget -O /var/lib/tftpboot/preseeds/ubuntu.preseed https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
+```
+
+Edit this preseed file to your liking, using the in-line comments as a guide. I modified mine to do things like use normal partitioning rather than lvm, I commented out the hostname parameter to make the installer prompt for a hostname, and I set the tasksel property to none, then put openssh-server and salt-minion as additional packages to install.
+
+Once you have this file configured as you like it, you need to modify your PXE options so that it will be used. Notice the append line added below.
 
 ```
 # /var/lib/tftpboot/bios/pxelinux.cfg/default
@@ -149,8 +160,20 @@ LABEL BootLocal
   ENDTEXT
 LABEL Ubuntu 14.04 (64-bit)
   KERNEL tftp://192.168.1.1/images/ubuntu/14.04/amd64/linux
-  APPEND auto=true priority=high vga=788 initrd=tftp://192.168.1.1/images/ubuntu/14.04/amd64/initrd.gz locale=en_US.UTF-8 kdb-chooser/method=us netcfg/choose_interface=auto url=tftp://192.168.1.1/preseed/ubuntu-14.04.preseed
+  APPEND auto=true priority=high vga=788 initrd=tftp://192.168.1.1/images/ubuntu/14.04/amd64/initrd.gz locale=en_US.UTF-8 kdb-chooser/method=us netcfg/choose_interface=auto url=tftp://192.168.1.1/preseeds/ubuntu.preseed
   TEXT HELP
   Boot to the Ubuntu 14.04 64-bit automatic installation
   ENDTEXT
 ```
+
+Notice a couple of things here. The first thing added is `auto=true`, this is what tells the installer to attempt to automatically complete. `priority=high` instructs the installer to skip asking any questoins with a priority of less than high. Many guides will instruct adding `priority=critical` which will only ask questions that the installer cannot possibly complete without. I choose high, because I want to be prompted for a hostname by the installer, and that is not a critical priority question. The locale must be passed to the kernel, because the locale and keyboard layout is asked before the preseed is actually downloaded. `netcfg/choose_interface=auto` should not be necessary if the same parameter is specified in the preseed file, but due to a [bug](https://bugs.launchpad.net/ubuntu/+source/netcfg/+bug/713385), this property only works if passed as a kernel option. And lastly `url=tftp://192.168.1.1/preseeds/ubuntu.preseed` is the tftp path to the preseed file you just customized.
+
+At this point you now have either a fully or semi-automated pxe installer for Ubuntu. However, because we're using the mini cd, it's probably a fair bit slower that you'd like, pulling packages from the internet for every install. Now it's time to setup your apt proxy to speed this up.
+
+In this demo I'm going to install it on the same server that is doing DHCP, but this can be on any server you want. Start by installing apt-cacher-ng.
+
+```bash
+apt-get install apt-cacher-ng
+```
+
+
