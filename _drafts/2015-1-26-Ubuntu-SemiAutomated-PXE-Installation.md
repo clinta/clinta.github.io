@@ -192,9 +192,10 @@ Now is when I ran into one more [bug](https://bugs.launchpad.net/ubuntu/+source/
 
 At this point you should have a fairly robust system for performing Ubuntu installations via PXE.
 
-One last tip is how to add entries for other PXE servers you may have on your network. Perhaps a Windows Deployment server, or a FOG server. To enable chain booting you can add simple menu entries to your `pxelinux.cfg/default` file.
+One last tip is how to add entries for other PXE servers you may have on your network. Perhaps a Windows Deployment server, or a FOG server. To enable chain booting you can add these simple menu entries to your `pxelinux.cfg/default` file.
 
 ```
-# add some stuff
-
+LABEL Fog
+  COM32 pxechn.c32
+  APPEND 192.168.1.2::/pxelinux.0
 ```
