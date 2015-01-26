@@ -10,14 +10,14 @@ Another complication that's not addressed in most existing guides is getting thi
 The first thing we need is a tftp server. 
 
 ```bash
-root@tftp-svr:~# apt-get install tftpd-hpa
+apt-get install tftpd-hpa
 ```
 
 Now we need syslinux. Syslinux contains a set of kernels that can be downloaded via tftp and booted by the client. It's really just a set of files, no services that will be run, so I'll be skipping the normal ubuntu syslinux packages and getting the latest and greatest from the source.
 
 ```bash
-root@tftp-svr:~# wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz
-root@tst-pxe1:~# tar -xvf syslinux-6.03.tar.gz
+wget https://www.kernel.org/pub/linux/utils/boot/syslinux/syslinux-6.03.tar.gz
+tar -xvf syslinux-6.03.tar.gz
 ```
 
 Now create some directories and copy the necessary syslinux files to the tftp root directory. Since we're wanting to boot legacy bios clients and x64 based EFI clients. Technically 32 bit EFI clients might exist, but I don't have any, so I'm not bothering to configure those. 
