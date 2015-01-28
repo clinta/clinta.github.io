@@ -2,6 +2,7 @@
 layout: post
 title: Managing Users with Salt
 redirect_from: "2015-1-22-Salt-User-Management"
+date: 2015-01-28 08:30:00
 ---
 
 This post has been updated. Though I thought I had properly tested my implementation of role specific users, it was wrong. Using pillars to set pillars is apparently impossible. As a result, I've redesigned my user management methods. If you'd like to see what this guide looked like before, the history is all on github.
