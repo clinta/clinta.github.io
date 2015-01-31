@@ -72,7 +72,7 @@ Now the logic for adding these users.
 
 ```sls
 {% raw %}
-# /srv/states/users/init.sls
+# /srv/salt/users/init.sls
 {% if pillar['revokedusers'] != None %}
 {% for user, args in pillar['revokedusers'].iteritems() %}
 {{user}}:
