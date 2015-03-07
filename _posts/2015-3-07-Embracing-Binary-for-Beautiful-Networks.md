@@ -10,21 +10,21 @@ In my new network design I sought to tackle this inconsistency head on. I starte
 
 With that in place a simple vlan to subnet mapping becomes possible. A vlan is a 12 bit integer, the network address of a /24 IPv4 network is a 24 bit integer. All of our private space will be /24 networks in the `10.0.0.0/8` network. This leaves us with a 16 bit number that identifies the network. As I said above, we don't need more than 4096 networks, so we can cut this number down to 12 bits. Our private netowork range is now `10.0.0.0/12`. And the vlan number is always the least significant network bits.
 
-See the table below for some examples for how this works:
+See the table below for some examples for how this works.
 
 |IP Addresss   |IP Address in Binary               |Network      |Network Bits              |Least Significant 12 Network Bits|Base 10 VLAN|
-|--------------|-----------------------------------|-------------|--------------------------|---------------------------------|------------|
+|:-------------|:---------------------------------:|:------------|:------------------------:|:-------------------------------:|-----------:|
 |10.0.4.254/24 |00001010.00000000.00000100.11111110|10.0.4.0/24  |00001010.00000000.00000100|0000.00000100                    |4           |
 |10.4.25.2/24  |00001010.00000100.00011001.00000010|10.4.25.0/24 |00001010.00000100.00011001|0100.00011001                    |1049        |
 |10.15.64.55/24|00001010.00001111.01000000.00110111|10.15.64.0/24|00001010.00001111.01000000|1111.01000000                    |3904        |
 
 Now here's the shortcut. Multiply the second octet by 256 and add the 3rd octet to get the vlan.
 
-|IP Addresss   |2nd octet * 256|+ 3rd octet      |
-|--------------|---------------|---------------- |
-|10.0.4.254/24 |0 * 256 = 0    |0 + 4 = 4        |
-|10.4.25.2/24  |4 * 256 = 1024 |1024 + 25 = 1049 |
-|10.15.64.55/24|15 * 256 = 3840|3840 + 64 = 3904 |
+|IP Addresss   |2nd octet * 256|+ 3rd octet     |
+|:-------------|--------------:|---------------:|
+|10.0.4.254/24 |0 * 256 = 0    |0 + 4 = 4       |
+|10.4.25.2/24  |4 * 256 = 1024 |1024 + 25 = 1049|
+|10.15.64.55/24|15 * 256 = 3840|3840 + 64 = 3904|
 
 Now at this point the astute reader may have noticed that there is no vlan `0`. And you're correct. `10.0.0.0/24` must be given as a sacrifice to the network gods. Or at least used for a network which does not need a vlan. In our case we'll be using it for router loopback addresses.
 
