@@ -21,7 +21,7 @@ See the table below for some examples for how this works:
 Now here's the shortcut. Multiply the second octet by 256 and add the 3rd octet to get the vlan.
 
 |IP Addresss   |2nd octet * 256|+ 3rd octet     |
-|--------------|--------------------------------|
+|--------------|---------------|----------------|
 |10.0.4.254/24 |0 * 256 = 0    |0 + 4 = 4       |
 |10.4.25.2/24  |4 * 256 = 1024 |1024 + 25 = 1049|
 |10.15.64.55/24|15 * 256 = 3840|3840 + 64 = 3904|
