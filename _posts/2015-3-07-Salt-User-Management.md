@@ -4,7 +4,7 @@ title: Managing Users with Salt
 redirect_from:
   - "2015-1-22-Salt-User-Management"
   - "2015-1-28-Salt-User-Management"
-date: 2015-03-07 08:30:00
+date: 2015-03-07 09:38:00
 ---
 
 This post has gone through a few iterations. You can see the full history on the github repo.
