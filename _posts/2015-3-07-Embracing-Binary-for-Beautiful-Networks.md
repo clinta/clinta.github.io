@@ -12,11 +12,12 @@ With that in place a simple vlan to subnet mapping becomes possible. A vlan is a
 
 See the table below for some examples for how this works.
 
-|IP Addresss   |IP Address in Binary               |Network      |Network Bits              |Least Significant 12 Network Bits|Base 10 VLAN|
-|:-------------|:---------------------------------:|:------------|:------------------------:|:-------------------------------:|-----------:|
-|10.0.4.254/24 |00001010.00000000.00000100.11111110|10.0.4.0/24  |00001010.00000000.00000100|0000.00000100                    |4           |
-|10.4.25.2/24  |00001010.00000100.00011001.00000010|10.4.25.0/24 |00001010.00000100.00011001|0100.00011001                    |1049        |
-|10.15.64.55/24|00001010.00001111.01000000.00110111|10.15.64.0/24|00001010.00001111.01000000|1111.01000000                    |3904        |
+<table border="1">
+<tr><th>IP Addresss</th><th>IP Address in Binary</th><th>Network</th><th>Network Bits</th><th>Least Significant 12 Network Bits</th><th>Base 10 VLAN</th></tr>
+<tr><td>10.0.4.254/24</td><td>00001010.00000000.00000100.11111110</td><td>10.0.4.0/24</td><td>00001010.00000000.00000100</td><td>0000.00000100</td><td>4</td></tr>
+<tr><td>10.4.25.2/24</td><td>00001010.00000100.00011001.00000010</td><td>10.4.25.0/24</td><td>00001010.00000100.00011001</td><td>0100.00011001</td><td>1049</td></tr>
+<tr><td>10.15.64.55/24</td><td>00001010.00001111.01000000.00110111</td><td>10.15.64.0/24</td><td>00001010.00001111.01000000</td><td>1111.01000000</td><td>3904</td></tr>
+</table>
 
 Now here's the shortcut. Multiply the second octet by 256 and add the 3rd octet to get the vlan.
 
