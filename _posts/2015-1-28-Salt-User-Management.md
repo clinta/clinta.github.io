@@ -1,11 +1,13 @@
 ---
 layout: post
 title: Managing Users with Salt
-redirect_from: "2015-1-22-Salt-User-Management"
-date: 2015-01-28 08:30:00
+redirect_from:
+  - "2015-1-22-Salt-User-Management"
+  - "2015-1-28-Salt-User-Management"
+date: 2015-03-07 08:30:00
 ---
 
-This post has been updated. Though I thought I had properly tested my implementation of role specific users, it was wrong. Using pillars to set pillars is apparently impossible. As a result, I've redesigned my user management methods. If you'd like to see what this guide looked like before, the history is all on github.
+This post has gone through a few iterations. You can see the full history on the github repo.
 
 One of the great things about a configuration management solution like Salt is the ability to centrally manage local users. Sure LDAP and Kerberos are great, but sometimes it's better to keep things simple, that's what I'm doing with Salt. Leveraging Pillars I can define certain users to be added to servers of a given role. Here's how I do it.
 
@@ -34,6 +36,9 @@ users:
   tywin:
     fullname: Tywin Lannister
     uid: 1100
+    ssh-keys:
+      - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNWRiUmFXjxrp4VGfqWISvsEdxPJi2ES3gi6U/ZoVR3UpMUNGYm/VUTNjiXPX6XU5KjaSdGgeqDQdcwfAxl7q4A= tywin@CastRockWks1
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCllUe3Q14M1AwMyaGLaW0b3IyDyghljYzKlQE/osh0hjUCxqcjFW26DekBSF/RErYeJwlRPrGxWZAYLYW9ZMLolYJGAon1jBgNUAaSbj45m+sf8gFDWqpL6E0Vxzr4/o2A7NpqBsdwy95Xov0MGQq7wyJ7bEQ4b/TFo7Peb6oWoHGdDMbXym/T0UFiEH30w6XBIN34tRsV9DGmG3BpshI7ho5pNo1dO8xDD0Acr6blpOQKap02ihJKYBAdFDGfK4P3PUrhArEJvD8QU7Q7Fwl1Yej6Y54IMndTVf8i5CZNmUKh87Xawo4NRMaVPePoMInEYTiEkOYrILGkWRCT2GWb tywin@TLLap1
 {% endraw %}
 ```
 
@@ -44,6 +49,8 @@ revokedusers:
   robb:
     fullname: Robb Stark
     uid: 2001
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFmuEiljWGa1W3/mgymLdEwCbkBcIaXZfik9uNQCzajW Robb@RSLap1
 {% endraw %}
 ```
 
@@ -54,6 +61,8 @@ users:
   tyrion:
     fullname: Tyrion Lannister
     uid: 1101
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED4TtDwUcNZdhQwIxK4LOtn3Q/yQxlcvQKrZIBaOllQ tyrion@TSLap2
 {% endraw %}
 ```
 
@@ -63,6 +72,8 @@ users:
   cersei:
     fullname: Cersei Lannister
     uid: 1102
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ9GpN4T3beWlRzfO27tYH7t13QhMRoKbmDR3nwwAWa cersei@CLLap1
 {% endraw %}
 ```
 
@@ -73,26 +84,34 @@ Now the logic for adding these users.
 ```sls
 {% raw %}
 # /srv/salt/users/init.sls
-{% if pillar['revokedusers'] != None %}
-{% for user, args in pillar['revokedusers'].iteritems() %}
+
+# Revoke any users with a role of revoked
+{% for user, args in pillar.get('revokedusers', {}).iteritems() %}
 {{user}}:
   user.absent: []
   group.absent: []
 
+{% if args['ssh-keys'] %}
 {{user}}_root_key:
   ssh_auth.absent:
     - user: root
-    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+    - names:
+      {% for key in args['ssh-keys'] %}
+      - {{ key }}
+      {% endfor %}
 
 {{user}}_key:
   ssh_auth.absent:
     - user: {{user}}
-    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
-{% endfor %}
+    - names:
+      {% for key in args['ssh-keys'] %}
+      - {{ key }}
+      {% endfor %}
 {% endif %}
+{% endfor %}
 
 # Add users
-{% for user, args in pillar['users'].iteritems() %}
+{% for user, args in pillar.get('users', {}).iteritems() %}
 {{user}}:
   group.present:
     - gid: {{ args['uid'] }}
@@ -110,15 +129,23 @@ Now the logic for adding these users.
       - plugdev
     {% endif %}
 
+{% if args['ssh-keys'] %}
 {{user}}_root_key:
   ssh_auth.present:
     - user: root
-    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+    - names:
+      {% for key in args['ssh-keys'] %}
+      - {{ key }}
+      {% endfor %}
 
 {{user}}_key:
   ssh_auth.present:
     - user: {{user}}
-    - source: salt://users/files/ssh/{{user}}.id_rsa.pub
+    - names:
+      {% for key in args['ssh-keys'] %}
+      - {{ key }}
+      {% endfor %}
+{% endif %}
 {% endfor %}
 
 # Allow sudoers to sudo without passwords.
@@ -134,6 +161,13 @@ Now the logic for adding these users.
 
 The first section removes any revoked users, and removed revoked users ssh keys from the root account, as well as their own.
 
-The second section adds any users in the users pillar to the system. It also adds their keys to the root account (put them in `/srv/salt/users/files/`). This isn't ideal, but I've not found any other way to allow users to edit files over scp. Running `vim scp://root@server//etc/file` is very useful, and simply doesn't work with sudo.
+The second section adds any users in the users pillar to the system. It also adds their keys to the root account. This isn't ideal, but I've not found any other way to allow users to edit files over scp. Running `vim scp://root@server//etc/file` is very useful, and simply doesn't work with sudo.
 
 Lastly, hashing passwords and putting that value into the pillar to define it wouldn't be difficult. But it does make it difficult for users to change their passwords. And with encrypted ssh keys, it seems unnecessary to me. So I push out a final config to allow users to sudo without a password, since no password is defined in the first place.
+
+The file that's being managed to allow sudo without password is below:
+
+```
+# /srv/salt/users/files/sudoers.d/sudonopasswd
+%sudo	ALL = (ALL) NOPASSWD: ALL
+```
