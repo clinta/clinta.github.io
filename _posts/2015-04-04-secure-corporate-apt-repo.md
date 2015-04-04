@@ -205,6 +205,7 @@ Now we're ready to put it all together with a salt state.
 
 /srv/salt/aptrepo/server/init.sls
 ```sls
+{% raw %}
 # Install the GPG package needed to sign packages
 gnupg:
   pkg.installed: []
@@ -329,6 +330,7 @@ aptrepo_server-cert:
     - backup: True
     - listen_in:
       - service: nginx
+{% endraw %}
 ```
 
 Now to configure clients to be able to use the new repository. First apt needs to know
@@ -351,6 +353,7 @@ need to use it.
 
 /srv/salt/aptrepo/client/init.sls
 ```sls
+{% raw %}
 # Add our new repository
 internal-main-prod:
   pkgrepo.managed:
@@ -390,6 +393,7 @@ aptrepo_client-cert:
 /etc/apt/apt.conf.d/45aptrepo-ssl:
   file.managed:
     - source: salt://aptrepo/client/files/45aptrepo-ssl
+{% endraw %}
 ```
 
 That it, now you have a fully managed internal repository on aptrepo. You can create expose this repository to the internet and only your clients trusted by salt and issued a client certificate will be able to use it.
