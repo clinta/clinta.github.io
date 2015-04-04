@@ -18,6 +18,7 @@ wget https://raw.githubusercontent.com/saltstack/salt/develop/salt/states/x509.p
 Now setup targeting in the top file.
 
 /srv/salt/top.sls
+
 ```sls
 base:
   'ca':
@@ -35,6 +36,7 @@ to have a signing policy which allows the apt server and clients to get signed c
 Start by creating the signing policy configuraiton.
 
 /srv/salt/pki/files/signing_policies.conf
+
 ```sls
 x509_signing_policies:
   aptrepo_server:
@@ -69,6 +71,7 @@ Note that in the below state I'm triggering a restart of the salt-minion service
 configuration changes. You'll need another state managing the status of salt-minion for this to work.
 
 /srv/salt/pki/server.sls
+
 ```sls
 /etc/pki:
   file.directory:
@@ -123,6 +126,7 @@ Reprepro requires some configuration files to define the distributions and compo
 Here are these config files which salt will manage.
 
 /srv/salt/aptrepo/server/files/conf/distributions
+
 ```
 # Internal Trusty Packages
 Origin: Internal #
@@ -139,6 +143,7 @@ Log: packages.trusty-prod.log
 ```
 
 /srv/salt/aptrepro/server/files/conf/incoming
+
 ```
 Name: incoming
 IncomingDir: /srv/packages/incoming
@@ -147,6 +152,7 @@ Default: prod
 ```
 
 /srv/salt/aptrepro/server/files/conf/options
+
 ```
 outdir +b/www
 logdir +b/logs
@@ -166,6 +172,7 @@ Another file that needs to be managed is the NGINX configuration file.
 Notice the `ssl_verify_client on;`, this is what enables client authentication.
 
 /srv/salt/aptrepo/server/files/nginx-default
+
 ```
 server {
     listen	443;
@@ -190,6 +197,7 @@ Salt will create a cron job that regularly runs this script. Now adding packages
 repository is a simple matter of SCPing them to the incoming directory on the aptrepo server.
 
 /srv/salt/aptrepo/server/files/processincoming.sh
+
 ```bash
 #!/bin/sh
 cd /srv/packages
@@ -204,6 +212,7 @@ done
 Now we're ready to put it all together with a salt state.
 
 /srv/salt/aptrepo/server/init.sls
+
 ```sls
 {% raw %}
 # Install the GPG package needed to sign packages
@@ -337,6 +346,7 @@ Now to configure clients to be able to use the new repository. First apt needs t
 that our repository requires a client certificate.
 
 /srv/salt/aptrepo/client/files/45aptrepo-ssl
+
 ```
 Acquire::https::aptrepo.example.com {
   Verify-Peer "true";
@@ -352,6 +362,7 @@ And now a client state to add the repository and generate the certificates clien
 need to use it.
 
 /srv/salt/aptrepo/client/init.sls
+
 ```sls
 {% raw %}
 # Add our new repository
