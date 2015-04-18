@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Creating a Secure Corporate Apt Repository with Salt
-redirect_from:
 date: 2015-04-04 10:04:00
 ---
 
