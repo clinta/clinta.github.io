@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Creating a Secure Corporate Apt Repository with Salt
+title: Compiling the mongodb plugin for collectd
 date: 2015-06-30 14:20:00
 ---
 
