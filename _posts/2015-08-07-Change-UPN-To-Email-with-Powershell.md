@@ -15,7 +15,7 @@ foreach ($user in $users) {
     $email = $user.EmailAddress
     $username = $email.toLower().Split('@')[0]
     $userdomain = $email.toLower().Split('@')[1]
-    if (-Not $forest.Contains($userdomain)) {
+    if (-Not $($forest.UPNSuffixes).Contains($userdomain)) {
         $forest | Set-ADForest -UPNSuffixes @{Add="$userdomain"}
     }
     $user | Set-ADUser -UserPrincipalName "$username@$userdomain"
