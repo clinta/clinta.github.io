@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Changing UPN to Email with Powershell
-date: 2015-06-30 14:20:00
+date: 2015-08-07
 ---
 
 If you need a quick way to change the UPN of all your users in active directory to match their email address, PowerShell makes it easy.
