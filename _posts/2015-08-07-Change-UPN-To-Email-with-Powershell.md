@@ -7,7 +7,8 @@ date: 2015-08-07
 If you need a quick way to change the UPN of all your users in active directory to match their email address, PowerShell makes it easy.
 
 ```powershell
-$users = get-aduser -SearchBase "OU=Users,DC=ad,DC=contoso,DC=com" -Filter * -Properties EmailAddress | where {$_.EmailAddress -ne $null -AND $_.EmailAddress.toLower() -ne $_.UserPrincipalName.toLower()}
+$users = get-aduser -SearchBase "OU=Users,DC=ad,DC=contoso,DC=com" -Filter * -Properties EmailAddress |
+where {$_.EmailAddress -ne $null -AND $_.EmailAddress.toLower() -ne $_.UserPrincipalName.toLower()}
 
 foreach ($user in $users) {
     $forest = Get-ADForest
