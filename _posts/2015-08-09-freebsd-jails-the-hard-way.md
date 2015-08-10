@@ -16,7 +16,7 @@ I'll also show some examples of how to use the templating power of jail.conf to 
 
 ## Full Jail
 
-1. Make a directory for the jail, or a zfs dataset if you prefer.
+1\. Make a directory for the jail, or a zfs dataset if you prefer.
 
 ```sh
 mkdir -p /usr/local/jails/fulljail1
@@ -25,7 +25,7 @@ zfs create -o mountpoint=/usr/local/jails zroot/jails
 zfs create zroot/jails/fulljail1
 ```
 
-2. Download the FreeBSD base files, and any other parts of FreeBSD you want. In this example I'll include the 32 bit libraries as well.
+2\. Download the FreeBSD base files, and any other parts of FreeBSD you want. In this example I'll include the 32 bit libraries as well.
 
 ```sh
 fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.1-RELEASE/base.txz -o /tmp/base.txz
@@ -34,7 +34,7 @@ fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.1-RELEASE/lib32.
 tar -xvf /tmp/lib32.txz -C /usr/local/jails/fulljail1
 ```
 
-3. Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
+3\. Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
 
 ```sh
 cp /etc/resolv.conf /usr/local/jails/fulljail1/etc/resolv.conf
@@ -42,7 +42,7 @@ cp /etc/localtime /usr/local/jails/fulljail1/etc/localtime
 echo hostname=\"fulljail1\" > /usr/local/jails/fulljail1/etc/rc.conf
 ```
 
-4. Edit jail.conf with the details about your jail.
+4\. Edit jail.conf with the details about your jail.
 
 ```
 # /etc/jail.conf
@@ -63,7 +63,7 @@ fulljail1 {
 }
 ```
 
-5. Start and login to your jail.
+5\. Start and login to your jail.
 
 ```sh
 jail -c fulljail1
@@ -73,7 +73,7 @@ jail -c fulljail1
 
 ## Creating a template
 
-1. Create a template or a ZFS dataset. If you'd like to use the zfs clone method of deploying templates, you'll need to create a zfs dataset instead of a folder.
+1\. Create a template or a ZFS dataset. If you'd like to use the zfs clone method of deploying templates, you'll need to create a zfs dataset instead of a folder.
 
 ```sh
 mkdir -p /usr/local/jails/templates/10-1-Release
@@ -88,7 +88,7 @@ cp /etc/resolv.conf /usr/local/jails/templates/10-1-Release/etc/resolv.conf
 cp /etc/localtime /usr/local/jails/templates/10-1-Release/etc/localtime
 ```
 
-2. Optionally, update your template with `freebsd-update`.
+2\. Optionally, update your template with `freebsd-update`.
 
 ```sh
 freebsd-update -b /usr/local/jails/tempaltes/10-1-Release fetch
@@ -99,25 +99,25 @@ And that's it, now you have a fully up to date jail template. If you've made thi
 
 ## Deploying a template with ZFS snapshots
 
-1. Create a snapshot. My last freebsd-update to my template brought it to patch level 17, so I'll call my snapshot p17.
+1\. Create a snapshot. My last freebsd-update to my template brought it to patch level 17, so I'll call my snapshot p17.
 
 ```sh
 zfs snapshot zroot/jails/templates/10-1-Release@p17
 ```
 
-2. Clone the snapshot to a new jail.
+2\. Clone the snapshot to a new jail.
 
 ```sh
 zfs clone zroot/jails/templates/10-1-Release@p17 zroot/jails/zjail1
 ```
 
-3. Configure the jail hostname.
+3\. Configure the jail hostname.
 
 ```sh
 echo hostname=\"zjail1\" > /usr/local/jails/zjail1/etc/rc.conf
 ```
 
-4. Add the jail definition to jail.conf, make sure you have the global jail settings from jail.conf listed in the fulljail example.
+4\. Add the jail definition to jail.conf, make sure you have the global jail settings from jail.conf listed in the fulljail example.
 
 ```
 # The jail definition for zjail1
@@ -129,7 +129,7 @@ zjail1 {
 }
 ```
 
-5. Start the jail.
+5\. Start the jail.
 
 ```sh
 jail -c zjail1
@@ -139,7 +139,7 @@ The downside with the zfs approach is that each jail is now a fully independent,
 
 ## Thin jails using NullFS mounts.
 
-1. Make a directory to store the read-write area of the jail.
+1\. Make a directory to store the read-write area of the jail.
 
 ```sh
 mkdir -p /usr/local/jails/thinjails/thinjail1
@@ -147,20 +147,20 @@ mkdir -p /usr/local/jails/thinjails/thinjail1
 zfs create -p zroot/jails/thinjails/thinjail1
 ```
 
-2. Add the hostname to the jails rc.conf
+2\. Add the hostname to the jails rc.conf
 
 ```sh
 mkdir -p /usr/local/jails/thinjails/thinjail1/etc
 echo hostname=\"thinjail1\" > /usr/local/jails/thinjails/thinjail1/etc/rc.conf
 ```
 
-3. Make the jail directory where the template and rw folder will be mounted.
+3\. Make the jail directory where the template and rw folder will be mounted.
 
 ```sh
 mkdir -p /usr/local/jails/thinjail1
 ```
 
-4. Create the jail entry in `/etc/jail.conf`, be sure and include the global jail configs listed in the fulljail example.
+4\. Create the jail entry in `/etc/jail.conf`, be sure and include the global jail configs listed in the fulljail example.
 
 ```
 # The jail definition for thinjail1
@@ -173,7 +173,7 @@ thinjail1 {
 }
 ```
 
-5. Create the jail fstab.
+5\. Create the jail fstab.
 
 ```
 # /usr/local/jails/thinjail1.fstab
@@ -182,7 +182,7 @@ thinjail1 {
 /usr/local/jails/thinjails/thinjail1     /usr/local/jails/thinjail1/ unionfs  rw,noatime  0 0
 ```
 
-6. Start the jail.
+6\. Start the jail.
 
 ```sh
 jail -c thinjail1
