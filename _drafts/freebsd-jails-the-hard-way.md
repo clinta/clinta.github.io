@@ -1,6 +1,6 @@
 There are many great options for managing FreeBSD Jails. iocage, warden and ez-jail aim to streamline the process and make it quick an easy to get going. But sometimes the tools built right into the OS are overlooked.
 
-This is called "Jails the hard way", but it's not really true, managing jails without additional tools isn't very hard, especially with the jail.conf configuration file.
+This post goes over what is involved in creating and managing jails using only the tools built into FreeBSD.
 
 For this guide, I'm going to be putting my jails in `/usr/local/jails`.
 
@@ -184,6 +184,8 @@ jail -c thinjail1
 Now if you create dozens of thinjails, you can run `freebsd-update` once against the template and all your jails will be updated, not to mention you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
 
 ## Simplifying jail.conf
+
+[Jail.conf](https://www.freebsd.org/cgi/man.cgi?query=jail.conf&sektion=5&manpath=FreeBSD+10.1-RELEASE) is actually a fairly powerfull tool if you take advantage of it's features. The man page goes in more detail of how to use variables, but the examples below should give enough details to see how it can be useful. Any option that can be specified in the [jail](https://www.freebsd.org/cgi/man.cgi?query=jail&sektion=8&apropos=0&manpath=FreeBSD+10.1-RELEASE) command can be included in jail.conf.
 
 If you've followed all three examples, your jail.conf is looking pretty long, something like this:
 
