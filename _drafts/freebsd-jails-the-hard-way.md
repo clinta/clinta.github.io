@@ -1,3 +1,9 @@
+---
+layout: post
+title: FreeBSD Jails the hard way
+date: 2015-08-09
+---
+
 There are many great options for managing FreeBSD Jails. iocage, warden and ez-jail aim to streamline the process and make it quick an easy to get going. But sometimes the tools built right into the OS are overlooked.
 
 This post goes over what is involved in creating and managing jails using only the tools built into FreeBSD.
