@@ -49,7 +49,7 @@ mount.devfs;
 
 # The jail definition for fulljail1
 fulljail1 {
-    host.hostname = "fullname1.domain.local";
+    host.hostname = "fulljail1.domain.local";
     path = "/usr/local/jails/fulljail1";
     interface = "lagg0";
     ip4.addr = 10.0.0.15;
@@ -113,13 +113,13 @@ echo hostname=\"zjail1\" > /usr/local/jails/zjail1/etc/rc.conf
 
 4. Add the jail definition to jail.conf, make sure you have the global jail settings from jail.conf listed in the fulljail example.
 
-```sh
-# The jail definition for fulljail1
+```
+# The jail definition for zjail1
 zjail1 {
-    host.hostname = "fullname1.domain.local";
-    path = "/usr/local/jails/fulljail1";
+    host.hostname = "zjail1.domain.local";
+    path = "/usr/local/jails/zjail1";
     interface = "lagg0";
-    ip4.addr = 10.0.0.15;
+    ip4.addr = 10.0.0.16;
 }
 ```
 
@@ -133,5 +133,156 @@ The downside with the zfs approach is that each jail is now a fully independent,
 
 ## Thin jails using NullFS mounts.
 
+1. Make a directory to store the read-write area of the jail.
+
 ```sh
+mkdir -p /usr/local/jails/thinjails/thinjail1
+# or
+zfs create -p zroot/jails/thinjails/thinjail1
 ```
+
+2. Add the hostname to the jails rc.conf
+
+```sh
+echo hostname=\"fulljail1\" > /usr/local/jails/fulljail1/etc/rc.conf
+```
+
+3. Make the jail directory where the template and rw folder will be mounted.
+
+```sh
+mkdir -p /usr/local/jails/thinjail1
+```
+
+4. Create the jail entry in `/etc/jail.conf`, be sure and include the global jail configs listed in the fulljail example.
+
+```
+# The jail definition for thinjail1
+thinjail1 {
+    host.hostname = "thinjail1.domain.local";
+    path = "/usr/local/jails/thinjail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.17;
+    mount.fstab = "/usr/local/jails/thinjail1.fstab";
+}
+```
+
+5. Create the jail fstab.
+
+```
+# /usr/local/jails/thinjail1.fstab
+
+/usr/local/jails/templates/10-1-Release  /usr/local/jails/thinjail1/ nullfs   ro          0 0
+/usr/local/jails/thinjails/thinjail1     /usr/local/jails/thinjail1/ unionfs  rw,noatime  0 0
+```
+
+6. Start the jail.
+
+```sh
+jail -c thinjail1
+```
+
+Now if you create dozens of thinjails, you can run `freebsd-update` once against the template and all your jails will be updated, not to mention you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
+
+## Simplifying jail.conf
+
+If you've followed all three examples, your jail.conf is looking pretty long, something like this:
+
+```
+# /etc/jail.conf
+
+# Global settings applied to all jails.
+
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.clean;
+mount.devfs;
+
+# The jail definition for fulljail1
+fulljail1 {
+    host.hostname = "fulljail1.domain.local";
+    path = "/usr/local/jails/fulljail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.15;
+}
+
+# The jail definition for zjail1
+zjail1 {
+    host.hostname = "zjail1.domain.local";
+    path = "/usr/local/jails/zjail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.16;
+}
+
+# The jail definition for thinjail1
+thinjail1 {
+    host.hostname = "thinjail1.domain.local";
+    path = "/usr/local/jails/thinjail1";
+    interface = "lagg0";
+    ip4.addr = 10.0.0.17;
+    mount.fstab = "/usr/local/jails/thinjail1.fstab";
+}
+```
+
+This can be greatly simplified using some of the inheritence features of jail.conf. The first low hanging fruit is that the interface is the same for every jail, so it can be moved up to the global settings and be applied to every jail.
+
+```
+# Global settings applied to all jails
+
+interface = "lagg0";
+```
+
+The hostnames and paths are slightly differnet, but all based on the name of the jail. In jail.conf, the name of a jail is accessable via a variable $name. So that can also be moved to the global settings.
+
+
+```
+# Global settings applied to all jails
+
+interface = "lagg0";
+hostname = "$name.domain.local";
+path = "/usr/local/jails/$name";
+```
+
+The IPv4 address is also nearly the same, just varying by one number, we can use custom variables to simplify this and allow us to change the subnet of all our jails in one config if we need to move this server to a new network in the future.
+
+
+```
+# Global settings applied to all jails
+
+interface = "lagg0";
+hostname = "$name.domain.local";
+path = "/usr/local/jails/$name";
+ip4.addr = 10.0.0.$ip;
+```
+
+Lastly the mount.fstab line. Lets assume that all the future jails we're going to create will have fstabs at `/usr/local/jails/$name.fstab`, but the first three we created won't. We can do that by defining the fstab as a global setting then removing it for the first two jails.
+
+Simplified, the new jail.conf looks like this, and new jails require only 3 lines of config and an fstab.
+
+```
+# Global settings applied to all jails
+
+interface = "lagg0";
+hostname = "$name.domain.local";
+path = "/usr/local/jails/$name";
+ip4.addr = 10.0.0.$ip;
+mount.fstab = "/usr/local/jails/$name.fstab";
+
+# The jail definition for fulljail1
+fulljail1 {
+    $num = 15;
+    mount.fstab = "";
+}
+
+# The jail definition for zjail1
+zjail1 {
+    $num = 16;
+    mount.fstab = "";
+}
+
+# The jail definition for thinjail1
+thinjail1 {
+    $num = 17;
+}
+```
+
+Hopefully this has helped you understand the process of how to create and manage FreeBSD jails without tools that abstract away all the details. Those tools are often quite useful, but there is always benefit in learning to do things the hard way. And in some cases like this, the hard way doesn't seem to be that hard afteall.
