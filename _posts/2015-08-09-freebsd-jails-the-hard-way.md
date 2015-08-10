@@ -17,6 +17,7 @@ I'll also show some examples of how to use the templating power of jail.conf to 
 ## Full Jail
 
 1. Make a directory for the jail, or a zfs dataset if you prefer.
+
 ```sh
 mkdir -p /usr/local/jails/fulljail1
 ## or
