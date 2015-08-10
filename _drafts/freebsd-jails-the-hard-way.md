@@ -18,7 +18,7 @@ zfs create -o mountpoint=/usr/local/jails zroot/jails
 zfs create zroot/jails/fulljail1
 ```
 
-2. Download the FreeBSD base files, and any other parts you want, in this example I'll include the 32 bit libraries as well.
+2. Download the FreeBSD base files, and any other parts of FreeBSD you want. In this example I'll include the 32 bit libraries as well.
 
 ```sh
 fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.1-RELEASE/base.txz -o /tmp/base.txz
@@ -60,7 +60,6 @@ fulljail1 {
 
 ```sh
 jail -c fulljail1
-jexec fulljail1 csh
 ```
 
 11 commands and a config file, but this is the most tedious way to make a jail. With a little bit of templating it can be even easier. So I'll start by making a template. Making a template is basically the same as steps 1, 2 and 3 above, but with a different destination folder, I'll condense them here.
@@ -129,7 +128,7 @@ zjail1 {
 jail -c zjail1
 ```
 
-The downside with the zfs approach is that each jail is now a fully independent, and if you want need to update your jails, you have to update them all. By sharing a template using nullfs mounts you can have only one copy of the base system that only needs to be updated once.
+The downside with the zfs approach is that each jail is now a fully independent, and if you need to update your jails, you have to update them all individually. By sharing a template using nullfs mounts you can have only one copy of the base system that only needs to be updated once.
 
 ## Thin jails using NullFS mounts.
 
@@ -144,7 +143,8 @@ zfs create -p zroot/jails/thinjails/thinjail1
 2. Add the hostname to the jails rc.conf
 
 ```sh
-echo hostname=\"fulljail1\" > /usr/local/jails/fulljail1/etc/rc.conf
+mkdir -p /usr/local/jails/thinjails/thinjail1/etc
+echo hostname=\"thinjail1\" > /usr/local/jails/thinjails/thinjail1/etc/rc.conf
 ```
 
 3. Make the jail directory where the template and rw folder will be mounted.
@@ -181,13 +181,13 @@ thinjail1 {
 jail -c thinjail1
 ```
 
-Now if you create dozens of thinjails, you can run `freebsd-update` once against the template and all your jails will be updated, not to mention you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
+Now if you create dozens of thinjails, you can run `freebsd-update` once against the template and all your jails will be updated. You also have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
 
 ## Simplifying jail.conf
 
 [Jail.conf](https://www.freebsd.org/cgi/man.cgi?query=jail.conf&sektion=5&manpath=FreeBSD+10.1-RELEASE) is actually a fairly powerfull tool if you take advantage of it's features. The man page goes in more detail of how to use variables, but the examples below should give enough details to see how it can be useful. Any option that can be specified in the [jail](https://www.freebsd.org/cgi/man.cgi?query=jail&sektion=8&apropos=0&manpath=FreeBSD+10.1-RELEASE) command can be included in jail.conf.
 
-If you've followed all three examples, your jail.conf is looking pretty long, something like this:
+If you've followed all three examples, your jail.conf is looking something like this:
 
 ```
 # /etc/jail.conf
@@ -271,20 +271,20 @@ mount.fstab = "/usr/local/jails/$name.fstab";
 
 # The jail definition for fulljail1
 fulljail1 {
-    $num = 15;
+    $ip = 15;
     mount.fstab = "";
 }
 
 # The jail definition for zjail1
 zjail1 {
-    $num = 16;
+    $ip = 16;
     mount.fstab = "";
 }
 
 # The jail definition for thinjail1
 thinjail1 {
-    $num = 17;
+    $ip = 17;
 }
 ```
 
-Hopefully this has helped you understand the process of how to create and manage FreeBSD jails without tools that abstract away all the details. Those tools are often quite useful, but there is always benefit in learning to do things the hard way. And in some cases like this, the hard way doesn't seem to be that hard afteall.
+Hopefully this has helped you understand the process of how to create and manage FreeBSD jails without tools that abstract away all the details. Those tools are often quite useful, but there is always benefit in learning to do things the hard way. And in this case, the hard way doesn't seem to be that hard afteall.
