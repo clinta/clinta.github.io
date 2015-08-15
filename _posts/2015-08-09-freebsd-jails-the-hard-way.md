@@ -271,10 +271,15 @@ Simplified, the new jail.conf looks like this, and new jails require only 3 line
 # Global settings applied to all jails
 
 interface = "lagg0";
-hostname = "$name.domain.local";
+host.hostname = "$name.domain.local";
 path = "/usr/local/jails/$name";
 ip4.addr = 10.0.0.$ip;
 mount.fstab = "/usr/local/jails/$name.fstab";
+
+exec.start = "/bin/sh /etc/rc";
+exec.stop = "/bin/sh /etc/rc.shutdown";
+exec.clean;
+mount.devfs;
 
 # The jail definition for fulljail1
 fulljail1 {
