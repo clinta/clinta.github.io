@@ -91,8 +91,8 @@ cp /etc/localtime /usr/local/jails/templates/10-1-Release/etc/localtime
 2\. Optionally, update your template with `freebsd-update`.
 
 ```sh
-freebsd-update -b /usr/local/jails/tempaltes/10-1-Release fetch
-freebsd-update -b /usr/local/jails/tempaltes/10-1-Release install
+freebsd-update -b /usr/local/jails/templates/10-1-Release fetch
+freebsd-update -b /usr/local/jails/templates/10-1-Release install
 ```
 
 And that's it, now you have a fully up to date jail template. If you've made this template with zfs, you can easily deploy it using zfs snapshots.
