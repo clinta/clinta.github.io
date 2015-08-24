@@ -1,3 +1,9 @@
+---
+layout: post
+title: Building your own Session Boarder Controller for SIP communication with Office 365.
+date: 2015-08-24
+---
+
 If you're looking to connect an on-premise VOIP phone system to Office 365 you'll find several documents stating that you must purchase a session border controller, and a list of supported vendors. But if you're the kind of person who would rather take an unsupported approach than install yet another black box on your network, it can be done. In this guide I'll share what I've learned over the last two weeks in building my own session boarder controller with open source software.
 
 This guide assumes you have some familiarity with SIP and that you can do some of the basic configuration of software like Kamailio and rtpengine. The point of this post is primarily to document the specific configuration needed by Office 365.
