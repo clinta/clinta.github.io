@@ -65,7 +65,19 @@ onreply_route[1] {
 
 Don't expect to be able to copy and paste the config above and have it work. As noted earlier, this guide is for people who can manage a kamailio configuration. But this should include the minimum SIP maipulations necessary to make it work.
 
-Part of what makes integrating SIP with Office 365 so difficult is that Microsoft does not public specific guidence on what SIP options they require, this seems to be special information reserved to their SBC partners. In the interests of helping others figure out what Office 365 requires I'm including the dump of a SIP exchange between my working Kamailio/rtpengine server and Office 365.
+Part of what makes integrating SIP with Office 365 so difficult is that Microsoft does not public specific guidence on what SIP options they require, this seems to be special information reserved to their SBC partners. Here are some of the specific requirements I've learned through trial and error.
+
+1. As noted above, the certificate subject must exactly match your DNS and the address in your UM IP gateway. Without this you get a 403 from 365.
+
+2. The host portion of the To: header in your SIP packet must be your destination <guid>.um.outlook.com. If this does not match you will get 488 not acceptable here from Microsoft.
+
+3. You will also get 488 from Microsoft if you are not offering SRTP
+
+4. If you are offering RTCP mutexing in your invite you will get 488.
+
+5. If your Invite contains any ICE options you will get 488.
+
+There may be other requirements or restrictions that I did not discover, so in the interests of helping others figure out what Office 365 requires I'm including the dump of a SIP exchange between my working Kamailio/rtpengine server and Office 365.
 
 
 Invite with Offer
