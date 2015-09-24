@@ -1,3 +1,9 @@
+---
+layout: post
+title: Random root passwords with saltstack.
+date: 2015-09-24
+---
+
 Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.
 
 The password manager I'll be using is [http://www.passwordstore.org/](pass). Pass is uniquely suited to this challenge because it relies on GPG and asymetric cryptography. This allows me to put my public GPG key on the salt master so that the salt master can encrypt passwords it generates, but the salt master doesn't have to store any private key that would allow it to ever decrypt the passwords after they've been generated.
@@ -41,13 +47,13 @@ y
 gpg> quit
 ```
 
-On your salt master, install the pwgen extension module. Install this in your [extension modules](https://docs.saltstack.com/en/latest/ref/configuration/master.html#extension-modules) directory. These directions assume it is `/srv/modules`.
+On your salt master, install the [pwgen](https://github.com/clinta/salt-pwgen) extension module. Install this in your [extension modules](https://docs.saltstack.com/en/latest/ref/configuration/master.html#extension-modules) directory. These directions assume it is `/srv/modules`.
 
 ```bash
 $ sudo wget https://raw.githubusercontent.com/clinta/salt-pwgen/master/pwgen.py -O /srv/modules/pwgen.py
 ```
 
-Clone your password store to the salt master, using your salt-master service account. In my case I'm clonig it to /opt/passdb
+Clone your password store to the salt master, using your salt-master service account. In my case I'm cloning it to /opt/passdb
 
 ```bash
 $ cd /opt
