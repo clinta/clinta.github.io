@@ -4,9 +4,9 @@ title: Random root passwords with saltstack.
 date: 2015-09-24
 ---
 
-Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.
+Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way to have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.
 
-The password manager I'll be using is [http://www.passwordstore.org/](pass). Pass is uniquely suited to this challenge because it relies on GPG and asymetric cryptography. This allows me to put my public GPG key on the salt master so that the salt master can encrypt passwords it generates, but the salt master doesn't have to store any private key that would allow it to ever decrypt the passwords after they've been generated.
+The password manager I'll be using is [pass](http://www.passwordstore.org/). Pass is uniquely suited to this challenge because it relies on GPG and asymetric cryptography. This allows me to put my public GPG key on the salt master so that the salt master can encrypt passwords it generates, but the salt master doesn't have to store any private key that would allow it to ever decrypt the passwords after they've been generated.
 
 First install pass using your operating system's package manager. It should pull in all GPG dependencies.
 
@@ -16,7 +16,7 @@ If you don't have a GPG key that you wish to use with pass, you must first creat
 $ gpg --gen-key
 ```
 
-Once you have a gpg key, initialize a password store, and initialize the git repository for the store.
+Once you have a gpg key, initialize a password store.
 
 ```bash
 $ pass init me@mydomain.com
@@ -60,7 +60,7 @@ $ cd /opt
 $ git clone git@gitserver:/passdb
 ```
 
-Now you are ready to start generating passwords. Here's how it will work. A pillar will be defined with a jinja template which calls this extension module. When the salt master compiles the pillar it will run the extension module. The extensino module checks for the existence of a meta file which holds the unix password hash as well as a sha256 of the .gpg file which contains the encrypted plaintext password. If the meta file does not exist, or the .gpg file doesn't exist, or the sha256 in the meta file doesn't match the .gpg file, it calls pass to generate a new password and writes the unix hash of this password and the sha256 of the new .gpg file to the meta file. It then returns the unix hash which is the value of the pillar. If the meta file does exist, and matches the .gpg file, the unix hash from the meta file is returned for the value of the pillar.
+Now you are ready to start generating passwords. Here's how it will work. A pillar will be defined with a jinja template which calls this extension module. When the salt master compiles the pillar it will run the extension module. The extension module checks for the existence of a meta file which holds the unix password hash as well as a sha256 of the .gpg file which contains the encrypted plaintext password. If the meta file does not exist, or the .gpg file doesn't exist, or the sha256 in the meta file doesn't match the .gpg file, it calls pass to generate a new password and writes the unix hash of this password and the sha256 of the new .gpg file to the meta file. It then returns the unix hash which is the value of the pillar. If the meta file does exist, and matches the .gpg file, the unix hash from the meta file is returned for the value of the pillar.
 
 Create your pillar template:
 
