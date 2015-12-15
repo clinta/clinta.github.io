@@ -27,7 +27,7 @@ salt-master:
 
 # get the list of remote branches
 {% set branches = [] %}
-{% for origin_branch in salt['git.ls_remote'](remote='git@gitlab.ad.trilliumstaffing.com:salt/salt.git', opts='--heads', user='root') %}
+{% for origin_branch in salt['git.ls_remote'](remote='git@gitlab:salt/salt.git', opts='--heads', user='root') %}
   {% set i = branches.append(origin_branch.replace('refs/heads/', '')) %}
 {% endfor %}
 
@@ -44,7 +44,7 @@ if dir.startswith('/srv/salt/') and dir.split('/')[-1] not in branches %}
 {% for branch in branches %}
 salt-repo-{{ branch }}:
   git.latest:
-    - name: git@gitlab.ad.trilliumstaffing.com:salt/salt.git
+    - name: git@gitlab:salt/salt.git
     - target: /srv/salt/{{ branch }}
     - rev: {{ branch }}
     - branch: {{ branch }}
@@ -134,7 +134,7 @@ Add the reactor file in your git repo.
 
 salt-push:
   local.state.sls:
-    - tgt: '(tss|dc[0-8])-salt[0-9].(ad|in).trilliumstaffing.com'
+    - tgt: 'salt-master'
     - expr_form: pcre
     - queue: True
     - kwarg:
@@ -163,7 +163,7 @@ salt-master:
 
 # if a piller was not passed in, then get the list of branches from remote
 {% if branches == [] %}
-  {% for origin_branch in salt['git.ls_remote'](remote='git@gitlab.ad.trilliumstaffing.com:salt/salt.git', opts='--heads', user='root') %}
+  {% for origin_branch in salt['git.ls_remote'](remote='git@gitlab:salt/salt.git', opts='--heads', user='root') %}
     {% set i = branches.append(origin_branch.replace('refs/heads/', '')) %}
   {% endfor %}
 
@@ -181,7 +181,7 @@ if dir.startswith('/srv/salt/') and dir.split('/')[-1] not in branches %}
 {% for branch in branches %}
 salt-repo-{{ branch }}:
   git.latest:
-    - name: git@gitlab.ad.trilliumstaffing.com:salt/salt.git
+    - name: git@gitlab:salt/salt.git
     - target: /srv/salt/{{ branch }}
     - rev: {{ branch }}
     - branch: {{ branch }}
