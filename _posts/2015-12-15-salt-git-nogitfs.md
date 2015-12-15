@@ -103,7 +103,7 @@ With just this and a schedule you already have an okay salt-git integration. But
 
 If you're using gitlab for your salt repository, you can create a post-recieve script by putting a file in `/var/opt/gitlab/git-data/repositories/salt/salt.git/custom_hooks/post-receive`.
 
-```
+```bash
 {% raw %}
 #!/usr/bin/env bash                                                        
  
