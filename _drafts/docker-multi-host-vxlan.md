@@ -1,3 +1,7 @@
+Docker's default networking design seems to be a great "just works" solution for people running docker in public clouds. It provides a simple way to expose ports for services by NATting ports on the host's IP back to containers.
+
+But this isn't ideal for some situations. In a bare-metal datacenter environment you may prefer that your containers have routable IPs on your network and you may prefer to keep the NAT at the edge of your network. To do this with docker isn't very straightforward, but it can be done. For ease of use I'll be showing how to do it with docker-machine and docker hosts running in virtualbox. But this technique should work well on bare metal in the datacenter.
+
 Install docker, docker-machine and docker-compose and virtualbox. Start by creating a docker-machine which will be used to generate your token to create a swarm cluster.
 
 ```bash
@@ -6,37 +10,43 @@ $ eval "$(docker-machine env default)"
 $ docker run swarm create
 ```
 
-Copy the token returned as the last line output from `docker swarm create`. Now create your swarm manager.
+Copy the token returned as the last line output from `docker swarm create`. Now create your swarm manager. Note the `iptables=false` and `ip-masq=false` these tell Docker to not NAT our containers and not mess with the iptables rules. This guide assumes you know how and want to manage your NAT and firewall yourself.
 
 ```bash
-docker-machine create \
-        -d virtualbox \
-        --swarm \
-        --swarm-master \
-        --swarm-discovery token://<TOKEN-FROM-ABOVE> \
-      swarm-master
+$ docker-machine create \
+    -d virtualbox \
+    --swarm \
+    --swarm-master \
+    --swarm-discovery token://<TOKEN-FROM-ABOVE> \
+    --iptables=false \
+    --ip-masq=false \
+    swarm-master
 ```
 
 Create a couple of swarm agent hosts:
 
 ```bash
-docker-machine create \
+$ docker-machine create \
     -d virtualbox \
     --swarm \
     --swarm-discovery token://<TOKEN-FROM-ABOVE> \
+    --iptables=false \
+    --ip-masq=false \
     swarm-agent-00
 
-docker-machine create \
+$ docker-machine create \
     -d virtualbox \
     --swarm \
     --swarm-discovery token://<TOKEN-FROM-ABOVE> \
+    --iptables=false \
+    --ip-masq=false \
     swarm-agent-01
 ```
 
 Now set your shell to manage the swarm:
 
 ```bash
-eval $(docker-machine env --swarm swarm-master)
+$ eval $(docker-machine env --swarm swarm-master)
 ```
 
 Now your docker swarm is up and running. Time to create some networks. When you run `docker network create` with the default bridge driver, docker creates a bridge device with the IP that you specify as gateway. The bridge device is named br-<short-id> where short-id is the first 12 characters of the network's UUID.
@@ -48,35 +58,35 @@ I'm also a little bit OCD about my networks. The vxlan ID is a 24 bit field, and
 I'm also assigning a /27 ip-range to the docker network so that each host assigns a specific subset of this network and I don't end up with containers that have overlapping IPs.
 
 ```bash
-docker-machine ssh swarm-master
-netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.1 --ip-range=10.42.0.32/27 vxlan666112 | cut -c1-12)
-sudo ip link add vxlan666112 
-type vxlan id 666112 group 239.1.1.1 dev eth1 dstpor
-t 4789
-sudo ip link set vxlan666112 master br-$netid
-sudo ip link set up vxlan666112
-sudo ip link set up br-$netid
-exit
+$ docker-machine ssh swarm-master
+# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.1 --ip-range=10.42.0.32/27 vxlan666112 | cut -c1-12)
+# sudo ip link add vxlan666112 
+# type vxlan id 666112 group 239.1.1.1 dev eth1 dstpor
+# t 4789
+# sudo ip link set vxlan666112 master br-$netid
+# sudo ip link set up vxlan666112
+# sudo ip link set up br-$netid
+# exit
 ```
 
 Now do the same for the two swarm agents. Making sure to change the gateway and ip-range parameters.
 
 ```
-docker-machine ssh swarm-agent-00
-netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.2 --ip-range=10.42.0.64/27 vxlan666112 | cut -c1-12)
-sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
-sudo ip link set vxlan666112 master br-$netid
-sudo ip link set up vxlan666112
-sudo ip link set up br-$netid
-exit
+$ docker-machine ssh swarm-agent-00
+# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.2 --ip-range=10.42.0.64/27 vxlan666112 | cut -c1-12)
+# sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
+# sudo ip link set vxlan666112 master br-$netid
+# sudo ip link set up vxlan666112
+# sudo ip link set up br-$netid
+# exit
 
-docker-machine ssh swarm-agent-01
-netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.3 --ip-range=10.42.0.96/27 vxlan666112 | cut -c1-12)
-sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
-sudo ip link set vxlan666112 master br-$netid
-sudo ip link set up vxlan666112
-sudo ip link set up br-$netid
-exit
+$ docker-machine ssh swarm-agent-01
+# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.3 --ip-range=10.42.0.96/27 vxlan666112 | cut -c1-12)
+# sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
+# sudo ip link set vxlan666112 master br-$netid
+# sudo ip link set up vxlan666112
+# sudo ip link set up br-$netid
+# exit
 ```
 
 Now at this point you have a vxlan overlay. Each docker node should to ping each other node on the addresses 10.42.0.1, 10.42.0.2 and 10.42.0.3.
@@ -84,7 +94,7 @@ Now at this point you have a vxlan overlay. Each docker node should to ping each
 Now you can create containers on this new network and have connectivity to hosts and other containers on this vxlan network.
 
 ```
-docker run -it --net=vxlan666112 ubuntu /bin/bash
+$ docker run -it --net=vxlan666112 ubuntu /bin/bash
 ```
 
 Run a few more containers and they should all have access to eachother via this vxlan network.
