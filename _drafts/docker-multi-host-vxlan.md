@@ -59,7 +59,13 @@ I'm also assigning a /27 ip-range to the docker network so that each host assign
 
 ```
 $ docker-machine ssh swarm-master
-# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.1 --ip-range=10.42.0.32/27 vxlan666112 | cut -c1-12)
+# netid=$(\
+    docker network create \
+    --subnet=10.42.0.0/24 \
+    --gateway=10.42.0.1 \
+    --ip-range=10.42.0.32/27 \
+    vxlan666112 \
+    | cut -c1-12)
 # sudo ip link add vxlan666112 
 # type vxlan id 666112 group 239.1.1.1 dev eth1 dstpor
 # t 4789
@@ -73,7 +79,13 @@ Now do the same for the two swarm agents. Making sure to change the gateway and 
 
 ```
 $ docker-machine ssh swarm-agent-00
-# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.2 --ip-range=10.42.0.64/27 vxlan666112 | cut -c1-12)
+# netid=$(\
+    docker network create \
+    --subnet=10.42.0.0/24 \
+    --gateway=10.42.0.2 \
+    --ip-range=10.42.0.64/27 \
+    vxlan666112 \
+    | cut -c1-12)
 # sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
 # sudo ip link set vxlan666112 master br-$netid
 # sudo ip link set up vxlan666112
@@ -81,7 +93,13 @@ $ docker-machine ssh swarm-agent-00
 # exit
 
 $ docker-machine ssh swarm-agent-01
-# netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.3 --ip-range=10.42.0.96/27 vxlan666112 | cut -c1-12)
+# netid=$(\
+    docker network create \
+    --subnet=10.42.0.0/24 \
+    --gateway=10.42.0.3 \
+    --ip-range=10.42.0.96/27 \
+    vxlan666112 \
+    | cut -c1-12)
 # sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
 # sudo ip link set vxlan666112 master br-$netid
 # sudo ip link set up vxlan666112
