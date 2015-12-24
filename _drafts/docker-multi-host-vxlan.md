@@ -66,7 +66,7 @@ $ docker-machine ssh swarm-master
     --ip-range=10.42.0.32/27 \
     vxlan666112 \
     | cut -c1-12)
-# sudo ip link add vxlan666112 
+# sudo ip link add vxlan666112 type vxlan id 666112 group 239.1.1.1 dev eth1 dstport 4789
 # type vxlan id 666112 group 239.1.1.1 dev eth1 dstpor
 # t 4789
 # sudo ip link set vxlan666112 master br-$netid
