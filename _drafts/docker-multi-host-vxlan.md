@@ -4,7 +4,7 @@ But this isn't ideal for some situations. In a bare-metal datacenter environment
 
 Install docker, docker-machine and docker-compose and virtualbox. Start by creating a docker-machine which will be used to generate your token to create a swarm cluster.
 
-```bash
+```
 $ docker-machine create -d virtualbox default
 $ eval "$(docker-machine env default)"
 $ docker run swarm create
@@ -12,7 +12,7 @@ $ docker run swarm create
 
 Copy the token returned as the last line output from `docker swarm create`. Now create your swarm manager. Note the `iptables=false` and `ip-masq=false` these tell Docker to not NAT our containers and not mess with the iptables rules. This guide assumes you know how and want to manage your NAT and firewall yourself.
 
-```bash
+```
 $ docker-machine create \
     -d virtualbox \
     --swarm \
@@ -25,7 +25,7 @@ $ docker-machine create \
 
 Create a couple of swarm agent hosts:
 
-```bash
+```
 $ docker-machine create \
     -d virtualbox \
     --swarm \
@@ -45,7 +45,7 @@ $ docker-machine create \
 
 Now set your shell to manage the swarm:
 
-```bash
+```
 $ eval $(docker-machine env --swarm swarm-master)
 ```
 
@@ -57,7 +57,7 @@ I'm also a little bit OCD about my networks. The vxlan ID is a 24 bit field, and
 
 I'm also assigning a /27 ip-range to the docker network so that each host assigns a specific subset of this network and I don't end up with containers that have overlapping IPs.
 
-```bash
+```
 $ docker-machine ssh swarm-master
 # netid=$(docker network create --subnet=10.42.0.0/24 --gateway=10.42.0.1 --ip-range=10.42.0.32/27 vxlan666112 | cut -c1-12)
 # sudo ip link add vxlan666112 
