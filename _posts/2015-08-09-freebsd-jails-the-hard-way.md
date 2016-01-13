@@ -32,6 +32,8 @@ fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/base.t
 tar -xvf /tmp/base.txz -C /usr/local/jails/fulljail1
 fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/lib32.txz -o /tmp/lib32.txz
 tar -xvf /tmp/lib32.txz -C /usr/local/jails/fulljail1
+fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/ports.txz -o /tmp/ports.txz
+tar -xvf /tmp/ports.txz -C /usr/local/jails/fulljail1
 ```
 
 3\. Update your FreeBSD base install. You will want to use `/bin/sh` or bash, as csh does not like the inline variable in this command.
@@ -96,6 +98,8 @@ fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/base.t
 tar -xvf /tmp/base.txz -C /usr/local/jails/templates/10-2-Release
 fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/lib32.txz -o /tmp/lib32.txz
 tar -xvf /tmp/lib32.txz -C /usr/local/jails/templates/10-2-Release
+fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/ports.txz -o /tmp/ports.txz
+tar -xvf /tmp/ports.txz -C /usr/local/jails/templates/10-2-Release
 cp /etc/resolv.conf /usr/local/jails/templates/10-2-Release/etc/resolv.conf
 cp /etc/localtime /usr/local/jails/templates/10-2-Release/etc/localtime
 ```
