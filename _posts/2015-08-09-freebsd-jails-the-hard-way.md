@@ -120,16 +120,16 @@ And that's it, now you have a fully up to date jail template. If you've made thi
 
 ## Deploying a template with ZFS snapshots
 
-1\. Create a snapshot. My last freebsd-update to my template brought it to patch level 17, so I'll call my snapshot p17.
+1\. Create a snapshot. My last freebsd-update to my template brought it to patch level 17, so I'll call my snapshot p8.
 
 ```sh
-zfs snapshot zroot/jails/templates/10-2-Release@p17
+zfs snapshot zroot/jails/templates/10-2-Release@p8
 ```
 
 2\. Clone the snapshot to a new jail.
 
 ```sh
-zfs clone zroot/jails/templates/10-2-Release@p17 zroot/jails/zjail1
+zfs clone zroot/jails/templates/10-2-Release@p8 zroot/jails/zjail1
 ```
 
 3\. Configure the jail hostname.
@@ -170,7 +170,7 @@ This method is a little bit more tricky, because you have to take notes of which
 cp -R /usr/local/jails/releases/10-2-Release /usr/local/jails/templates/base-10-2-Release
 # or
 zfs create zroot/jails/templates
-zfs clone zroot/jails/releases/10-2-Release@p17 zroot/jails/templates/base-10-2-Release
+zfs clone zroot/jails/releases/10-2-Release@p8 zroot/jails/templates/base-10-2-Release
 ```
 
 2\. In addition to your base template, you need to create a skeleton template which will hold all the directories that are local to your jail. We're going to copy these directories from the template to the skeleton.
