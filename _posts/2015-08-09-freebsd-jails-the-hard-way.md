@@ -156,7 +156,7 @@ The downside with the zfs approach is that each jail is now a fully independent,
 
 ## Thin jails using NullFS mounts.
 
-This section has changed. [details](https://add-links-to-commit) 
+This section has changed. [details](https://github.com/clinta/clinta.github.io/commit/2b28a7d626eff467e44ce18dd1000aa2c279a329) 
 
 This method is a little bit more tricky, because you have to take notes of which directories are local to your jails and which are universal to FreeBSD. Fortunately FreeBSD's directory structure is stable and predictable and the benefits of this method are that it allows you to update your base image and your ports tree once for all jails.
 
