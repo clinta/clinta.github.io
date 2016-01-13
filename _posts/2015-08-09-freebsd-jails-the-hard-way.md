@@ -259,7 +259,7 @@ thinjail1 {
 jail -c thinjail1
 ```
 
-Now if you create dozens of thinjails, you can run `freebsd-update` once against the base template and all your jails will be updated. You also have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
+Now if you create dozens of thinjails, you can run `UNAME_r=10.2-RELEASE freebsd-update -d /usr/local/jails/templates/base-10-2-Release fetch install` once and all your jails will be updated. You can run `portsnap -p /usr/local/jails/templates/base-10-2-Release/usr/ports auto` and your ports tree for all jails is updated. And you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
 
 ## Simplifying jail.conf
 
