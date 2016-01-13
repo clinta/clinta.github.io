@@ -39,13 +39,13 @@ tar -xvf /tmp/ports.txz -C /usr/local/jails/fulljail1
 3\. Update your FreeBSD base install. You will want to use `/bin/sh` or bash, as csh does not like the inline variable in this command.
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -d /usr/local/jails/fulljail fetch install
+UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail fetch install
 ```
 
 4\. Verify your download. We're downloading these archives over FTP after all, we should confirm that this download is valid and not tampered with. The `freebsd-update IDS` command verifies the installation using a PGP key which is in your base system, which was presumably installed with an ISO that you verified using the FreeBSD [signed checksums](https://www.freebsd.org/releases/10.2R/signatures.html). Admittedly this step is a bit of paranoia, but I think it's prudent.
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -d /usr/local/jails/fulljail IDS
+UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail IDS
 ```
 
 5\. Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
@@ -259,7 +259,7 @@ thinjail1 {
 jail -c thinjail1
 ```
 
-Now if you create dozens of thinjails, you can run `UNAME_r=10.2-RELEASE freebsd-update -d /usr/local/jails/templates/base-10-2-Release fetch install` once and all your jails will be updated. You can run `portsnap -p /usr/local/jails/templates/base-10-2-Release/usr/ports auto` and your ports tree for all jails is updated. And you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
+Now if you create dozens of thinjails, you can run `UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/templates/base-10-2-Release fetch install` once and all your jails will be updated. You can run `portsnap -p /usr/local/jails/templates/base-10-2-Release/usr/ports auto` and your ports tree for all jails is updated. And you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
 
 ## Simplifying jail.conf
 
