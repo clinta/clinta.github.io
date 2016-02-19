@@ -69,6 +69,7 @@ users:
 ```sls
 {% raw %}
 # /srv/pillar/users/dbadmins.sls
+users:
   cersei:
     fullname: Cersei Lannister
     uid: 1102
