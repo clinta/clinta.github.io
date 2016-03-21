@@ -36,16 +36,16 @@ fetch ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/amd64/10.2-RELEASE/ports.
 tar -xvf /tmp/ports.txz -C /usr/local/jails/fulljail1
 ```
 
-3\. Update your FreeBSD base install. You will want to use `/bin/sh` or bash, as csh does not like the inline variable in this command.
+3\. Update your FreeBSD base install.
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail fetch install
+env UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail fetch install
 ```
 
 4\. Verify your download. We're downloading these archives over FTP after all, we should confirm that this download is valid and not tampered with. The `freebsd-update IDS` command verifies the installation using a PGP key which is in your base system, which was presumably installed with an ISO that you verified using the FreeBSD [signed checksums](https://www.freebsd.org/releases/10.2R/signatures.html). Admittedly this step is a bit of paranoia, but I think it's prudent.
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail IDS
+env UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/fulljail IDS
 ```
 
 5\. Make sure you jail has the right timezone and dns servers and a hostname in rc.conf.
@@ -104,16 +104,16 @@ cp /etc/resolv.conf /usr/local/jails/releases/10.2-RELEASE/etc/resolv.conf
 cp /etc/localtime /usr/local/jails/releases/10.2-RELEASE/etc/localtime
 ```
 
-2\. Update your template with `freebsd-update`. Run this in `/bin/sh` or `bash`.
+2\. Update your template with `freebsd-update`.
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/releases/10.2-RELEASE fetch install
+env UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/releases/10.2-RELEASE fetch install
 ```
 
 3\. Verify your install
 
 ```sh
-UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/releases/10.2-RELEASE IDS
+env UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/releases/10.2-RELEASE IDS
 ```
 
 And that's it, now you have a fully up to date jail template. If you've made this template with zfs, you can easily deploy it using zfs snapshots.
@@ -259,7 +259,7 @@ thinjail1 {
 jail -c thinjail1
 ```
 
-Now if you create dozens of thinjails, you can run `UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/templates/base-10.2-RELEASE fetch install` once and all your jails will be updated. You can run `portsnap -p /usr/local/jails/templates/base-10.2-RELEASE/usr/ports auto` and your ports tree for all jails is updated. And you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
+Now if you create dozens of thinjails, you can run `env UNAME_r=10.2-RELEASE freebsd-update -b /usr/local/jails/templates/base-10.2-RELEASE fetch install` once and all your jails will be updated. You can run `portsnap -p /usr/local/jails/templates/base-10.2-RELEASE/usr/ports auto` and your ports tree for all jails is updated. And you have one easy place to backup to save all your jails customizations: `/usr/local/jails/thinjails/`.
 
 ## Simplifying jail.conf
 
