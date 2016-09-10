@@ -14,7 +14,7 @@ I even have some features that I never had with gitfs, like automatic environmen
 
 My salt master has the following state applied. This state ensures that the salt-master service is running. It gets the list of branches from the git remote and makes sure that that branch is cloned into a directory under `/srv/salt/`. It also manages a file in `/etc/salt/master.d/roots.conf` which defines each environment that has been cloned and restarts the salt-master process when the file changes. This uses one git repository for both states and pillars, so states are in the `repo/states` directory and pillars are in the `repo/pillar` directory.
 
-```sls
+```jinja
 {% raw %}
 # repo/states/salt-master-git.sls
 
