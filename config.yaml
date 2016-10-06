@@ -1,7 +1,7 @@
 title: "Devops Discoveries"
 languageCode: "en-us"
 baseurl: "https://blag.clintarmstrong.net/"
-theme: "heather-hugo"
+theme: "clinta"
 LanguageCode: ""
 Title: ""
 PygmentsCodeFences: true
