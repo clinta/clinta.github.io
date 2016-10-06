@@ -2,8 +2,12 @@
 layout: post
 title: Managing Users with Salt
 redirect_from:
-  - "2015-1-22-Salt-User-Management"
-  - "2015-1-28-Salt-User-Management"
+aliases:
+  - /posts/2015-1-22-Salt-User-Management
+  - /posts/2015-1-28-Salt-User-Management
+  - /posts/2015-03-07-Salt-User-Management
+  - /posts/2015-3-07-Salt-User-Management
+  - /posts/2015-3-7-Salt-User-Management
 date: 2015-03-07 09:38:00
 ---
 

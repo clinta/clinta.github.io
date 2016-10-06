@@ -2,6 +2,9 @@
 layout: post
 title: Random root passwords with saltstack.
 date: 2015-09-24
+aliases:
+  - /posts/2015-09-24-random-local-passwords
+  - /posts/2015-9-24-random-local-passwords
 ---
 
 Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way to have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.

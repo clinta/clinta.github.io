@@ -1,6 +1,9 @@
 ---
 layout: post
 title: Using one pair of SSDs for both ZIL and L2ARC in FreeNAS
+aliases:
+  - /post/2015-01-21-FreeNAS-Multipurpose-SSD
+  - /post/2015-1-21-FreeNAS-Multipurpose-SSD
 ---
 
 I'm a big fan of ZFS, and a big fan of FreeNAS. But some times the options avaliable in the FreeNAS GUI can't quite do everything. Using one disk for more than one purpose is one of those things. At $dayjob we're going to be using a new FreeNAS server for iSCSI datastores for VMWare. This is one of those instances where a ZIL can really improve performance because there is potential for a lot of synchronious writes from VMs hosting databases.

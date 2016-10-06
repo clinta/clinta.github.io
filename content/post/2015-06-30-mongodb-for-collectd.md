@@ -2,6 +2,9 @@
 layout: post
 title: Compiling the mongodb plugin for collectd
 date: 2015-06-30 14:20:00
+aliases:
+  - /posts/2015-06-30-mongodb-for-collectd
+  - /posts/2015-6-30-mongodb-for-collectd
 ---
 
 The MongoDB [plugin](https://collectd.org/wiki/index.php/Plugin:MongoDB) for collectd is currently unfinished and hasn't had active development since 2012. Fortunately the folks at [Stackdriver](https://github.com/Stackdriver) have fixed some of the issues so that the plugin works for their stackdriver agent, which is based on collectd. Unfortunately this code has not been submitted back upstream to collectd.

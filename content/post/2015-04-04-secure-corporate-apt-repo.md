@@ -2,6 +2,10 @@
 layout: post
 title: Creating a Secure Corporate Apt Repository with Salt
 date: 2015-04-04 10:04:00
+aliases:
+  - /posts/2015-04-04-secure-corporate-apt-repo
+  - /posts/2015-4-04-secure-corporate-apt-repo
+  - /posts/2015-4-4-secure-corporate-apt-repo
 ---
 
 There are many reasons an organization could use it's own internal apt repository. But controlling access to this repository for clients that are outside your internal network can be difficult. But if your repository contains proprietary or confidential packages, securing access is not optional. Thankfully apt supports client authentication with SSL certificates. And with the new [x509](http://docs.saltstack.com/en/latest/ref/states/all/salt.states.x509.html) module, managing these certificates can be made fully automatic.

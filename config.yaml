@@ -9,6 +9,8 @@ pygmentsstyle: "friendly"
 Author:
   name: "Clint Armstrong"
   email: "clint@clintarmstrong.net"
+permalinks:
+  post: /:title/
 
 Params:
   headerHTML: "<h1> bleh </h1>"
