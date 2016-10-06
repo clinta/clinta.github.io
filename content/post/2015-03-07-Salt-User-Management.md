@@ -8,7 +8,7 @@ aliases:
   - /posts/2015-03-07-Salt-User-Management
   - /posts/2015-3-07-Salt-User-Management
   - /posts/2015-3-7-Salt-User-Management
-date: 2015-03-07 09:38:00
+date: 2015-03-07T09:38:00-05:00
 ---
 
 This post has gone through a few iterations. You can see the full history on the github repo.

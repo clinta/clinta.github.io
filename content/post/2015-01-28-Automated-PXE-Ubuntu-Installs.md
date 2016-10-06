@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Automated Ubuntu Installation with PXE, Preseeds and Apt-Cacher-NG (and UEFI compatible)
-date: 2015-01-28 09:13:00
+date: 2015-01-28T09:13:00-05:00
 aliases:
   - /posts/2015-01-28-Automated-PXE-Ubuntu-Installs
   - /posts/2015-1-28-Automated-PXE-Ubuntu-Installs

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: X509 Certificates in Salt, implementation details
-date: 2015-04-02 21:16:00
+date: 2015-04-02T21:16:00-05:00
 aliases:
   - /posts/2015-04-02-salt-x509-details
   - /posts/2015-4-02-salt-x509-details

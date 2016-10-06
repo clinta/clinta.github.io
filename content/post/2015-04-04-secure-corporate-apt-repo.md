@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Creating a Secure Corporate Apt Repository with Salt
-date: 2015-04-04 10:04:00
+date: 2015-04-04T10:04:00-05:00
 aliases:
   - /posts/2015-04-04-secure-corporate-apt-repo
   - /posts/2015-4-04-secure-corporate-apt-repo

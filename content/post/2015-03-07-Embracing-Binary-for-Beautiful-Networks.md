@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Embracing Binary for Beautiful Networks
-date: 2015-03-07 11:30:00
+date: 2015-03-07T11:30:00-05:00
 aliases:
   - /posts/2015-03-07-Embracing-Binary-for-Beautiful-Networks
   - /posts/2015-3-07-Embracing-Binary-for-Beautiful-Networks

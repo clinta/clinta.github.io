@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Compiling the mongodb plugin for collectd
-date: 2015-06-30 14:20:00
+date: 2015-06-30T14:20:00-05:00
 aliases:
   - /posts/2015-06-30-mongodb-for-collectd
   - /posts/2015-6-30-mongodb-for-collectd
