@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Salt git integration without gitfs
-date: 2015-12-15T15:45-05:00
+date: 2015-12-15T15:45:00-05:00
 slug: salt-git-nogitfs
 aliases:
   - 2015-12-15-salt-git-nogitfs
