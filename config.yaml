@@ -1,0 +1,20 @@
+title: "Devops Discoveries"
+languageCode: "en-us"
+baseurl: "https://blag.clintarmstrong.net/"
+theme: "heather-hugo"
+LanguageCode: ""
+Title: ""
+PygmentsCodeFences: true
+pygmentsstyle: "friendly"
+Author:
+  name: "Clint Armstrong"
+  email: "clint@clintarmstrong.net"
+
+Params:
+  headerHTML: "<h1> bleh </h1>"
+
+
+Indexes:
+  tag: "tags"
+
+# MetadataFormat = "yaml"
