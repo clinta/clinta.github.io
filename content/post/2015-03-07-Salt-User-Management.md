@@ -34,7 +34,7 @@ base:
 And define your users:
 
 ```sls
-{% raw %}
+
 # /srv/pillar/users/admins.sls
 users:
   tywin:
@@ -43,11 +43,11 @@ users:
     ssh-keys:
       - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNWRiUmFXjxrp4VGfqWISvsEdxPJi2ES3gi6U/ZoVR3UpMUNGYm/VUTNjiXPX6XU5KjaSdGgeqDQdcwfAxl7q4A= tywin@CastRockWks1
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCllUe3Q14M1AwMyaGLaW0b3IyDyghljYzKlQE/osh0hjUCxqcjFW26DekBSF/RErYeJwlRPrGxWZAYLYW9ZMLolYJGAon1jBgNUAaSbj45m+sf8gFDWqpL6E0Vxzr4/o2A7NpqBsdwy95Xov0MGQq7wyJ7bEQ4b/TFo7Peb6oWoHGdDMbXym/T0UFiEH30w6XBIN34tRsV9DGmG3BpshI7ho5pNo1dO8xDD0Acr6blpOQKap02ihJKYBAdFDGfK4P3PUrhArEJvD8QU7Q7Fwl1Yej6Y54IMndTVf8i5CZNmUKh87Xawo4NRMaVPePoMInEYTiEkOYrILGkWRCT2GWb tywin@TLLap1
-{% endraw %}
+
 ```
 
 ```sls
-{% raw %}
+
 # /srv/pillar/users/revokedusers.sls
 revokedusers:
   robb:
@@ -55,11 +55,11 @@ revokedusers:
     uid: 2001
     ssh-keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFmuEiljWGa1W3/mgymLdEwCbkBcIaXZfik9uNQCzajW Robb@RSLap1
-{% endraw %}
+
 ```
 
 ```sls
-{% raw %}
+
 # /srv/pillar/users/webadmins.sls
 users:
   tyrion:
@@ -67,11 +67,11 @@ users:
     uid: 1101
     ssh-keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED4TtDwUcNZdhQwIxK4LOtn3Q/yQxlcvQKrZIBaOllQ tyrion@TSLap2
-{% endraw %}
+
 ```
 
 ```sls
-{% raw %}
+
 # /srv/pillar/users/dbadmins.sls
 users:
   cersei:
@@ -79,7 +79,7 @@ users:
     uid: 1102
     ssh-keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ9GpN4T3beWlRzfO27tYH7t13QhMRoKbmDR3nwwAWa cersei@CLLap1
-{% endraw %}
+
 ```
 
 It should be fairly self-explanatory how this works. Tywin is added to every server. Tyrion is only added to webservers and Cersei is only added to database servers. Robb has been fired and his access to all servers has been revoked.
@@ -87,7 +87,7 @@ It should be fairly self-explanatory how this works. Tywin is added to every ser
 Now the logic for adding these users.
 
 ```sls
-{% raw %}
+
 # /srv/salt/users/init.sls
 
 # Revoke any users with a role of revoked
@@ -161,7 +161,7 @@ Now the logic for adding these users.
     - user: root
     - group: root
     - mode: 440
-{% endraw %}
+
 ```
 
 The first section removes any revoked users, and removed revoked users ssh keys from the root account, as well as their own.

@@ -68,10 +68,10 @@ Now you are ready to start generating passwords. Here's how it will work. A pill
 Create your pillar template:
 
 ```sls
-{% raw %}
+
 # /srv/pillar/root-pw.sls
 root-pw: {{ salt['pwgen.get_pw'](pw_name='local-root/'+grains['host'], pw_store='/opt/passdb', pw_meta_dir='/opt/pw_meta') }}
-{% endraw %}
+
 ```
 
 And apply this pillar via the pillar top file:
@@ -94,13 +94,13 @@ $ pass local-root/minion
 Once you know this is working, you can use this unix hash to set the root password on your minions with a simple state:
 
 ```sls
-{% raw %}
+
 # /srv/salt/root-pw.sls
 
 root:
   user.present:
     - password: {{ salt['pillar.get']('root-pw') }}
-{% endraw %}
+
 ```
 
 Make sure this state is applied via your top file, highstate all your minions and you will now have all their unique passwords in your password store.

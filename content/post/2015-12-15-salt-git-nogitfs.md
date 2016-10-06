@@ -16,8 +16,8 @@ I even have some features that I never had with gitfs, like automatic environmen
 
 My salt master has the following state applied. This state ensures that the salt-master service is running. It gets the list of branches from the git remote and makes sure that that branch is cloned into a directory under `/srv/salt/`. It also manages a file in `/etc/salt/master.d/roots.conf` which defines each environment that has been cloned and restarts the salt-master process when the file changes. This uses one git repository for both states and pillars, so states are in the `repo/states` directory and pillars are in the `repo/pillar` directory.
 
-```jinja
-{% raw %}
+```sls
+
 # repo/states/salt-master-git.sls
 
 salt-master:
@@ -70,11 +70,11 @@ salt-repo-{{ branch }}:
     - mode: 644
     - listen_in:
       - service: salt-master
-{% endraw %}
+
 ```
 
 ```sls
-{% raw %}
+
 # repo/states/files/roots.conf
 
 {%- set branch_dirs = [] -%}
@@ -98,7 +98,7 @@ pillar_roots:
   {{ branch }}:
     - {{ branch }}/pillar
 {%- endfor %}
-{% endraw %}
+
 ```
 
 With just this and a schedule you already have an okay salt-git integration. But with a little more work you can take it to the next step and make it event driven on git push.
@@ -106,32 +106,32 @@ With just this and a schedule you already have an okay salt-git integration. But
 If you're using gitlab for your salt repository, you can create a post-recieve script by putting a file in `/var/opt/gitlab/git-data/repositories/salt/salt.git/custom_hooks/post-receive`.
 
 ```bash
-{% raw %}
+
 #!/usr/bin/env bash                                                        
  
 while read branch; do                                                      
         branchname=$(cut -d "/" -f 3 <<< "${branch}")                      
         sudo salt-call event.send salt/push branch=${branchname}           
 done                                                                       
-{% endraw %}
+
 ```
 
 Now in your salt master config, add a reactor:
 
 ```sls
-{% raw %}
+
 # /etc/salt/master
 
 reactor:
   - 'salt/push':
      - salt://reactor/salt-push.sls
-{% endraw %}
+
 ```
 
 Add the reactor file in your git repo.
 
 ```sls
-{% raw %}
+
 # repo/states/reactor/salt-push.sls
 
 salt-push:
@@ -145,13 +145,13 @@ salt-push:
           salt_git_branches:
             - {{ data['data']['branch'] }}
         queue: True
-{% endraw %}
+
 ```
 
 And add a bit more logic to the salt-master-git.sls to handle the individual branch being pushed. With this logic if the pillar `salt_git_branches` is included in the state run, the state will only update that branch. If it is not included, the state will update all branches, and clean up old deleted branches. This saves some time which is important when it's being called by a post-recieve hook.
 
 ```sls
-{% raw %}
+
 # repo/states/salt-master-git.sls
 
 salt-master:
@@ -206,7 +206,7 @@ salt-repo-{{ branch }}:
     - mode: 644
     - listen_in:
       - service: salt-master
-{% endraw %}
+
 ```
 
 Now enjoy the best of both worlds. Automatic integration between salt and git and the reliability and speed of a simple file_roots configuration.
