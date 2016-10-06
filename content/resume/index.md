@@ -2,6 +2,9 @@
 layout: page
 title: Résumé
 permalink: /resume/
+date: 2016-10-06
+blackfriday:
+  fractions: false
 ---
 
 Clint Armstrong
