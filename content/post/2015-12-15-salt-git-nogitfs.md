@@ -2,8 +2,9 @@
 layout: post
 title: Salt git integration without gitfs
 date: 2015-12-15T15:45-05:00
+slug: salt-git-nogitfs
 aliases:
-  - /posts/2015-12-15-salt-git-nogitfs
+  - 2015-12-15-salt-git-nogitfs
 ---
 
 [SaltStack](http://saltstack.com/) has some pretty cool git [integration](https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html). Unfortunately it also has quite a few [bugs](https://github.com/saltstack/salt/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+gitfs), especially when using gitfs for pillars.

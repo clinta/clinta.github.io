@@ -2,9 +2,10 @@
 layout: post
 title: Automated Ubuntu Installation with PXE, Preseeds and Apt-Cacher-NG (and UEFI compatible)
 date: 2015-01-28T09:13:00-05:00
+slug: Automated-PXE-Ubuntu-Installs
 aliases:
-  - /posts/2015-01-28-Automated-PXE-Ubuntu-Installs
-  - /posts/2015-1-28-Automated-PXE-Ubuntu-Installs
+  - 2015-01-28-Automated-PXE-Ubuntu-Installs
+  - 2015-1-28-Automated-PXE-Ubuntu-Installs
 ---
 
 Doing repetitive installs can be a pain, and figuring out how to make it easier can be even more of a pain since everybody has their own preferred system. Most searching for how to do this for Ubuntu will lead you to Cobbler. Cobbler isn't a bad tool, but it's not a good fit for me. It takes away most of the ability to customize pxelinux without learning their templating language. And it is built with the assumption that you'll be defining system roles and doing configuration management through Cobbler. I don't need that, I'm using Salt for configuration management. For unattended installations I need something simpler. Putting together a few simple tools I was able to get an installation system I'm very happy with.

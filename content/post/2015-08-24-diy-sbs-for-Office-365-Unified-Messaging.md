@@ -2,9 +2,10 @@
 layout: post
 title: Building your own Session Boarder Controller for SIP communication with Office 365.
 date: 2015-08-24
+slug: diy-sbs-for-Office-365-Unified-Messaging
 aliases:
-  - /posts/2015-08-24-diy-sbs-for-Office-365-Unified-Messaging
-  - /posts/2015-8-24-diy-sbs-for-Office-365-Unified-Messaging
+  - 2015-08-24-diy-sbs-for-Office-365-Unified-Messaging
+  - 2015-8-24-diy-sbs-for-Office-365-Unified-Messaging
 ---
 
 If you're looking to connect an on-premise VOIP phone system to Office 365 you'll find several documents stating that you must purchase a session border controller, and a list of supported vendors. But if you're the kind of person who would rather take an unsupported approach than install yet another black box on your network, it can be done. In this guide I'll share what I've learned over the last two weeks in building my own session boarder controller with open source software.

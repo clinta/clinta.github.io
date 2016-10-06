@@ -2,10 +2,11 @@
 layout: post
 title: Embracing Binary for Beautiful Networks
 date: 2015-03-07T11:30:00-05:00
+slug: Embracing-Binary-for-Beautiful-Networks
 aliases:
-  - /posts/2015-03-07-Embracing-Binary-for-Beautiful-Networks
-  - /posts/2015-3-07-Embracing-Binary-for-Beautiful-Networks
-  - /posts/2015-3-7-Embracing-Binary-for-Beautiful-Networks
+  - 2015-03-07-Embracing-Binary-for-Beautiful-Networks
+  - 2015-3-07-Embracing-Binary-for-Beautiful-Networks
+  - 2015-3-7-Embracing-Binary-for-Beautiful-Networks
 ---
 
 During my time working for an MSP I got to see many different networks with many different techniques for mapping vlan numbers to subnets, but all of them left me dissatisfied. The biggest problem was that they were always destgned to try to make some sense to people looking at the numbers as they're most commonly written. Vlan numbers in decimal and IP addresses in dotted decimal. But these are just incompatible. Sure you can make it look pretty if Vlan `10` is `10.10.0.0/16` and Vlan `20` is `10.20.0.0/16`, but once you need to start subnetting those /16 networks things get messy and you have to have all sorts of special rules for what happens to vlans over 255.

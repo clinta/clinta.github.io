@@ -2,10 +2,11 @@
 layout: post
 title: X509 Certificates in Salt, implementation details
 date: 2015-04-02T21:16:00-05:00
+slug: salt-x509-details
 aliases:
-  - /posts/2015-04-02-salt-x509-details
-  - /posts/2015-4-02-salt-x509-details
-  - /posts/2015-4-2-salt-x509-details
+  - 2015-04-02-salt-x509-details
+  - 2015-4-02-salt-x509-details
+  - 2015-4-2-salt-x509-details
 ---
 
 [Saltstack](http://saltstack.com/) has recently accepted my pull request and integrated the x509 module I've spent the last few weeks working on. Most of it's functionality including a complete PKI example is explained in the [documentation](http://docs.saltstack.com/en/latest/ref/states/all/salt.states.x509.html), this blog post is to go over some more of the details of how and why I made it for anyone who may not want to just read the source code.

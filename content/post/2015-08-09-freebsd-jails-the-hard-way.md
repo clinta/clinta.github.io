@@ -2,10 +2,11 @@
 layout: post
 title: FreeBSD Jails the hard way
 date: 2015-08-09
+slug: freebsd-jails-the-hard-way
 aliases:
-  - /posts/2015-08-09-freebsd-jails-the-hard-way
-  - /posts/2015-8-09-freebsd-jails-the-hard-way
-  - /posts/2015-8-9-freebsd-jails-the-hard-way
+  - 2015-08-09-freebsd-jails-the-hard-way
+  - 2015-8-09-freebsd-jails-the-hard-way
+  - 2015-8-9-freebsd-jails-the-hard-way
 ---
 
 There are many great options for managing FreeBSD Jails. iocage, warden and ez-jail aim to streamline the process and make it quick an easy to get going. But sometimes the tools built right into the OS are overlooked.

@@ -10,7 +10,7 @@ Author:
   name: "Clint Armstrong"
   email: "clint@clintarmstrong.net"
 permalinks:
-  post: /:title/
+  post: /:slug/
 
 Params:
   headerLinks:
