@@ -13,10 +13,10 @@ permalinks:
   post: /:title/
 
 Params:
-  headerHTML: "<h1> bleh </h1>"
-
+  headerLinks:
+    - Posts: /
+    - Résumé: /resume
+    - Twitter: https://twitter.com/clinta
 
 Indexes:
   tag: "tags"
-
-# MetadataFormat = "yaml"
