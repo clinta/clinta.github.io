@@ -1,0 +1,11 @@
+{{ partial "head.html" . }}
+<main class="posts">
+  <article class="post">
+	{{ range (where .Data.Pages "Section" "post") }}
+      <h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
+      <p>{{ .Summary }}</p>
+	  <p class="small"><a href="{{ .Permalink }}">{{ .Date.Format "2006-01-02" }}</a></p>
+    {{ end }}
+  </article>
+</main>
+{{ partial "foot.html" . }}
