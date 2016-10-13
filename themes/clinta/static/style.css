@@ -25,6 +25,12 @@ body {
   font-size: 100%;
   line-height: 1.75;
   /* font-family: 'Merriweather', serif; */
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+code, pre {
+  font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
+  /* white-space: nowrap; */
 }
 
 .header p, footer p { text-align: left; }
