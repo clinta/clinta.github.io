@@ -11,8 +11,8 @@ permalinks:
   post: /:slug/
 googleAnalytics: "UA-58778705-1"
 
-Params:
-  headerLinks:
+params:
+  headerlinks:
     - Posts: /
     - Résumé: /resume
     - Twitter: https://twitter.com/clinta

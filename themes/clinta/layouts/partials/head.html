@@ -20,7 +20,7 @@
 
   <div class="header center">
     <ul class="navbar">
-	{{ range .Site.Params.headerLinks }}
+	{{ range .Site.Params.headerlinks }}
 	{{ range $k, $v := . }}
 		<li class="navbar"><a class="navbar" href="{{ $v }}">{{ $k }}</a></li>
 	{{ end }}
