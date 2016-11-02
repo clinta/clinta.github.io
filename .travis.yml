@@ -15,6 +15,10 @@ env:
     - ENCRYPTION_LABEL="ab5fa77f9e84"
     - COMMIT_AUTHOR_EMAIL="clint@clintarmstrong.net"
 
+cache:
+  directories:
+    - $GOPATH
+
 branches:
   only:
     - src
