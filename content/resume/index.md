@@ -12,6 +12,7 @@ Clint Armstrong
 
 Work Experience
 ----------
+----------
 
 01/2015 - Present
 :    **Network Administrator** Trillium Staffing, Kalamazoo, MI
@@ -116,6 +117,7 @@ Work Experience
 
 Open Source Projects
 ----------
+----------
 
 **[undocker-dns](https://github.com/TrilliumIT/undocker-dns)**
 :    A small daemon to keep Docker from changing the dns server in a container.
@@ -142,6 +144,7 @@ Open Source Projects
      continuous integration pipeline.
 
 Technologies Used
+----------
 ----------
 Technologies I have experinece with include:
 
