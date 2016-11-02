@@ -25,7 +25,7 @@ SHA=`git rev-parse --verify HEAD`
 git clone -b $TARGET_BRANCH $REPO public
 
 # Clean out existing contents
-rm -rf ./public/* || true
+rm -rf ./public || true
 
 # Run our compile script
 doCompile
