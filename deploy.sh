@@ -5,7 +5,7 @@ SOURCE_BRANCH="src"
 TARGET_BRANCH="master"
 
 function doCompile {
-  hugo -d ./public
+  $GOPATH/bin/hugo -d ./public
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
@@ -48,4 +48,4 @@ eval `ssh-agent -s`
 ssh-add deploy_key
 
 # Now that we're all set up, we can push.
-git push $SSH_REPO $TARGET_BRANCH
+git -C ./public push $SSH_REPO $TARGET_BRANCH

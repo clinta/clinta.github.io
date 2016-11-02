@@ -1,0 +1,13 @@
+language: go
+
+go:
+  - 1.7
+
+before_install:
+- go get github.com/spf13/hugo
+
+script: bash ./deploy.sh
+env:
+  global:
+    - ENCRYPTION_LABEL: ab5fa77f9e84
+    - COMMIT_AUTHOR_EMAIL: "clint@clintarmstrong.net"
