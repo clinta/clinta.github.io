@@ -8,6 +8,11 @@ function doCompile {
   $GOPATH/bin/hugo -d ./public
 }
 
+git fetch origin $SOURCE_BRANCH
+git -C ./public reset --hard FETCH_HEAD
+git clean -df
+
+
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
     echo "Skipping deploy; just doing a build."
@@ -20,12 +25,13 @@ REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
-# Clone the existing gh-pages for this repo into out/
-# Create a new empty branch if gh-pages doesn't exist yet (should only happen on first deply)
-git clone -b $TARGET_BRANCH $REPO public
+# Clone the existing gh-pages for this repo into public/
+git clone -b $TARGET_BRANCH $REPO public || git -C ./ fetch origin $TARGET_BRANCH
+git -C ./public reset --hard FETCH_HEAD
+git clean -df
 
 # Clean out existing contents
-rm -rf ./public || true
+rm -rf ./public/* || true
 
 # Run our compile script
 doCompile
