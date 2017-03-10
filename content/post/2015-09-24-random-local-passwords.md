@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Random root passwords with saltstack.
 date: 2015-09-24
 slug: random-local-passwords

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Managing Users with Salt
 redirect_from:
 slug: Salt-User-Management

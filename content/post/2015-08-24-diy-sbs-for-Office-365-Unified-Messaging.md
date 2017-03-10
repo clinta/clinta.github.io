@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Building your own Session Boarder Controller for SIP communication with Office 365.
 date: 2015-08-24
 slug: diy-sbs-for-Office-365-Unified-Messaging

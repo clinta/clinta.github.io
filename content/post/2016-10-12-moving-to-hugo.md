@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Moving to Hugo
 date: 2016-10-12
 slug: moving-to-hugo

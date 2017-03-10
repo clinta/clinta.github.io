@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Compiling the mongodb plugin for collectd
 date: 2015-06-30T14:20:00-05:00
 slug: mongodb-for-collectd

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Salt git integration without gitfs
 date: 2015-12-15T15:45:00-05:00
 slug: salt-git-nogitfs

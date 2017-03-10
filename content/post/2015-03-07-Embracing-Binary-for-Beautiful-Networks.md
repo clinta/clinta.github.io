@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Embracing Binary for Beautiful Networks
 date: 2015-03-07T11:30:00-05:00
 slug: Embracing-Binary-for-Beautiful-Networks

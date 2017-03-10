@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Creating a Secure Corporate Apt Repository with Salt
 date: 2015-04-04T10:04:00-05:00
 slug: secure-corporate-apt-repo

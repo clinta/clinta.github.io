@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: X509 Certificates in Salt, implementation details
 date: 2015-04-02T21:16:00-05:00
 slug: salt-x509-details

@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: single
 title: Résumé
 permalink: /resume/
 date: 2016-10-06

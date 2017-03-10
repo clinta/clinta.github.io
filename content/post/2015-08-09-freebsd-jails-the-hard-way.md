@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: FreeBSD Jails the hard way
 date: 2015-08-09
 slug: freebsd-jails-the-hard-way

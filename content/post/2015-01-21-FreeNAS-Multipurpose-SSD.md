@@ -1,6 +1,6 @@
 ---
 date: "2015-01-21"
-layout: post
+layout: single
 title: Using one pair of SSDs for both ZIL and L2ARC in FreeNAS
 slug: FreeNAS-Multipurpose-SSD
 aliases:

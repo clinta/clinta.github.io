@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 title: Changing UPN to Email with Powershell
 date: 2015-08-07
 slug: Change-UPN-To-Email-with-Powershell
