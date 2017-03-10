@@ -5,7 +5,7 @@ SOURCE_BRANCH="src"
 TARGET_BRANCH="master"
 
 function doCompile {
-  $GOPATH/bin/hugo -d ./public
+  hugo -d ./public
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
