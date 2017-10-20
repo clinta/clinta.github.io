@@ -3,8 +3,8 @@ sudo: required
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y python-pygments
-  - wget https://github.com/spf13/hugo/releases/download/v0.19/hugo_0.19-64bit.deb
-  - sudo dpkg -i ./hugo_0.19-64bit.deb
+  - wget https://github.com/gohugoio/hugo/releases/download/v0.30.2/hugo_0.30.2_Linux-64bit.deb
+  - sudo dpkg -i ./hugo_0.30.2_Linux-64bit.deb
 
 install: true
 
