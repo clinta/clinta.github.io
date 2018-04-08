@@ -1,19 +1,20 @@
 sudo: required
 
+env:
+  global:
+    - HUGO_VER=0.38.1
+    - ENCRYPTION_LABEL="ab5fa77f9e84"
+    - COMMIT_AUTHOR_EMAIL="clint@clintarmstrong.net"
+
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y python-pygments
-  - wget https://github.com/gohugoio/hugo/releases/download/v0.30.2/hugo_0.30.2_Linux-64bit.deb
-  - sudo dpkg -i ./hugo_0.30.2_Linux-64bit.deb
+  - wget https://github.com/gohugoio/hugo/releases/download/v0.38.1/hugo_${HUGO_VER}_Linux-64bit.deb
+  - sudo dpkg -i ./hugo_${HUGO_VER}_Linux-64bit.deb
 
 install: true
 
 script: bash ./deploy.sh
-
-env:
-  global:
-    - ENCRYPTION_LABEL="ab5fa77f9e84"
-    - COMMIT_AUTHOR_EMAIL="clint@clintarmstrong.net"
 
 branches:
   only:
