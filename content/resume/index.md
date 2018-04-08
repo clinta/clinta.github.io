@@ -2,7 +2,7 @@
 layout: single
 title: Résumé
 permalink: /resume/
-date: 2016-10-06
+date: 2018-04-08
 blackfriday:
   fractions: false
 ---
@@ -10,15 +10,90 @@ blackfriday:
 Clint Armstrong
 ===============
 
+Open Source
+----------
+----------
+**[go-multiping](https://github.com/TrilliumIT/go-multiping)**
+:    An icmp library designed to ping multiple hosts efficiently in go.
+     Improves on existing libraries by pinging multiple while using a single
+     raw-socket in the kernel. This was created to improve the icmp module in
+     [Bosun](https://github.com/bosun-monitor/bosun) and there is an open
+     [PR](https://github.com/bosun-monitor/bosun/pull/2238) to implement it.
+
+**[vxrouter](https://github.com/TrilliumIT/vxrouter)**
+:    A docker network and ipam plugin that connects containers to vxlans using
+     macvlan devices. It coordinates IPAM in a cluster by inserting /32 routes
+     to each container into the kernel routing table, which can be
+     redistributed through the network via a routing protocol of the admin's
+     choosing. In our case BGB using bird.
+
+**[iputil](https://github.com/TrilliumIT/iputil)**
+:    A go library for common operations on IP addresses, like adding or
+     subtracting from an address, or generating random addresses.
+
+**[updog](https://github.com/TrilliumIT/updog)**
+:    A simple monitoring system that uses http or tcp checks and logs data to
+     bosun.
+
+**[geliUnlocker](https://github.com/clinta/geliUnlocker)**
+:    An rc.d script for FreeBSD which automates unlocking geli encrypted disks
+     using a key and password stored on a remote server accessible via scp.
+
+**[genify](https://github.com/clinta/genify)**
+:    A go code generator to simultae generics.
+
+**[go-zfs](https://github.com/clinta/go-zfs)**
+:    A go library for manipulating zfs filesystems.
+
+**[docker-vxlan-plugin](https://github.com/TrilliumIT/docker-vxlan-plugin)**
+:    A docker plugin for connecting containers to vxlan networks.
+
+**[docker-drouter](https://github.com/TrilliumIT/docker-drouter)**
+:    A container based routing platform which injects routes to other container
+     networks into each container namespace.
+
+**[docker-arp-ipam](https://github.com/TrilliumIT/docker-arp-ipam)**
+:    A docker ipam plugin which uses the arp cache to determine which IP
+     addresses are in use.
+
+**[salt-pwgen](https://github.com/clinta/salt-pwgen)**
+:    A salt module for generating random passwords and storing them in
+     [pass](https://www.passwordstore.org/).
+
+**Other minor contributions**
+:
+   * [Many](https://github.com/saltstack/salt/pulls?q=is%3Apr+author%3Aclinta)
+     bug fixes and contributions to
+     [SaltStack](https://github.com/saltstack/salt).
+   * [Fixed](https://github.com/hashicorp/nomad/pull/3081) a issue in
+     [Nomad](https://github.com/hashicorp/nomad) that prevented jobs from being
+     updated.
+   * [Added](https://github.com/bosun-monitor/bosun/pull/2095) per region stats
+     for hbase to [Bosun](https://github.com/bosun-monitor/bosun).
+   * [Added](https://github.com/iocage/iocage/pull/94) the ability to add
+     multiple IP addresses to jails in
+     [iocage](https://github.com/iocage/iocage).
+   * [Merged](https://github.com/PIVX-Project/PIVX/pull/85) an upstream bug fix
+     from [Dash](https://github.com/dashpay/dash) into
+     [Pivx](https://github.com/PIVX-Project/PIVX).
+   * [Added](https://github.com/xenolf/lego/pull/296) memcached provider to
+     [lego](https://github.com/xenolf/lego) letsEncrypt client.
+   * [Fixed](https://github.com/docker/libnetwork/pull/1289) a
+     [bug](https://github.com/docker/libnetwork/issues/1288) in
+     [docker/libnetwork](https://github.com/docker/libnetwork) that resulted in
+     incorrect routes being added to containers.
+
 Work Experience
 ----------
 ----------
 
 01/2015 - Present
-:    **Network Administrator** Trillium Staffing, Kalamazoo, MI
+:    **Systems Engineer** Trillium Staffing, Kalamazoo, MI
 :    Primary technical resource for managing Networking, Servers and cloud
      services.
 
+     * Built an open-source big data cluster using Docker, Nomad, Ceph and many
+       in-house plugins to tie them together.
      * Built a full mesh DMVPN network between over 100 branch offices using
        Linux on commodity hardware.
      * Managed a Citrix environment providing desktops for over 200 users.
@@ -37,7 +112,8 @@ Work Experience
        using provider independant IPs.
      * Wrote and contributed multiple modules for SaltStack to manage our linux
        servers and workstations.
-     * Wrote multiple docker plugins to built our container cluster.
+
+----------
 
 12/2011 - 01/2015
 :    **Professional Services Engineer** Secant Techologies, Kalamazoo, MI
@@ -57,6 +133,8 @@ Work Experience
        Directory migrations, workstation inventory and replacement, and user
        support coordination.
 
+----------
+
 01/2011 - 12/2011
 :    **Microsoft Systems Administrator** Liberty University, Lynchburg, VA
 :    Primary Administrator responsible for design and maintenance of Active
@@ -73,6 +151,8 @@ Work Experience
        on for several external ervices.
      * Participated in implementation PCI security requirements for storage of
        sensitive data on infrastructure servers. 
+
+----------
 
 2008 - 2011
 :    **Desktop Configuration Administrator** Liberty University, Lynchburg, VA
@@ -97,6 +177,8 @@ Work Experience
      * Participated in committees coordinating the implementation of Information
        Technology Infrastructure Library (ITIL) business process throughout IT.
 
+----------
+
 2008
 :    **Desk-Side Support Technician** Liberty University, Lynchburg, VA
 :    Provided desk side support for escalated IT tickets.
@@ -106,6 +188,8 @@ Work Experience
        technicians.
      * Deployed and re-imaged workstations.
 
+----------
+
 2005 - 2007
 :    **IT Technician** Comstock Public Schools, Kalamazoo, MI
 :    Remote and on-site support technician
@@ -114,40 +198,3 @@ Work Experience
        XP.
      * Managed software deployment via Novell Zenworks.
      * Provided remote and on-site technical support.
-
-Open Source Projects
-----------
-----------
-
-**[undocker-dns](https://github.com/TrilliumIT/undocker-dns)**
-:    A small daemon to keep Docker from changing the dns server in a container.
-
-**[docker-vxlan-plugin](https://github.com/TrilliumIT/docker-vxlan-plugin)**
-:    A plugin for connecting docker containers to vxlan overlay networks.
-
-**[docker-arp-ipam](https://github.com/TrilliumIT/docker-arp-ipam)**
-:    A docker IPAM plugin to assign IP addresses to containers based on which
-     addresses are already in use on the network.
-
-**[docker-drouter](https://github.com/TrilliumIT/docker-drouter)**
-:    Co-Authored a tool which monitors docker containers and manipulates their
-     routing tables to facilitate efficient routing between containers on a
-     cluster of hosts.
-
-**[SaltStack](https://github.com/saltstack/salt/commits?author=clinta)**
-:    Wrote the
-     [x509](https://docs.saltstack.com/en/latest/ref/states/all/salt.states.x509.html)
-     state and module which facilitates managing an internal x509 PKI with Salt.
-
-**[docker-zfs-plugin](https://github.com/TrilliumIT/docker-zfs-plugin)**
-:    Wrote the go zfs library which this project is based on, and Setup the
-     continuous integration pipeline.
-
-Technologies Used
-----------
-----------
-Technologies I have experinece with include:
-
-Linux, Ubuntu, FreeBSD, FreeNAS, ZFS, Windows Server, Go (GoLang), Python,
-PowerShell, Bash, Docker, Cisco, BGP, OSPF, Bird, Kamailio, Microsoft Exchange,
-Windows Server, Office 365
