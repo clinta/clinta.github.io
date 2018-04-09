@@ -117,8 +117,8 @@ Work Experience
 
 12/2011 - 01/2015
 :    **Professional Services Engineer** Secant Techologies, Kalamazoo, MI
-:    Provided services to customers including NetPro visits to check health of
-     network and server and leading upgrade projects to server infrastructure.
+:    Provided services to customers including on-site visits to check health of
+     network and servers and lead infrastructure upgrade projects.
 
      * Frequent repairs of unhealthy Active Directory infrastructure including
        correcting AD Site topology, forcibly removing failed domain controllers,
