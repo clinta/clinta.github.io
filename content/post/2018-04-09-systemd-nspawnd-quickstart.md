@@ -13,9 +13,9 @@ I love container technologies. One of my most popular blog posts to date is my
   container, but docker has a very specific vision for containers. Docker aims
   to build a collection of microservices where only a single process is running
   in a container. For anyone familiar with FreeBSD Jails, or familiar with
-  deploying VMs these microservice containers can be unfamiliar. Systemd-nspawnd
-  on the other hand is much more like running a vm in a container. The container
-  runs an init process and generally isn't as effemeral as a docker container.
+  deploying VMs these microservice containers can be unfamiliar. Nspawnd
+  on the other hand is much more like running a vm. The container
+  runs an init process and generally isn't as ephemeral as a docker container.
   If you want a more basic guide on the differences between containers, VMs and
   docker, check out my last post [VMs, Containers and
   Docker](/vms-containers-and-docker/).
@@ -36,7 +36,7 @@ The first step is to setup a directory and install Ubuntu. I like to start by
 creating a releases directory to hold templates which I will later copy to make
 my containers.
 
-```bash
+```console
 # mkdir -p /var/lib/machines/releases/xenial
 # cd /var/lib/machines/releases
 ```
@@ -44,22 +44,22 @@ my containers.
 Make sure you have `debootstrap` installed, then install Ubuntu into your
 directory.
 
-```bash
+```console
 # debootstrap xenial xenial http://archive.ubuntu.com/ubuntu
 ```
 
-And now some cleanup. debootstrap will have added your hostname to
+And now some cleanup. Debootstrap will have added your hostname to
 `/etc/hostname` in the container. You will want to delete this file so that the
 container keeps the hostname that nspawnd assigns it.
 
-```bash
+```console
 # rm xenial/etc/hostname
 ```
 
-deboostrap will only have the main repo in `/etc/sources.list`, you may want to
-add additional ubuntu repositories now.
+Deboostrap will only have the main repo in `/etc/sources.list`, you may want to
+add additional Ubuntu repositories now.
 
-```bash
+```console
 cat <<EOF > xenial/etc/apt/sources.list
 deb http://archive.ubuntu.com/ubuntu/ xenial main restricted
 deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted
@@ -76,7 +76,7 @@ EOF
 Now it's time to set a root password, since Ubuntu will not properly boot
 without one.
 
-```bash
+```console
 # systemd-nspawn -D xenial
 Spawning container xenial on /var/lib/machines/releases/xenial.
 Press ^] three times within 1s to kill container.
@@ -91,7 +91,7 @@ Container xenial exited successfully.
 
 Now it's time to boot the container and install upgrades.
 
-```bash
+```console
 # systemd-nspawn -M xenial -b -D xenial
 [...]
 Ubuntu 16.04 LTS xenial console
@@ -107,14 +107,14 @@ root@xenial:~#
 
 First though, we need a dns server.
 
-```bash
+```console
 root@xenial:~# echo "nameserver 8.8.8.8" > /etc/resolv.con
 ```
 
 And now the updates. Be warned, you will see an error here, we will solve it in
 the next step.
 
-```bash
+```console
 root@xenial:~# apt update
 Get:1 http://security.ubuntu.com/ubuntu xenial-security InRelease [102 kB]
 [...]
@@ -151,16 +151,16 @@ changing the line in `/debian/postinst` from `if grep -q container=lxc
 /proc/1/environ` to `if grep -q container=[lxc\|systemd-nspawn]
 /proc/1/environ`. If you trust me, and github, and your ISP, and want to install
 an unsigned package at your own risk, you can download a patched makedev from
-[here](todo-link). Copy the patched deb into your container and install it.
+[here](/resources/makedev_2.3.1-93ubuntu3~ubuntu16.04.2_all.deb). Copy the patched deb into your container and install it.
 
 (in another shell, that is not in the container)
-```bash
+```console
 # cp makedev_2.3.1-93ubuntu3\~ubuntu16.04.2_all.deb
 /var/lib/machines/xenial/root/
 ```
 
 (and back in the container)
-```bash
+```console
 root@xenial:~# dpkg -i makedev_2.3.1-93ubuntu3~ubuntu16.04.2_all.deb 
 (Reading database ... 10463 files and directories currently installed.)
 Preparing to unpack makedev_2.3.1-93ubuntu3~ubuntu16.04.2_all.deb ...
@@ -182,13 +182,13 @@ Setting up ubuntu-minimal (1.361.1) ...
 We need to install dbus. Dbus is used by systemd to communicate with the container, and `machinectl login` will
 not work without it.
 
-```bash
+```console
 root@xenial:~# apt install dbus
 ```
 
 And we need to edit `/etc/securetty` to permit root to login via `/dev/pts/0`
 
-```bash
+```console
 root@xenial:~# echo "pts/0" >> /etc/securetty
 ```
 
@@ -196,7 +196,7 @@ And that's it, we can now shut down this container and copy the template to
 begin using it. To exit the login prompt press `ctrl+]` three times.
 
 
-```bash
+```console
 root@xenial:~# exit
 logout
 
@@ -206,3 +206,82 @@ xenial login:
 Container xenial terminated by signal KILL.
 #
 ```
+
+Now that we have a template, let's copy it and make a useful container from it.
+For this example I'll create a container to run an nginx web server.
+
+
+```console
+# cp -rp /var/lib/machines/releases/xenial /var/lib/machines/web
+```
+
+And create an nspawn unit file
+
+```
+# /etc/systemd/nspawn/web.nspawn
+[Exec]
+PrivateUsers=pick
+
+[Network]
+Zone=web
+Port=tcp:80
+
+[Files]
+PrivateUsersChown=yes
+```
+
+The `PrivateUsers=pick` paramater will enable user namespacing for this
+container. Systemd will choose a random high number where all UIDs in the
+container will be mapped to. This enhances the security of the container.
+`PrivateUsersChown=yes` automatically changes the ownership of files in the
+container to these mapped UIDs.
+
+The `Zone=web` directive in the `Network` section causes systemd to
+automatically create a bridge on a private network to join the container to, and
+setups IP forwarding. `Port=tcp:80` forwards port 80 from the host into the
+container. If you want a less magical network configuration, there are many more
+options available, check the man pages linked below. My personal favorite is
+`MACVLAN`.
+
+Now that the machine is setup, time to start it and login.
+
+```console
+# machinectl start web
+# machinectl login web
+Connected to machine web. Press ^] three times within 1s to exit session.
+
+Ubuntu 16.04.4 LTS web pts/0
+
+web login: root
+Password: 
+Last login: Tue Apr 10 10:49:09 EDT 2018 on pts/0
+Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.15.0-13-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+root@web:~# 
+```
+
+We're now inside a container and can setup a web server.
+
+```console
+root@web:~# apt update
+root@web:~# apt install nginx
+```
+
+At this point it should all be working. Visit your host in a web browser and you
+should see the nginx welcome page.
+
+The last step is to configure the machine to start on boot. Exit the container
+by pressing `ctrl+]` three times. Then enable the unit.
+
+```console
+# machinectl enable web
+```
+
+There are many more options that can be customized in an .nspawnd file. To
+explore all of them, checkout the man pages for
+[systemd.nspawn](https://www.freedesktop.org/software/systemd/man/systemd.nspawn.html)
+and
+[systemd-nspawn](https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html).
