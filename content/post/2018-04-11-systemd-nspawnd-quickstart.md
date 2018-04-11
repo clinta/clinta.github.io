@@ -59,17 +59,17 @@ Deboostrap will only have the main repo in `/etc/sources.list`, you may want to
 add additional Ubuntu repositories now.
 
 ```console
-cat <<EOF > xenial/etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu/ xenial main restricted
-deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted
-deb http://archive.ubuntu.com/ubuntu/ xenial universe
-deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe
-deb http://archive.ubuntu.com/ubuntu/ xenial multiverse
-deb http://archive.ubuntu.com/ubuntu/ xenial-updates multiverse
-deb http://security.ubuntu.com/ubuntu xenial-security main restricted
-deb http://security.ubuntu.com/ubuntu xenial-security universe
-deb http://security.ubuntu.com/ubuntu xenial-security multiverse
-EOF
+# cat <<EOF > xenial/etc/apt/sources.list
+> deb http://archive.ubuntu.com/ubuntu/ xenial main restricted
+> deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted
+> deb http://archive.ubuntu.com/ubuntu/ xenial universe
+> deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe
+> deb http://archive.ubuntu.com/ubuntu/ xenial multiverse
+> deb http://archive.ubuntu.com/ubuntu/ xenial-updates multiverse
+> deb http://security.ubuntu.com/ubuntu xenial-security main restricted
+> deb http://security.ubuntu.com/ubuntu xenial-security universe
+> deb http://security.ubuntu.com/ubuntu xenial-security multiverse
+> EOF
 ```
 
 Now it's time to set a root password, since Ubuntu will not properly boot
