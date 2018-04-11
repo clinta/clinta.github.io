@@ -279,7 +279,7 @@ by pressing `ctrl+]` three times. Then enable the unit.
 # machinectl enable web
 ```
 
-There are many more options that can be customized in an .nspawnd file. To
+There are many more options that can be customized in a .nspawn file. To
 explore all of them, checkout the man pages for
 [systemd.nspawn](https://www.freedesktop.org/software/systemd/man/systemd.nspawn.html)
 and
