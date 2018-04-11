@@ -1,7 +1,7 @@
 ---
 layout: single
 title: Getting Started with systemd-nspawnd
-date: 2018-04-09
+date: 2018-04-13
 slug: getting-started-with-systemd-nspawnd
 draft: true
 ---
