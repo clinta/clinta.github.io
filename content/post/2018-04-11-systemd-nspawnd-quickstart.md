@@ -29,7 +29,7 @@ This guide will assume you're running on an Ubuntu 18.04 host, but these
 instructions will work on any modern linux distribution with a new enough
 version of systemd.
 
-### Installing
+### Install
 
 The first step is to setup a directory and install Ubuntu. I like to start by
 creating a releases directory to hold templates which I will later copy to make
@@ -47,7 +47,9 @@ directory.
 # debootstrap xenial xenial http://archive.ubuntu.com/ubuntu
 ```
 
-And now some cleanup. Debootstrap will have added your hostname to
+### Cleanup
+
+Debootstrap will have added your hostname to
 `/etc/hostname` in the container. You will want to delete this file so that the
 container keeps the hostname that nspawnd assigns it.
 
@@ -72,6 +74,12 @@ add additional Ubuntu repositories now.
 > EOF
 ```
 
+And we need to edit `/etc/securetty` to permit root to login via `/dev/pts/0`
+
+```console
+# echo "pts/0" >> xenial/etc/securetty
+```
+
 Now it's time to set a root password, since Ubuntu will not properly boot
 without one.
 
@@ -87,6 +95,8 @@ root@xenial:~# exit
 logout
 Container xenial exited successfully.
 ```
+
+### Upgrade
 
 Now it's time to boot the container and install upgrades.
 
@@ -185,14 +195,8 @@ not work without it.
 root@xenial:~# apt install dbus
 ```
 
-And we need to edit `/etc/securetty` to permit root to login via `/dev/pts/0`
-
-```console
-root@xenial:~# echo "pts/0" >> /etc/securetty
-```
-
-And that's it, we can now shut down this container and copy the template to
-begin using it. To exit the login prompt press `ctrl+]` three times.
+And that's it, we can now shut down this template container.
+To exit the login prompt press `ctrl+]` three times.
 
 
 ```console
@@ -205,6 +209,8 @@ xenial login:
 Container xenial terminated by signal KILL.
 #
 ```
+
+### Deploy
 
 Now that we have a template, let's copy it and make a useful container from it.
 For this example I'll create a container to run an nginx web server.
