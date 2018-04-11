@@ -40,7 +40,7 @@ Open Source
      using a key and password stored on a remote server accessible via scp.
 
 **[genify](https://github.com/clinta/genify)**
-:    A go code generator to simultae generics.
+:    A go code generator to simulate generics.
 
 **[go-zfs](https://github.com/clinta/go-zfs)**
 :    A go library for manipulating zfs filesystems.
@@ -77,7 +77,7 @@ Open Source
      from [Dash](https://github.com/dashpay/dash) into
      [Pivx](https://github.com/PIVX-Project/PIVX).
    * [Added](https://github.com/xenolf/lego/pull/296) memcached provider to
-     [lego](https://github.com/xenolf/lego) letsEncrypt client.
+     [lego](https://github.com/xenolf/lego) LetsEncrypt client.
    * [Fixed](https://github.com/docker/libnetwork/pull/1289) a
      [bug](https://github.com/docker/libnetwork/issues/1288) in
      [docker/libnetwork](https://github.com/docker/libnetwork) that resulted in
@@ -116,7 +116,7 @@ Work Experience
 ----------
 
 12/2011 - 01/2015
-:    **Professional Services Engineer** Secant Techologies, Kalamazoo, MI
+:    **Professional Services Engineer** Secant Technologies, Kalamazoo, MI
 :    Provided services to customers including on-site visits to check health of
      network and servers and lead infrastructure upgrade projects.
 
@@ -156,7 +156,7 @@ Work Experience
 
 2008 - 2011
 :    **Desktop Configuration Administrator** Liberty University, Lynchburg, VA
-:    Managed the centeralized configuration of over 5000 workstations across
+:    Managed the centralized configuration of over 5000 workstations across
      campus.
 
      * Implemented and managed Microsoft System Center Configuration Manager
