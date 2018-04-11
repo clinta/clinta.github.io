@@ -1,9 +1,8 @@
 ---
 layout: single
 title: Getting Started with systemd-nspawnd
-date: 2018-04-13
+date: 2018-04-11
 slug: getting-started-with-systemd-nspawnd
-draft: true
 ---
 
 I love container technologies. One of my most popular blog posts to date is my
