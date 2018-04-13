@@ -3,7 +3,6 @@ layout: single
 title: Installing Ubuntu 18.04 on an APU2
 date: 2018-04-12
 slug: bionic-on-apu2
-draft: true
 ---
 
 The [PC Engines APU2](https://www.pcengines.ch/apu2.htm) is a great little board
