@@ -23,23 +23,23 @@ in Go and Python.
 {{< resSection "Work Experience" >}}
 01/2015 - Present
 :    **Systems Engineer** Trillium Staffing, Kalamazoo, MI
-:    Head engineer managing Networking, Servers and cloud services.
-     * Facilitated a corporate big-data initiative building an open source
+:    Head engineer responsible for networking, servers and cloud services.
+     * Facilitated a corporate big-data initiative building an open source,
          hyperconverged cluster on top of [Nomad](https://www.nomadproject.io/),
          [Docker](https://www.docker.com/), and [Ceph](https://ceph.com/), and wrote
          several plugins and contributions to these projects to integrate them.
      * Replaced a Cisco hub-and-spoke branch VPN solution with a full mesh DMVPN
          between over 100 branch offices using Linux on commodity hardware.
      * Achieved datacenter IP redundancy using Linux to peer with multiple ISPs
-         and announce provider independnet IP space via BGP.
+         and announce provider independent IP space via BGP.
      * Introduced and standardized configuration management on a wide deployment
          of Linux servers improving security and maintainability.
 
 12/2011 - 01/2015
 :    **Professional Services Engineer** Secant Technologies, Kalamazoo, MI
 :    On-Site and Remote consulting, support and engineering.
-     * Frequently enganged to perform infrastructure upgrades of SANs,
-         Datacenter switches and vSphere clusters.
+     * Frequently engaged to perform infrastructure upgrades of SANs,
+         datacenter switches and vSphere clusters.
      * Performed migration projects for business services including email,
          databases and identity.
 
@@ -47,7 +47,7 @@ in Go and Python.
 :    **Microsoft Systems Administrator** Liberty University, Lynchburg, VA
 :    Responsible for design and maintenance of Active Directory, Exchange,
      and all other critical Microsoft services.
-     * Migrated a 350,000 user environment from Exhange 2007 to a hybrid
+     * Migrated a 350,000 user environment from Exchange 2007 to a hybrid
        Office 365 and Exchange 2010 deployment.
 {{< /resSection >}}
 
@@ -79,24 +79,24 @@ See my complete portfolio of open source work at https://github.com/clinta/.
 :    
 
 **[vxrouter](https://github.com/TrilliumIT/vxrouter)**
-:    A docker network and ipam plugin that connects containers to vxlans using
-     macvlan devices. Designed to be used with a routing protocol like BGP to
+:    A docker network and IPAM plugin that connects containers to VXLANs using
+     MacVLAN devices. Designed to be used with a routing protocol like BGP to
      coordinate IPAM across a cluster of hosts.
 
 **[go-multiping](https://github.com/TrilliumIT/go-multiping)**
-:    An icmp library designed to ping multiple hosts efficiently in go.
+:    An ICMP library designed to ping multiple hosts efficiently in go.
      Improves on existing libraries by pinging multiple hosts while using a single
      raw-socket in the kernel.
 
 **[updog](https://github.com/TrilliumIT/updog)**
-:    A simple monitoring system that uses http or tcp checks and logs data to
-     bosun.
+:    A simple monitoring system that uses HTTP or TCP checks and logs data to
+     [Bosun](https://bosun.org/).
 
 **[iputil](https://github.com/TrilliumIT/iputil)**
 :    A go library for common operations on IP addresses.
 
 **[go-zfs](https://github.com/clinta/go-zfs)**
-:    A go library for manipulating zfs filesystems.
+:    A go library for manipulating ZFS filesystems.
 
 **[salt-pwgen](https://github.com/clinta/salt-pwgen)**
 :    A salt module for generating random passwords and storing them in
