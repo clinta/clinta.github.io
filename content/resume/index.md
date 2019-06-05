@@ -3,27 +3,12 @@ layout: single
 title: Clint Armstrong
 email: clint@clintarmstrong.net
 permalink: /resume/
-date: 2018-04-08
+date: 2019-06-05
 blackfriday:
   fractions: false
 ---
 
-{{< rawhtml >}}
-<style>
-.title {
-    display: none;
-}
-@page {
-  @top-left {
-    content: element(heading);
-  }
-}
-
-p.heading {
-  position: running(heading);
-}
-</style>
-{{< /rawhtml >}}
+<link rel="stylesheet" type="text/css" href="/css/resume.css" />
 
 {{< resSection class="firstSec" >}}
 IT Systems and Operations engineer with expertise in building and maintaining
@@ -95,7 +80,8 @@ in Go and Python.
 {{< /resSection >}}
 
 {{< resSection section="Open Source" class="firstEntry" >}}
-:    See my complete portfolio of open source work at https://github.com/clinta/.
+See my complete portfolio of open source work at https://github.com/clinta/.
+:    
 
 **[vxrouter](https://github.com/TrilliumIT/vxrouter)**
 :    A docker network and ipam plugin that connects containers to vxlans using
