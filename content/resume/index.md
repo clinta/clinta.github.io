@@ -13,17 +13,19 @@ blackfriday:
 .title {
     display: none;
 }
-.noBreak {
-    break-inside: avoid-page;
-}
 @page {
-  @top-center {
+  @top-left {
+    content: element(heading);
   }
+}
+
+p.heading {
+  position: running(heading);
 }
 </style>
 {{< /rawhtml >}}
 
-{{< resSection firstSection="yes" >}}
+{{< resSection class="firstSec" >}}
 IT Systems and Operations engineer with expertise in building and maintaining
 business critical infrastructure in a variety of environments. Utilizing open
 source software I build reliable systems and networks that empower businesses to
@@ -31,7 +33,7 @@ be more agile and do more with less. Programming experience building solutions
 in Go and Python.
 {{< /resSection >}}
 
-{{< resSection section="Work Experience" firstEntry="yes" >}}
+{{< resSection section="Work Experience" class="firstEntry" >}}
 01/2015 - Present
 :    **Systems Engineer** Trillium Staffing, Kalamazoo, MI
 :    Head engineer managing Networking, Servers and cloud services.
@@ -57,7 +59,7 @@ in Go and Python.
          databases and identity.
 {{< /resSection >}}
 
-{{< resSection section="Work Experience (continued)" >}}
+{{< resSection section="Work Experience (continued)" class="">}}
 01/2011 - 12/2011
 :    **Microsoft Systems Administrator** Liberty University, Lynchburg, VA
 :    Responsible for design and maintenance of Active Directory, Exchange,
@@ -66,7 +68,7 @@ in Go and Python.
        Office 365 and Exchange 2010 deployment.
 {{< /resSection >}}
 
-{{< resSection section="Work Experience (continued)" >}}
+{{< resSection section="Work Experience (continued)" class="print">}}
 2008 - 2011
 :    **Desktop Configuration Administrator** Liberty University, Lynchburg, VA
 :    Managed the centralized configuration of over 5000 workstations across
@@ -82,17 +84,17 @@ in Go and Python.
 2008
 :    **Desk-Side Support Technician** Liberty University, Lynchburg, VA
 :    On-Site support technician
-<p>
+<ul/>
 {{< /resSection >}}
 
 {{< resSection section="Work Experience (continued)" >}}
 2005 - 2007
 :    **IT Technician** Comstock Public Schools, Kalamazoo, MI
 :    Remote and on-site support technician
-<p>
+<ul/>
 {{< /resSection >}}
 
-{{< resSection section="Open Source" firstEntry="yes" >}}
+{{< resSection section="Open Source" class="firstEntry" >}}
 :    See my complete portfolio of open source work at https://github.com/clinta/.
 
 **[vxrouter](https://github.com/TrilliumIT/vxrouter)**

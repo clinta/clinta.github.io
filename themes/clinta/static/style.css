@@ -131,10 +131,30 @@ li.navbar a.navbar:hover {
     page-break-after: auto;
     display: block;
   }
+
+  .docHeader:not(.firstSec).print {
+    display:block
+  }
+  .secHeader:not(.firstSec).print {
+    display:block
+  }
+
+}
+
+.docHeader:not(.firstSec) {
+  display: none;
+}
+
+.secHeader:not(.firstEntry) {
+  display: none;
+}
+
+.resSection ul {
+  margin-bottom: 0.5em;
 }
 
 @media screen {
-   .onlyPrint {
-       display: none;
-   }
+  .onlyPrint {
+      display: none;
+  }
 }
