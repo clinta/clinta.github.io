@@ -2,7 +2,7 @@
 <!-- <main class="posts"> -->
 <main>
 <article class="post">
-  <h1><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h1>
+  <h1 class="title"><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h1>
   {{ .Content }}
   <p class="small gray"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></p>
 </article>

@@ -111,3 +111,30 @@ li.navbar a.navbar:hover {
     background-color: #111;
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  article, article * {
+    visibility: visible;
+  }
+  article {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  article>span {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+    position: relative;
+    page-break-before: auto;
+    page-break-after: auto;
+    display: block;
+  }
+}
+
+@media screen {
+   .onlyPrint {
+       display: none;
+   }
+}
