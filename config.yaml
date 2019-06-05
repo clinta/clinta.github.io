@@ -1,4 +1,4 @@
-Title: "Devops Discoveries"
+#Title: "Devops Discoveries" I hate this title, who needs a title anyway
 languageCode: "en-us"
 baseurl: "https://clinta.github.io"
 theme: "clinta"
@@ -14,7 +14,6 @@ googleAnalytics: "UA-58778705-1"
 params:
   headerlinks:
     - Posts: /
-    - Résumé: /resume
     - Twitter: https://twitter.com/clinta
 
 Indexes:
