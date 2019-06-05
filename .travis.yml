@@ -2,7 +2,7 @@ sudo: required
 
 env:
   global:
-    - HUGO_VER=0.38.1
+    - HUGO_VER=0.55.6
     - ENCRYPTION_LABEL="ab5fa77f9e84"
     - COMMIT_AUTHOR_EMAIL="clint@clintarmstrong.net"
 
