@@ -1,0 +1,58 @@
+ul {
+    margin-bottom: 0.5em;
+}
+
+.title, .pubDate {
+    display: none;
+}
+
+.contNotice {
+	display: none;
+    text-align: center;
+    vertical-align: bottom;
+    page-break-after: always;
+}
+
+.docHeader.firstSec, .secHeader.firstEntry {
+    display: block;
+}
+
+@media print {
+  html { zoom: 85%; }
+  body * {
+    visibility: hidden;
+  }
+  article, article * {
+    visibility: visible;
+  }
+  article {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  article.post {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  article>span {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+    position: relative;
+    page-break-before: auto;
+    page-break-after: auto;
+    display: block;
+  }
+
+  .print {
+    display:block;
+  }
+
+}
+
+@media screen {
+  .print {
+      display: none;
+  }
+}

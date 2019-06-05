@@ -1,0 +1,9 @@
+<span class="resSection">
+	{{ if .Get 0 }}
+	<span class="secHeader {{ with .Get 1 }}{{.}}{{ end }}">
+		<h2 style="margin-top:1em">{{ .Get 0 }}</h2>
+		<hr>
+	</span>
+	{{ end }}
+	{{ .Inner | markdownify }}
+</span>
