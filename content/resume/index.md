@@ -8,7 +8,8 @@ blackfriday:
 ---
 
 <h1 style="margin:0;padding:0;">Clint Armstrong</h1>
-[<h5 style="margin:0;padding:0;">clint@clintamstrong.net</h3>](mailto:clint@clintarmstrong.net)
+<div style="float:left">[clint@clintarmstrong.net](mailto:clint@clintarmstrong.net)</div>
+<div style="float:right">[www.clintamstrong.net/resume](/resume/)</div>
 
 ----------
 
@@ -61,6 +62,16 @@ Work Experience
      * Implemented Microsoft Windows Deployment Services with a custom front-end
        to provide advanced automated imaging workflows for Support Technicians.
 
+<h1 style="margin:0;padding:0;page-break-before:always">Clint Armstrong</h1>
+<div style="float:left">[clint@clintarmstrong.net](mailto:clint@clintarmstrong.net)</div>
+<div style="float:right">[www.clintamstrong.net/resume](/resume/)</div>
+
+----------
+
+Work Experience (continued)
+----------
+----------
+
 2008
 :    **Desk-Side Support Technician** Liberty University, Lynchburg, VA
 :    On-Site support technician
@@ -69,7 +80,7 @@ Work Experience
 :    **IT Technician** Comstock Public Schools, Kalamazoo, MI
 :    Remote and on-site support technician
 
-
+<div/>
 
 Open Source
 ----------
