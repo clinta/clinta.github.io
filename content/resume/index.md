@@ -6,11 +6,14 @@ permalink: /resume/
 date: 2019-06-05
 blackfriday:
   fractions: false
+# Be sure and update the pdf when updating this
 ---
 
 <link rel="stylesheet" type="text/css" href="/css/resume.css" />
 
-{{< resHeader >}}
+{{< span class="pdfLink">}}[Download](/resume.pdf "Download PDF"){{< /span >}}
+
+{{< resPage >}}
 
 {{< resSection >}}
 IT Systems and Operations engineer with expertise in building and maintaining
@@ -50,8 +53,9 @@ in Go and Python.
      * Migrated a 350,000 user environment from Exchange 2007 to a hybrid
        Office 365 and Exchange 2010 deployment.
 {{< /resSection >}}
+{{< /resPage >}}
 
-{{< resHeader break="1" >}}
+{{< resPage break="1" >}}
 
 {{< resSection "Work Experience (continued)" "print">}}
 2008 - 2011
@@ -105,3 +109,4 @@ See my complete portfolio of open source work at https://github.com/clinta/.
 **[salt](https://github.com/saltstack/salt/pulls?q=is%3Apr+author%3Aclinta)**
 :    Wrote the [x509 module](https://docs.saltstack.com/en/latest/ref/states/all/salt.states.x509.html) and contributed several bug fixes.
 {{< /resSection >}}
+{{< /resPage >}}

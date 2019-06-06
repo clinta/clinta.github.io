@@ -1,0 +1,10 @@
+{{ if .Get "break" }}<span class="small gray contNotice print">continued on next page</span>{{ end }}
+<span>
+	<span class="docHeader {{ if .Get "break" }}print{{ end }}">
+		<h1 style="margin:0;padding:0">{{ .Page.Title }}</h1>
+		<div style="float:left"><a href="mailto:{{ .Page.Params.email }}">{{ .Page.Params.email }}</a></div>
+		<div style="float:right"><a href="{{ .Page.Permalink }}">{{ .Page.Permalink }}</a></div>
+		<p><hr>
+	</span>
+	{{ .Inner }}
+</span>
