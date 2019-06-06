@@ -14,7 +14,15 @@ before_install:
 
 install: true
 
-script: bash ./deploy.sh
+script: hugo -d ./public
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: false
+  local_dir: ./public
+  target_branch: master
 
 branches:
   only:
