@@ -23,6 +23,8 @@ deploy:
   keep_history: false
   local_dir: ./public
   target_branch: master
+  on:
+    branch: src
 
 branches:
   only:
