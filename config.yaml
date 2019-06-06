@@ -15,6 +15,7 @@ params:
   headerlinks:
     - Posts: /
     - Twitter: https://twitter.com/clinta
+    - Resume: /resume/
 
 Indexes:
   tag: "tags"
