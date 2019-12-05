@@ -12,7 +12,7 @@ I use systemd-networkd to create lacp bonds. Then these lacp bonds get an IP
 address via dhcp. These bonds are also configured to set their MTU based on the
 dhcp options. This is done with the following files.
 
-'''
+```
 #/etc/systemd/network/eno.network 
 [Match]
 Name=eno[1,2]
@@ -22,9 +22,9 @@ Bond=bond0
 DHCP=no
 LinkLocalAddressing=no
 IPv4LLRoute=no
-'''
+```
 
-'''
+```
 #/etc/systemd/network/bond0.netdev 
 [NetDev]
 Name=bond0
@@ -36,9 +36,9 @@ Mode=802.3ad
 TransmitHashPolicy=layer3+4
 MIIMonitorSec=0.1s
 LACPTransmitRate=fast
-'''
+```
 
-'''
+```
 # cat /etc/systemd/network/bond0.network 
 [Match]
 Name=bond0
@@ -49,7 +49,7 @@ DHCP=yes
 [DHCP]
 UseMTU=true
 UseDomains=true
-'''
+```
 
 I also run these servers with the HWE kernel, currently 5.0.
 
