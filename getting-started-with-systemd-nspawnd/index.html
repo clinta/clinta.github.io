@@ -1,0 +1,285 @@
+<!doctype html> 
+<html lang="en-us"> 
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="author" content="Clint Armstrong">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+
+  
+  <link rel="stylesheet" href="/style.css" />
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-58778705-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body class="">
+
+  <div class="header center">
+    <ul class="navbar">
+	
+	
+		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
+	
+	
+	</ul>
+  </div>
+
+  <div class="wrap">
+	
+
+
+<main>
+<article class="post">
+  <h1 class="title"><a href="https://clinta.github.io/getting-started-with-systemd-nspawnd/" title="Getting Started with systemd-nspawnd">Getting Started with systemd-nspawnd</a></h1>
+  
+
+<p>I love container technologies. One of my most popular blog posts to date is my
+  guide on <a href="/freebsd-jails-the-hard-way/">FreeBSD Jails the Hard Way</a>. This
+  guide aims to be similar, but for creating containers on linux using
+  systemd-nspawnd. Many people immediately think docker when they think linux
+  container, but docker has a very specific vision for containers. Docker aims
+  to build a collection of microservices where only a single process is running
+  in a container. For anyone familiar with FreeBSD Jails, or familiar with
+  deploying VMs these microservice containers can be unfamiliar. Nspawnd
+  on the other hand is much more like running a vm. The container
+  runs an init process and generally isn&rsquo;t as ephemeral as a docker container.
+  If you want a more basic guide on the differences between containers, VMs and
+  docker, check out my last post <a href="/vms-containers-and-docker/">VMs, Containers and
+  Docker</a>.</p>
+
+<p>At the time of this writing, there isn&rsquo;t a whole lot of information about
+  nspawnd outside of the man pages, many people don&rsquo;t even know this technology
+  exists. This guide will get you quickly up and running with some Ubuntu
+  containers so you can determine if this container technology might help you
+  solve some problems.</p>
+
+<p>This guide will assume you&rsquo;re running on an Ubuntu 18.04 host, but these
+instructions will work on any modern linux distribution with a new enough
+version of systemd.</p>
+
+<h3 id="install">Install</h3>
+
+<p>The first step is to setup a directory and install Ubuntu. I like to start by
+creating a releases directory to hold templates which I will later copy to make
+my containers.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># mkdir -p /var/lib/machines/releases/xenial
+# cd /var/lib/machines/releases</code></pre></div>
+<p>Make sure you have <code>debootstrap</code> installed, then install Ubuntu into your
+directory.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># debootstrap xenial xenial http://archive.ubuntu.com/ubuntu</code></pre></div>
+<h3 id="cleanup">Cleanup</h3>
+
+<p>Debootstrap will have added your hostname to
+<code>/etc/hostname</code> in the container. You will want to delete this file so that the
+container keeps the hostname that nspawnd assigns it.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># rm xenial/etc/hostname</code></pre></div>
+<p>Deboostrap will only have the main repo in <code>/etc/sources.list</code>, you may want to
+add additional Ubuntu repositories now.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># cat &lt;&lt;EOF &gt; xenial/etc/apt/sources.list
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial main restricted
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial universe
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial multiverse
+&gt; deb http://archive.ubuntu.com/ubuntu/ xenial-updates multiverse
+&gt; deb http://security.ubuntu.com/ubuntu xenial-security main restricted
+&gt; deb http://security.ubuntu.com/ubuntu xenial-security universe
+&gt; deb http://security.ubuntu.com/ubuntu xenial-security multiverse
+&gt; EOF</code></pre></div>
+<p>And we need to edit <code>/etc/securetty</code> to permit root to login via <code>/dev/pts/0</code></p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># echo &#34;pts/0&#34; &gt;&gt; xenial/etc/securetty</code></pre></div>
+<p>Now it&rsquo;s time to set a root password, since Ubuntu will not properly boot
+without one.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># systemd-nspawn -D xenial
+Spawning container xenial on /var/lib/machines/releases/xenial.
+Press ^] three times within 1s to kill container.
+root@xenial:~# passwd
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+root@xenial:~# exit
+logout
+Container xenial exited successfully.</code></pre></div>
+<h3 id="upgrade">Upgrade</h3>
+
+<p>Now it&rsquo;s time to boot the container and install upgrades.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># systemd-nspawn -M xenial -b -D xenial
+[...]
+Ubuntu 16.04 LTS xenial console
+
+xenial login: root
+Password: 
+Last login: Mon Apr  9 16:07:55 EDT 2018 on console
+Welcome to Ubuntu 16.04 LTS (GNU/Linux 4.15.15-1-ARCH x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+root@xenial:~#</code></pre></div>
+<p>First though, we need a dns server.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root@xenial:~# echo &#34;nameserver 8.8.8.8&#34; &gt; /etc/resolv.con</code></pre></div>
+<p>And now the updates. Be warned, you will see an error here, we will solve it in
+the next step.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root@xenial:~# apt update
+Get:1 http://security.ubuntu.com/ubuntu xenial-security InRelease [102 kB]
+[...]
+91 packages can be upgraded. Run &#39;apt list --upgradable&#39; to see them.
+root@xenial:~# apt dist-upgrade
+[...]
+Setting up makedev (2.3.1-93ubuntu2~ubuntu16.04.1) ...
+mknod: mem-: Operation not permitted
+makedev mem c 1 1 root kmem 0640: failed
+mknod: kmem-: Operation not permitted
+makedev kmem c 1 2 root kmem 0640: failed
+mknod: port-: Operation not permitted
+makedev port c 1 4 root kmem 0640: failed
+mknod: ram0-: Operation not permitted
+makedev ram0 b 1 0 root disk 0660: failed
+mknod: ram1-: Operation not permitted
+makedev ram1 b 1 1 root disk 0660: failed
+[...]
+Errors were encountered while processing:
+ makedev
+ ubuntu-minimal</code></pre></div>
+<p>The errors above are a result of this
+<a href="https://bugs.launchpad.net/ubuntu/+source/makedev/+bug/1675163">bug</a>. The bug
+has a fix released, but that fix is only for LXC containers. If you look at the
+<a href="http://launchpadlibrarian.net/312139838/makedev_2.3.1-93ubuntu1_2.3.1-93ubuntu2~ubuntu16.04.1.diff.gz">patch</a>
+to the post install script, you&rsquo;ll see that it works by exiting early if an LXC
+container is detected. We need to modify this patch so that it does the same for
+systemd-nspawnd containers too. There are many great
+<a href="https://raphaelhertzog.com/2011/07/04/how-to-prepare-patches-for-debian-packages/">guides</a> out there on how to
+package debian packages, if you follow one the only change you need to make is
+changing the line in <code>/debian/postinst</code> from <code>if grep -q container=lxc
+/proc/1/environ</code> to <code>if grep -q container=[lxc\|systemd-nspawn]
+/proc/1/environ</code>. If you trust me, and github, and your ISP, and want to install
+an unsigned package at your own risk, you can download a patched makedev from
+<a href="/resources/makedev_2.3.1-93ubuntu3~ubuntu16.04.2_all.deb">here</a>. Copy the patched deb into your container and install it.</p>
+
+<p>(in another shell, that is not in the container)</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># cp makedev_2.3.1-93ubuntu3\~ubuntu16.04.2_all.deb
+/var/lib/machines/xenial/root/</code></pre></div>
+<p>(and back in the container)</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root<span style="">@</span>xenial:<span style="">~#</span> dpkg <span style="color:#666">-</span>i makedev_2<span style="color:#40a070">.3.1</span><span style="color:#666">-</span><span style="color:#40a070">93</span>ubuntu3<span style="">~</span>ubuntu16<span style="color:#40a070">.04.2</span>_all.<span style="color:#06287e">deb</span> 
+(Reading database <span style="color:#666">...</span> <span style="color:#40a070">10463</span> files and directories currently installed.)
+Preparing to unpack makedev_2<span style="color:#40a070">.3.1</span><span style="color:#666">-</span><span style="color:#40a070">93</span>ubuntu3<span style="">~</span>ubuntu16<span style="color:#40a070">.04.2</span>_all.deb <span style="color:#666">...</span>
+Unpacking <span style="color:#06287e">makedev</span> (<span style="color:#40a070">2.3.1</span><span style="color:#666">-</span><span style="color:#40a070">93</span>ubuntu3<span style="">~</span>ubuntu16<span style="color:#40a070">.04.2</span>) <span style="color:#06287e">over</span> (<span style="color:#40a070">2.3.1</span><span style="color:#666">-</span><span style="color:#40a070">93</span>ubuntu2<span style="">~</span>ubuntu16<span style="color:#40a070">.04.1</span>) <span style="color:#666">...</span>
+Setting up <span style="color:#06287e">makedev</span> (<span style="color:#40a070">2.3.1</span><span style="color:#666">-</span><span style="color:#40a070">93</span>ubuntu3<span style="">~</span>ubuntu16<span style="color:#40a070">.04.2</span>) <span style="color:#666">...</span>
+LXC container detected, aborting due to LXC managed <span style="color:#666">/</span>dev.
+root<span style="">@</span>xenial:<span style="">~#</span> apt dist<span style="color:#666">-</span>upgrade
+Reading <span style="color:#007020;font-weight:bold">package</span> lists<span style="color:#666">...</span> Done
+Building dependency tree       
+Reading state information<span style="color:#666">...</span> Done
+Calculating upgrade<span style="color:#666">...</span> Done
+<span style="color:#40a070">0</span> upgraded, <span style="color:#40a070">0</span> newly installed, <span style="color:#40a070">0</span> to remove and <span style="color:#40a070">0</span> not upgraded.
+<span style="color:#40a070">1</span> not fully installed or removed.
+After this operation, <span style="color:#40a070">0</span> B of additional disk space will be used.
+Do you want to <span style="color:#007020;font-weight:bold">continue</span><span style="">?</span> [Y<span style="color:#666">/</span>n] y
+Setting up ubuntu<span style="color:#666">-</span><span style="color:#06287e">minimal</span> (<span style="color:#40a070">1.361.1</span>) <span style="color:#666">...</span></code></pre></div>
+<p>We need to install dbus. Dbus is used by systemd to communicate with the container, and <code>machinectl login</code> will
+not work without it.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root@xenial:~# apt install dbus</code></pre></div>
+<p>And that&rsquo;s it, we can now shut down this template container.
+To exit the login prompt press <code>ctrl+]</code> three times.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root@xenial:~# exit
+logout
+
+Ubuntu 16.04.4 LTS xenial console
+
+xenial login:   
+Container xenial terminated by signal KILL.
+#</code></pre></div>
+<h3 id="deploy">Deploy</h3>
+
+<p>Now that we have a template, let&rsquo;s copy it and make a useful container from it.
+For this example I&rsquo;ll create a container to run an nginx web server.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># cp -rp /var/lib/machines/releases/xenial /var/lib/machines/web</code></pre></div>
+<p>And create an nspawn unit file</p>
+
+<pre><code># /etc/systemd/nspawn/web.nspawn
+[Exec]
+PrivateUsers=pick
+
+[Network]
+Zone=web
+Port=tcp:80
+
+[Files]
+PrivateUsersChown=yes
+</code></pre>
+
+<p>The <code>PrivateUsers=pick</code> paramater will enable user namespacing for this
+container. Systemd will choose a random high number where all UIDs in the
+container will be mapped to. This enhances the security of the container.
+<code>PrivateUsersChown=yes</code> automatically changes the ownership of files in the
+container to these mapped UIDs.</p>
+
+<p>The <code>Zone=web</code> directive in the <code>Network</code> section causes systemd to
+automatically create a bridge on a private network to join the container to, and
+setups IP forwarding. <code>Port=tcp:80</code> forwards port 80 from the host into the
+container. If you want a less magical network configuration, there are many more
+options available, check the man pages linked below. My personal favorite is
+<code>MACVLAN</code>.</p>
+
+<p>Now that the machine is setup, time to start it and login.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># machinectl start web
+# machinectl login web
+Connected to machine web. Press ^] three times within 1s to exit session.
+
+Ubuntu 16.04.4 LTS web pts/0
+
+web login: root
+Password: 
+Last login: Tue Apr 10 10:49:09 EDT 2018 on pts/0
+Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.15.0-13-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+root@web:~# </code></pre></div>
+<p>We&rsquo;re now inside a container and can setup a web server.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console">root@web:~# apt update
+root@web:~# apt install nginx</code></pre></div>
+<p>At this point it should all be working. Visit your host in a web browser and you
+should see the nginx welcome page.</p>
+
+<p>The last step is to configure the machine to start on boot. Exit the container
+by pressing <code>ctrl+]</code> three times. Then enable the unit.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-console" data-lang="console"># machinectl enable web</code></pre></div>
+<p>There are many more options that can be customized in a .nspawn file. To
+explore all of them, checkout the man pages for
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.nspawn.html">systemd.nspawn</a>
+and
+<a href="https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html">systemd-nspawn</a>.</p>
+
+  <p class="small gray pubDate"><time datetime="2018-04-11">2018-04-11</time></p>
+</article>
+</main>
+</div>
+
+</body>
+</html>
+

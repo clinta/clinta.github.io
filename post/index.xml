@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on </title>
+    <link>https://clinta.github.io/post/</link>
+    <description>Recent content in Posts on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <managingEditor>clint@clintarmstrong.net (Clint Armstrong)</managingEditor>
+    <webMaster>clint@clintarmstrong.net (Clint Armstrong)</webMaster>
+    <lastBuildDate>Thu, 06 Feb 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://clinta.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Preventing disrupting reboots with Ubuntu automatic updates</title>
+      <link>https://clinta.github.io/preventing-distrupting-reboots/</link>
+      <pubDate>Thu, 06 Feb 2020 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/preventing-distrupting-reboots/</guid>
+      <description>Keeping your systems up to date is important, and Ubuntu makes this fairly easy. It&amp;rsquo;s also easy to enable automatic reboots when required for an update. The downside is that these updates can happen when they shouldn&amp;rsquo;t. With some custom SystemD services you can replace the built in automatic-reboot functionaly with a system that waits until conditions are appropriate to reboot.
+Start by enabling automatic updates, but make sure Unattended-Upgrade::Automatic-Reboot&#39; is set to&amp;ldquo;false&amp;rdquo;`.</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu Unattended Upgrades Hangs With Too Many Routes</title>
+      <link>https://clinta.github.io/ubuntu-unattended-upgrades-too-many-routes/</link>
+      <pubDate>Tue, 14 Jan 2020 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/ubuntu-unattended-upgrades-too-many-routes/</guid>
+      <description>I recently discovered an issue on some of our routers running Ubuntu 16.04 where they would have a stuck unattended-updates process consuming 100% of a CPU core.
+This issue only appears on routers wich are retrieving full route table from the internet, (at this time about 800k routes). I tracked the issue down to unattended-upgrades default setting of trying to determine if it&amp;rsquo;s running on a metered connection.
+This function relies on pygobjects NetworkManger.</description>
+    </item>
+    
+    <item>
+      <title>Bug with systemd bonds and DHCP MTU</title>
+      <link>https://clinta.github.io/systemd-dhcp-mtu-bug/</link>
+      <pubDate>Thu, 05 Dec 2019 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/systemd-dhcp-mtu-bug/</guid>
+      <description>After a recent update to systemd on Ubuntu 19.04 I ran into a bug which I was unable to find anybody talking about.
+I use systemd-networkd to create lacp bonds. Then these lacp bonds get an IP address via dhcp. These bonds are also configured to set their MTU based on the dhcp options. This is done with the following files.
+#/etc/systemd/network/eno.network [Match] Name=eno[1,2] [Network] Bond=bond0 DHCP=no LinkLocalAddressing=no IPv4LLRoute=no  #/etc/systemd/network/bond0.</description>
+    </item>
+    
+    <item>
+      <title>Installing Ubuntu 18.04 on an APU2</title>
+      <link>https://clinta.github.io/bionic-on-apu2/</link>
+      <pubDate>Thu, 12 Apr 2018 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/bionic-on-apu2/</guid>
+      <description>The PC Engines APU2 is a great little board to build a router on. We&amp;rsquo;ve used several of them at work for branch offices, and I&amp;rsquo;m using one for my home router now.
+But with no video, these devices can be a bit intimidating to get setup for a new user. This guide will take you step-by-step through updating the firmware and installing Ubuntu 18.04 on one.
+Before installing any software make sure you assemble the APU2 properly, pay special attention to how you install the CPU cooler.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started with systemd-nspawnd</title>
+      <link>https://clinta.github.io/getting-started-with-systemd-nspawnd/</link>
+      <pubDate>Wed, 11 Apr 2018 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/getting-started-with-systemd-nspawnd/</guid>
+      <description>I love container technologies. One of my most popular blog posts to date is my guide on FreeBSD Jails the Hard Way. This guide aims to be similar, but for creating containers on linux using systemd-nspawnd. Many people immediately think docker when they think linux container, but docker has a very specific vision for containers. Docker aims to build a collection of microservices where only a single process is running in a container.</description>
+    </item>
+    
+    <item>
+      <title>VMs Containers and Docker</title>
+      <link>https://clinta.github.io/vms-containers-and-docker/</link>
+      <pubDate>Sun, 08 Apr 2018 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/vms-containers-and-docker/</guid>
+      <description>This post is an explanation of what containers are, how they compare to vms, and where specific container technologies like docker, nspawn, and FreeBSD jails fit. This post is mostly to clarify terminology and help to to bring anyone who is unfamiliar with these concepts up to speed. This explanation is based on my experience over the last several years using these technologies and writing programs to make use of them.</description>
+    </item>
+    
+    <item>
+      <title>Moving to Hugo</title>
+      <link>https://clinta.github.io/moving-to-hugo/</link>
+      <pubDate>Wed, 12 Oct 2016 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/moving-to-hugo/</guid>
+      <description>If you notice things look a little different here, it&amp;rsquo;s because I&amp;rsquo;ve given up on Jekyll. Ever since github upgraded it I&amp;rsquo;ve not been happy with how it does syntax highlighting and I&amp;rsquo;ve been looking for alternatives. Hugo looks promising, and that&amp;rsquo;s what I&amp;rsquo;m trying now. Sometime soon I&amp;rsquo;ll blog about my CI setup once it&amp;rsquo;s running the way I like.</description>
+    </item>
+    
+    <item>
+      <title>Salt git integration without gitfs</title>
+      <link>https://clinta.github.io/salt-git-nogitfs/</link>
+      <pubDate>Tue, 15 Dec 2015 15:45:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/salt-git-nogitfs/</guid>
+      <description>SaltStack has some pretty cool git integration. Unfortunately it also has quite a few bugs, especially when using gitfs for pillars.
+These issues can be annoying at small scale, but they can become very important as you add more minions. To work around these I looked for ways I could simplify our salt/git integration and now that it&amp;rsquo;s complete I couldn&amp;rsquo;t be happier.
+With a post-receive hook on my gitlab server and a salt master that is also a minion, the salt server updates it&amp;rsquo;s file root&amp;rsquo;s directory from git without the salt-master process having to do any interfacing with git at all.</description>
+    </item>
+    
+    <item>
+      <title>Random root passwords with saltstack.</title>
+      <link>https://clinta.github.io/random-local-passwords/</link>
+      <pubDate>Thu, 24 Sep 2015 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/random-local-passwords/</guid>
+      <description>Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way to have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.</description>
+    </item>
+    
+    <item>
+      <title>Building your own Session Boarder Controller for SIP communication with Office 365.</title>
+      <link>https://clinta.github.io/diy-sbs-for-office-365-unified-messaging/</link>
+      <pubDate>Mon, 24 Aug 2015 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/diy-sbs-for-office-365-unified-messaging/</guid>
+      <description>If you&amp;rsquo;re looking to connect an on-premise VOIP phone system to Office 365 you&amp;rsquo;ll find several documents stating that you must purchase a session border controller, and a list of supported vendors. But if you&amp;rsquo;re the kind of person who would rather take an unsupported approach than install yet another black box on your network, it can be done. In this guide I&amp;rsquo;ll share what I&amp;rsquo;ve learned over the last two weeks in building my own session boarder controller with open source software.</description>
+    </item>
+    
+    <item>
+      <title>FreeBSD Jails the hard way</title>
+      <link>https://clinta.github.io/freebsd-jails-the-hard-way/</link>
+      <pubDate>Sun, 09 Aug 2015 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/freebsd-jails-the-hard-way/</guid>
+      <description>There are many great options for managing FreeBSD Jails. iocage, warden and ez-jail aim to streamline the process and make it quick an easy to get going. But sometimes the tools built right into the OS are overlooked.
+This post goes over what is involved in creating and managing jails using only the tools built into FreeBSD.
+For this guide, I&amp;rsquo;m going to be putting my jails in /usr/local/jails.</description>
+    </item>
+    
+    <item>
+      <title>Changing UPN to Email with Powershell</title>
+      <link>https://clinta.github.io/change-upn-to-email-with-powershell/</link>
+      <pubDate>Fri, 07 Aug 2015 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/change-upn-to-email-with-powershell/</guid>
+      <description>If you need a quick way to change the UPN of all your users in active directory to match their email address, PowerShell makes it easy.
+$users = get-aduser -SearchBase &amp;#34;OU=Users,DC=ad,DC=contoso,DC=com&amp;#34; -Filter * -Properties EmailAddress | where {$_.EmailAddress -ne $null -AND $_.EmailAddress.toLower() -ne $_.UserPrincipalName.toLower()} foreach ($user in $users) { $forest = Get-ADForest $email = $user.EmailAddress $username = $email.toLower().Split(&amp;#39;@&amp;#39;)[0] $userdomain = $email.toLower().Split(&amp;#39;@&amp;#39;)[1] if (-Not $($forest.UPNSuffixes).Contains($userdomain)) { $forest | Set-ADForest -UPNSuffixes @{Add=&amp;#34;$userdomain&amp;#34;} } $user | Set-ADUser -UserPrincipalName &amp;#34;$username@$userdomain&amp;#34; }</description>
+    </item>
+    
+    <item>
+      <title>Compiling the mongodb plugin for collectd</title>
+      <link>https://clinta.github.io/mongodb-for-collectd/</link>
+      <pubDate>Tue, 30 Jun 2015 14:20:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/mongodb-for-collectd/</guid>
+      <description>The MongoDB plugin for collectd is currently unfinished and hasn&amp;rsquo;t had active development since 2012. Fortunately the folks at Stackdriver have fixed some of the issues so that the plugin works for their stackdriver agent, which is based on collectd. Unfortunately this code has not been submitted back upstream to collectd.
+This means that if you want to monitor your own mongodb instances with collectd you&amp;rsquo;ll need to build it yourself.</description>
+    </item>
+    
+    <item>
+      <title>Creating a Secure Corporate Apt Repository with Salt</title>
+      <link>https://clinta.github.io/secure-corporate-apt-repo/</link>
+      <pubDate>Sat, 04 Apr 2015 10:04:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/secure-corporate-apt-repo/</guid>
+      <description>There are many reasons an organization could use it&amp;rsquo;s own internal apt repository. But controlling access to this repository for clients that are outside your internal network can be difficult. But if your repository contains proprietary or confidential packages, securing access is not optional. Thankfully apt supports client authentication with SSL certificates. And with the new x509 module, managing these certificates can be made fully automatic.
+The x509 module is not yet in the latest release of salt, so you&amp;rsquo;ll need to manually add it to your custom paths.</description>
+    </item>
+    
+    <item>
+      <title>X509 Certificates in Salt, implementation details</title>
+      <link>https://clinta.github.io/salt-x509-details/</link>
+      <pubDate>Thu, 02 Apr 2015 21:16:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/salt-x509-details/</guid>
+      <description>Saltstack has recently accepted my pull request and integrated the x509 module I&amp;rsquo;ve spent the last few weeks working on. Most of it&amp;rsquo;s functionality including a complete PKI example is explained in the documentation, this blog post is to go over some more of the details of how and why I made it for anyone who may not want to just read the source code.
+I started out with a need to manage X509 certificates for geographically distributed linux based VPN routers.</description>
+    </item>
+    
+    <item>
+      <title>Embracing Binary for Beautiful Networks</title>
+      <link>https://clinta.github.io/embracing-binary-for-beautiful-networks/</link>
+      <pubDate>Sat, 07 Mar 2015 11:30:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/embracing-binary-for-beautiful-networks/</guid>
+      <description>During my time working for an MSP I got to see many different networks with many different techniques for mapping vlan numbers to subnets, but all of them left me dissatisfied. The biggest problem was that they were always designed to try to make some sense to people looking at the numbers as they&amp;rsquo;re most commonly written. Vlan numbers in decimal and IP addresses in dotted decimal. But these are just incompatible.</description>
+    </item>
+    
+    <item>
+      <title>Managing Users with Salt</title>
+      <link>https://clinta.github.io/salt-user-management/</link>
+      <pubDate>Sat, 07 Mar 2015 09:38:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/salt-user-management/</guid>
+      <description>This post has gone through a few iterations. You can see the full history on the github repo.
+One of the great things about a configuration management solution like Salt is the ability to centrally manage local users. Sure LDAP and Kerberos are great, but sometimes it&amp;rsquo;s better to keep things simple, that&amp;rsquo;s what I&amp;rsquo;m doing with Salt. Leveraging Pillars I can define certain users to be added to servers of a given role.</description>
+    </item>
+    
+    <item>
+      <title>Automated Ubuntu Installation with PXE, Preseeds and Apt-Cacher-NG (and UEFI compatible)</title>
+      <link>https://clinta.github.io/automated-pxe-ubuntu-installs/</link>
+      <pubDate>Wed, 28 Jan 2015 09:13:00 -0500</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/automated-pxe-ubuntu-installs/</guid>
+      <description>Doing repetitive installs can be a pain, and figuring out how to make it easier can be even more of a pain since everybody has their own preferred system. Most searching for how to do this for Ubuntu will lead you to Cobbler. Cobbler isn&amp;rsquo;t a bad tool, but it&amp;rsquo;s not a good fit for me. It takes away most of the ability to customize pxelinux without learning their templating language.</description>
+    </item>
+    
+    <item>
+      <title>Using one pair of SSDs for both ZIL and L2ARC in FreeNAS</title>
+      <link>https://clinta.github.io/freenas-multipurpose-ssd/</link>
+      <pubDate>Wed, 21 Jan 2015 00:00:00 +0000</pubDate>
+      <author>clint@clintarmstrong.net (Clint Armstrong)</author>
+      <guid>https://clinta.github.io/freenas-multipurpose-ssd/</guid>
+      <description>I&amp;rsquo;m a big fan of ZFS, and a big fan of FreeNAS. But some times the options avaliable in the FreeNAS GUI can&amp;rsquo;t quite do everything. Using one disk for more than one purpose is one of those things. At $dayjob we&amp;rsquo;re going to be using a new FreeNAS server for iSCSI datastores for VMWare. This is one of those instances where a ZIL can really improve performance because there is potential for a lot of synchronious writes from VMs hosting databases.</description>
+    </item>
+    
+  </channel>
+</rss>

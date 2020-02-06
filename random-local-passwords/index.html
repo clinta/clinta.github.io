@@ -1,0 +1,119 @@
+<!doctype html> 
+<html lang="en-us"> 
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="author" content="Clint Armstrong">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+
+  
+  <link rel="stylesheet" href="/style.css" />
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-58778705-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body class="">
+
+  <div class="header center">
+    <ul class="navbar">
+	
+	
+		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
+	
+	
+	</ul>
+  </div>
+
+  <div class="wrap">
+	
+
+
+<main>
+<article class="post">
+  <h1 class="title"><a href="https://clinta.github.io/random-local-passwords/" title="Random root passwords with saltstack.">Random root passwords with saltstack.</a></h1>
+  <p>Common passwords for devices is a significant security risk, but maintaining unique passwords for every server is nearly impossible without some password manager. But manually generating passwords for hundreds of servers and putting them into a password manager is just not practical. Here is a way to have your salt master generate complex random passwords for each minion and store them in a password manager where you can retrieve them later.</p>
+
+<p>The password manager I&rsquo;ll be using is <a href="http://www.passwordstore.org/">pass</a>. Pass is uniquely suited to this challenge because it relies on GPG and asymetric cryptography. This allows me to put my public GPG key on the salt master so that the salt master can encrypt passwords it generates, but the salt master doesn&rsquo;t have to store any private key that would allow it to ever decrypt the passwords after they&rsquo;ve been generated.</p>
+
+<p>First install pass using your operating system&rsquo;s package manager. It should pull in all GPG dependencies.</p>
+
+<p>If you don&rsquo;t have a GPG key that you wish to use with pass, you must first create one on your workstation. Depending on your workstation it may take a long time to generate, you can make this faster by installing the <code>haveged</code> daemon to collect entropy. Choose to generate a key of type <code>RSA and RSA</code> and be sure to choose a strong passphrase. This passphrase and the key file are what will protect all your passwords in the future.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gpg --gen-key</code></pre></div>
+<p>Once you have a gpg key, initialize a password store.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pass init me@mydomain.com</code></pre></div>
+<p>You also need to initialize your password store as a git repo and add a git remote. The service account which runs your salt-master must also have read and write permissions to this git remote.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pass git init
+$ pass git remote add origin git@gitserver:/passdb
+$ pass git push</code></pre></div>
+<p>Export your gpg public key and copy it to your salt master.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gpg --armor --export me@mydomain.com &gt; gpg.pub</code></pre></div>
+<p>In your salt master, install pass, then import your gpg public key and trust it. Run the commands under the user account that runs your salt-master service.</p>
+
+<pre><code>$ gpg --import gpg.pub
+$ gpg --edit-key me@mydomain.com
+gpg&gt; trust
+5
+y
+gpg&gt; quit
+</code></pre>
+
+<p>On your salt master, install the <a href="https://github.com/clinta/salt-pwgen">pwgen</a> extension module. Install this in your <a href="https://docs.saltstack.com/en/latest/ref/configuration/master.html#extension-modules">extension modules</a> directory. These directions assume it is <code>/srv/modules</code>.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo wget https://raw.githubusercontent.com/clinta/salt-pwgen/master/pwgen.py -O /srv/modules/pwgen.py</code></pre></div>
+<p>Clone your password store to the salt master, using your salt-master service account. In my case I&rsquo;m cloning it to /opt/passdb</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ <span style="color:#007020">cd</span> /opt
+$ git clone git@gitserver:/passdb</code></pre></div>
+<p>Now you are ready to start generating passwords. Here&rsquo;s how it will work. A pillar will be defined with a jinja template which calls this extension module. When the salt master compiles the pillar it will run the extension module. The extension module checks for the existence of a meta file which holds the unix password hash as well as a sha256 of the .gpg file which contains the encrypted plaintext password. If the meta file does not exist, or the .gpg file doesn&rsquo;t exist, or the sha256 in the meta file doesn&rsquo;t match the .gpg file, it calls pass to generate a new password and writes the unix hash of this password and the sha256 of the new .gpg file to the meta file. It then returns the unix hash which is the value of the pillar. If the meta file does exist, and matches the .gpg file, the unix hash from the meta file is returned for the value of the pillar.</p>
+
+<p>Create your pillar template:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/root-pw.sls
+root-pw: {{ salt[&#39;pwgen.get_pw&#39;](pw_name=&#39;local-root/&#39;+grains[&#39;host&#39;], pw_store=&#39;/opt/passdb&#39;, pw_meta_dir=&#39;/opt/pw_meta&#39;) }}</code></pre></div>
+<p>And apply this pillar via the pillar top file:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/top.sls
+
+base:
+  &#39;*&#39;:
+    - root-pw</code></pre></div>
+<p>At this point you should be able to highstate a minion, then on the minion run <code>salt-call pillar.get root-pw</code> and get back a unix hash of a unique password. You can get the plaintext of this password on your workstation:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ pass git pull
+$ pass local-root/minion</code></pre></div>
+<p>Once you know this is working, you can use this unix hash to set the root password on your minions with a simple state:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/salt/root-pw.sls
+
+root:
+  user.present:
+    - password: {{ salt[&#39;pillar.get&#39;](&#39;root-pw&#39;) }}</code></pre></div>
+<p>Make sure this state is applied via your top file, highstate all your minions and you will now have all their unique passwords in your password store.</p>
+
+  <p class="small gray pubDate"><time datetime="2015-09-24">2015-09-24</time></p>
+</article>
+</main>
+</div>
+
+</body>
+</html>
+

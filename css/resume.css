@@ -1,0 +1,65 @@
+ul {
+    margin-bottom: 0.5em;
+}
+
+article>span {
+	page-break-inside: avoid;
+	break-inside: avoid-page;
+	position: relative;
+	page-break-before: auto;
+	page-break-after: auto;
+	display: block;
+}
+
+
+.title, .pubDate, .title+p {
+    display: none;
+}
+
+.contNotice {
+	position: relative;
+	display: none;
+    text-align: center;
+    vertical-align: bottom;
+    page-break-after: always;
+}
+
+.contNotice+* {
+	position: relative;
+	page-break-before: always;
+	page-break-after: avoid;
+}
+
+@media print {
+  html { zoom: 85%; }
+  body * {
+    visibility: hidden;
+  }
+
+  article, article * {
+    visibility: visible;
+  }
+
+  .pdfLink {
+	  display: none;
+  }
+
+  article, article.post {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  .print {
+    display:block;
+  }
+
+}
+
+@media screen {
+  .print {
+      display: none;
+  }
+}

@@ -1,0 +1,197 @@
+<!doctype html> 
+<html lang="en-us"> 
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="author" content="Clint Armstrong">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+
+  
+  <link rel="stylesheet" href="/style.css" />
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-58778705-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body class="">
+
+  <div class="header center">
+    <ul class="navbar">
+	
+	
+		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
+	
+	
+	</ul>
+  </div>
+
+  <div class="wrap">
+	
+
+
+<main>
+<article class="post">
+  <h1 class="title"><a href="https://clinta.github.io/salt-user-management/" title="Managing Users with Salt">Managing Users with Salt</a></h1>
+  <p>This post has gone through a few iterations. You can see the full history on the github repo.</p>
+
+<p>One of the great things about a configuration management solution like Salt is the ability to centrally manage local users. Sure LDAP and Kerberos are great, but sometimes it&rsquo;s better to keep things simple, that&rsquo;s what I&rsquo;m doing with Salt. Leveraging Pillars I can define certain users to be added to servers of a given role. Here&rsquo;s how I do it.</p>
+
+<p>Start by defining your users, separating and targeting by role.:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/top.sls
+base:
+  &#39;*&#39;:
+    - users.admins
+    - users.revokedusers
+
+  &#39;web*&#39;:
+    - users.webadmins
+
+  &#39;db*&#39;:
+    - users.dbadmins</code></pre></div>
+<p>And define your users:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/users/admins.sls
+users:
+  tywin:
+    fullname: Tywin Lannister
+    uid: 1100
+    ssh-keys:
+      - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNWRiUmFXjxrp4VGfqWISvsEdxPJi2ES3gi6U/ZoVR3UpMUNGYm/VUTNjiXPX6XU5KjaSdGgeqDQdcwfAxl7q4A= tywin@CastRockWks1
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCllUe3Q14M1AwMyaGLaW0b3IyDyghljYzKlQE/osh0hjUCxqcjFW26DekBSF/RErYeJwlRPrGxWZAYLYW9ZMLolYJGAon1jBgNUAaSbj45m+sf8gFDWqpL6E0Vxzr4/o2A7NpqBsdwy95Xov0MGQq7wyJ7bEQ4b/TFo7Peb6oWoHGdDMbXym/T0UFiEH30w6XBIN34tRsV9DGmG3BpshI7ho5pNo1dO8xDD0Acr6blpOQKap02ihJKYBAdFDGfK4P3PUrhArEJvD8QU7Q7Fwl1Yej6Y54IMndTVf8i5CZNmUKh87Xawo4NRMaVPePoMInEYTiEkOYrILGkWRCT2GWb tywin@TLLap1</code></pre></div><div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/users/revokedusers.sls
+revokedusers:
+  robb:
+    fullname: Robb Stark
+    uid: 2001
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFmuEiljWGa1W3/mgymLdEwCbkBcIaXZfik9uNQCzajW Robb@RSLap1</code></pre></div><div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/users/webadmins.sls
+users:
+  tyrion:
+    fullname: Tyrion Lannister
+    uid: 1101
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIED4TtDwUcNZdhQwIxK4LOtn3Q/yQxlcvQKrZIBaOllQ tyrion@TSLap2</code></pre></div><div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/pillar/users/dbadmins.sls
+users:
+  cersei:
+    fullname: Cersei Lannister
+    uid: 1102
+    ssh-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZ9GpN4T3beWlRzfO27tYH7t13QhMRoKbmDR3nwwAWa cersei@CLLap1</code></pre></div>
+<p>It should be fairly self-explanatory how this works. Tywin is added to every server. Tyrion is only added to webservers and Cersei is only added to database servers. Robb has been fired and his access to all servers has been revoked.</p>
+
+<p>Now the logic for adding these users.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /srv/salt/users/init.sls
+
+# Revoke any users with a role of revoked
+{% for user, args in pillar.get(&#39;revokedusers&#39;, {}).iteritems() %}
+{{user}}:
+  user.absent: []
+  group.absent: []
+
+{% if args[&#39;ssh-keys&#39;] %}
+{{user}}_root_key:
+  ssh_auth.absent:
+    - user: root
+    - names:
+      {% for key in args[&#39;ssh-keys&#39;] %}
+      - {{ key }}
+      {% endfor %}
+
+{{user}}_key:
+  ssh_auth.absent:
+    - user: {{user}}
+    - names:
+      {% for key in args[&#39;ssh-keys&#39;] %}
+      - {{ key }}
+      {% endfor %}
+{% endif %}
+{% endfor %}
+
+# Add users
+{% for user, args in pillar.get(&#39;users&#39;, {}).iteritems() %}
+{{user}}:
+  group.present:
+    - gid: {{ args[&#39;uid&#39;] }}
+  user.present:
+    - fullname: {{ args[&#39;fullname&#39;] }}
+    - uid: {{ args[&#39;uid&#39;] }}
+    - gid: {{ args[&#39;uid&#39;] }}
+    - shell: /bin/bash
+    {% if grains[&#39;os&#39;] == &#39;Ubuntu&#39; %}
+    - groups:
+      - sudo
+      - adm
+      - dip
+      - cdrom
+      - plugdev
+    {% endif %}
+
+{% if args[&#39;ssh-keys&#39;] %}
+{{user}}_root_key:
+  ssh_auth.present:
+    - user: root
+    - names:
+      {% for key in args[&#39;ssh-keys&#39;] %}
+      - {{ key }}
+      {% endfor %}
+
+{{user}}_key:
+  ssh_auth.present:
+    - user: {{user}}
+    - names:
+      {% for key in args[&#39;ssh-keys&#39;] %}
+      - {{ key }}
+      {% endfor %}
+{% endif %}
+{% endfor %}
+
+# Allow sudoers to sudo without passwords.
+# This is to avoid having to manage passwords in addition to keys
+/etc/sudoers.d/sudonopasswd:
+  file.managed:
+    - source: salt://users/files/sudoers.d/sudonopasswd
+    - user: root
+    - group: root
+    - mode: 440</code></pre></div>
+<p>The first section removes any revoked users, and removed revoked users ssh keys from the root account, as well as their own.</p>
+
+<p>The second section adds any users in the users pillar to the system. It also adds their keys to the root account. This isn&rsquo;t ideal, but I&rsquo;ve not found any other way to allow users to edit files over scp. Running <code>vim scp://root@server//etc/file</code> is very useful, and simply doesn&rsquo;t work with sudo.</p>
+
+<p>Lastly, hashing passwords and putting that value into the pillar to define it wouldn&rsquo;t be difficult. But it does make it difficult for users to change their passwords. And with encrypted ssh keys, it seems unnecessary to me. So I push out a final config to allow users to sudo without a password, since no password is defined in the first place.</p>
+
+<p>The file that&rsquo;s being managed to allow sudo without password is below:</p>
+
+<pre><code># /srv/salt/users/files/sudoers.d/sudonopasswd
+%sudo	ALL = (ALL) NOPASSWD: ALL
+</code></pre>
+
+  <p class="small gray pubDate"><time datetime="2015-03-07">2015-03-07</time></p>
+</article>
+</main>
+</div>
+
+</body>
+</html>
+

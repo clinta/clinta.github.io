@@ -1,0 +1,142 @@
+<!doctype html> 
+<html lang="en-us"> 
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="author" content="Clint Armstrong">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="icon" href="/favicon.png" />
+  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
+
+  
+  <link rel="stylesheet" href="/style.css" />
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-58778705-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</head>
+
+<body class="">
+
+  <div class="header center">
+    <ul class="navbar">
+	
+	
+		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
+	
+	
+	
+		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
+	
+	
+	</ul>
+  </div>
+
+  <div class="wrap">
+	
+
+
+<main>
+<article class="post">
+  <h1 class="title"><a href="https://clinta.github.io/preventing-distrupting-reboots/" title="Preventing disrupting reboots with Ubuntu automatic updates">Preventing disrupting reboots with Ubuntu automatic updates</a></h1>
+  <p>Keeping your systems up to date is important, and Ubuntu makes this fairly easy.
+It&rsquo;s also easy to enable automatic reboots when required for an update. The
+downside is that these updates can happen when they shouldn&rsquo;t. With some custom
+SystemD services you can replace the built in automatic-reboot functionaly with
+a system that waits until conditions are appropriate to reboot.</p>
+
+<p>Start by <a href="https://help.ubuntu.com/lts/serverguide/automatic-updates.html">enabling automatic
+updates</a>, but
+make sure <code>Unattended-Upgrade::Automatic-Reboot' is set to</code>&ldquo;false&rdquo;`.</p>
+
+<p>When a reboot is needed Ubuntu places a file in <code>/var/run/reboot-required</code>. Make
+a service that reboots the system only if this file exists.</p>
+
+<p><code>/etc/systemd/system/reboot-for-upgrades.service</code></p>
+
+<pre><code>[Unit]
+Description=Reboot if updates require it
+ConditionPathExists=/var/run/reboot-required
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+ExecStop=/bin/systemctl reboot
+</code></pre>
+
+<p>This service&rsquo;s start action does nothing, but it&rsquo;s stop action reboots the
+machine. This is important for proper ordering with the services we want to
+delay or prevent a reboot.</p>
+
+<p>This service needs to run after apt-daily-upgrade runs. So use a SystemD
+override to make this happen.</p>
+
+<p><code>/etc/systemd/system/apt-daily-upgrade.service.d/override.conf</code></p>
+
+<pre><code>[Unit]
+Requires=reboot-for-upgrades.service
+Before=reboot-for-upgrades.service
+</code></pre>
+
+<p>Now make a SystemD service that will run before reboot-for-upgrades, which can
+ensure that the system is ready to reboot. In my case, I do not want a machine
+to reboot if the Citrix ICA Client is running, because this means a user is
+actively using this machine. This service will wait for the process to finish
+for up to 12 hours before allowing the reboot to complete.</p>
+
+<p><code>/etc/systemd/system/wait-for-icaclient.service</code></p>
+
+<pre><code>[Unit]
+Description=Wait for ICAClient to stop
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+ExecStop=-/bin/sh -c 'tail --pid=$(pidof wfica) -f /dev/null'
+TimeoutStopSec=12h
+</code></pre>
+
+<p>Again, the interesting work is done in ExecStop. In this case, <code>tail</code>&rsquo;s &ndash;pid
+feature is used to block until the wfica process exits. ExecStop is prefixed
+with a <code>-</code> so that if the command fails (which it will if wfica is not running)
+the service is still considered successfully stopped.</p>
+
+<p>The dependency is created in an override for <code>reboot-for-upgrades.service</code>.</p>
+
+<p><code>/etc/systemd/system/reboot-for-upgrades.service.d/wait-for-icaclient.conf</code></p>
+
+<pre><code>[Unit]
+Requires=wait-for-icaclient.service
+After=wait-for-icaclient.service
+</code></pre>
+
+<p>Now <code>reboot-for-upgrades.service</code> depends on <code>wait-for-icaclient.service</code> and
+should start after it. Because SystemD inverts ordering for stopping services,
+this means that <code>wait-for-icaclient.service</code> will complete it&rsquo;s ExecStop command
+before <code>reboot-for-upgrades.service</code> can run it&rsquo;s ExecStop command.</p>
+
+  <p class="small gray pubDate"><time datetime="2020-02-06">2020-02-06</time></p>
+</article>
+</main>
+</div>
+
+</body>
+</html>
+
