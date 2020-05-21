@@ -19,7 +19,7 @@ WantedBy=multi-user.target default.target
 </code></pre><p>That command is a little cryptic because of the layers of escaping to make it
 work well with systemd. Written as a bash script it&rsquo;d look something like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#/bin/bash</span>
 
-ip mon addr | sed -nu -r <span style=color:#ae81ff>\&#39;</span>s/.*<span style=color:#f92672>[[</span>:digit:<span style=color:#f92672>]]</span>+:<span style=color:#f92672>[[</span>:space:<span style=color:#f92672>]]</span>+<span style=color:#f92672>([</span>^<span style=color:#f92672>[</span>:space:<span style=color:#f92672>]]</span>+<span style=color:#f92672>)</span>.*/<span style=color:#ae81ff>\\</span>1/p<span style=color:#ae81ff>\&#39;</span> | <span style=color:#66d9ef>while</span> read iface; <span style=color:#66d9ef>do</span>
+ip mon addr | sed -nu -r <span style=color:#e6db74>&#39;s/.*[[:digit:]]+:[[:space:]]+([^[:space:]]+).*/\1/p&#39;</span> | <span style=color:#66d9ef>while</span> read iface; <span style=color:#66d9ef>do</span>
   systemctl restart ip-changed@<span style=color:#e6db74>${</span>iface<span style=color:#e6db74>}</span>.target
 <span style=color:#66d9ef>done</span>
 </code></pre></div><p><code>ip monitor address</code> is a the command watching for ip address changes. If you
