@@ -35,7 +35,7 @@ work well with systemd. Written as a bash script it'd look something like this:
 ```bash
 #/bin/bash
 
-ip mon addr | sed -nu -r \'s/.*[[:digit:]]+:[[:space:]]+([^[:space:]]+).*/\\1/p\' | while read iface; do
+ip mon addr | sed -nu -r 's/.*[[:digit:]]+:[[:space:]]+([^[:space:]]+).*/\1/p' | while read iface; do
   systemctl restart ip-changed@${iface}.target
 done
 ```
