@@ -2,8 +2,6 @@
 languageCode: "en-us"
 baseurl: "https://clinta.github.io"
 theme: "clinta"
-PygmentsCodeFences: true
-pygmentsstyle: "friendly"
 Author:
   name: "Clint Armstrong"
   email: "clint@clintarmstrong.net"
