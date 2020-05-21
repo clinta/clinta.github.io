@@ -1,69 +1,7 @@
-<!doctype html> 
-<html lang="en-us"> 
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="author" content="Clint Armstrong">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="icon" href="/favicon.png" />
-  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
-
-  
-  <link rel="stylesheet" href="/style.css" />
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-58778705-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-
-</head>
-
-<body class="">
-
-  <div class="header center">
-    <ul class="navbar">
-	
-	
-		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
-	
-	
-	</ul>
-  </div>
-
-  <div class="wrap">
-	
-
-
-<main>
-<article class="post">
-  <h1 class="title"><a href="https://clinta.github.io/systemd-dhcp-mtu-bug/" title="Bug with systemd bonds and DHCP MTU">Bug with systemd bonds and DHCP MTU</a></h1>
-  <p>After a recent update to systemd on Ubuntu 19.04 I ran into a bug which I was
-unable to find anybody talking about.</p>
-
-<p>I use systemd-networkd to create lacp bonds. Then these lacp bonds get an IP
+<!doctype html><html lang=en-us><head><meta charset=utf-8><title></title><meta name=author content="Clint Armstrong"><meta name=description content><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.png><link rel=apple-touch-icon-precomposed href=/apple-touch-icon.png><link rel=stylesheet href=/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-58778705-1','auto');ga('send','pageview');}</script></head><body><div class="header center"><ul class=navbar><li class=navbar><a class=navbar href=/>Posts</a></li><li class=navbar><a class=navbar href=https://twitter.com/clinta>Twitter</a></li><li class=navbar><a class=navbar href=/resume/>Resume</a></li></ul></div><div class=wrap><main><article class=post><h1 class=title><a href=https://clinta.github.io/systemd-dhcp-mtu-bug/ title="Bug with systemd bonds and DHCP MTU">Bug with systemd bonds and DHCP MTU</a></h1><p>After a recent update to systemd on Ubuntu 19.04 I ran into a bug which I was
+unable to find anybody talking about.</p><p>I use systemd-networkd to create lacp bonds. Then these lacp bonds get an IP
 address via dhcp. These bonds are also configured to set their MTU based on the
-dhcp options. This is done with the following files.</p>
-
-<pre><code>#/etc/systemd/network/eno.network 
+dhcp options. This is done with the following files.</p><pre><code>#/etc/systemd/network/eno.network 
 [Match]
 Name=eno[1,2]
 
@@ -72,9 +10,7 @@ Bond=bond0
 DHCP=no
 LinkLocalAddressing=no
 IPv4LLRoute=no
-</code></pre>
-
-<pre><code>#/etc/systemd/network/bond0.netdev 
+</code></pre><pre><code>#/etc/systemd/network/bond0.netdev 
 [NetDev]
 Name=bond0
 Kind=bond
@@ -85,9 +21,7 @@ Mode=802.3ad
 TransmitHashPolicy=layer3+4
 MIIMonitorSec=0.1s
 LACPTransmitRate=fast
-</code></pre>
-
-<pre><code># cat /etc/systemd/network/bond0.network 
+</code></pre><pre><code># cat /etc/systemd/network/bond0.network 
 [Match]
 Name=bond0
 
@@ -97,20 +31,10 @@ DHCP=yes
 [DHCP]
 UseMTU=true
 UseDomains=true
-</code></pre>
-
-<p>I also run these servers with the HWE kernel, currently 5.0.</p>
-
-<p>This has worked fine for several years, until last weeks update to systemd systemd 237-3ubuntu10.33.
-Last week my servers would boot up and repeatedly log messages like this:</p>
-
-<pre><code>speed changed to 0 for port eno2
+</code></pre><p>I also run these servers with the HWE kernel, currently 5.0.</p><p>This has worked fine for several years, until last weeks update to systemd systemd 237-3ubuntu10.33.
+Last week my servers would boot up and repeatedly log messages like this:</p><pre><code>speed changed to 0 for port eno2
 speed changed to 0 for port eno1
-</code></pre>
-
-<p>Looking in the kernel logs showed some more details:</p>
-
-<pre><code>tg3 0000:02:00.1 eno2: Link is up at 1000 Mbps, full duplex
+</code></pre><p>Looking in the kernel logs showed some more details:</p><pre><code>tg3 0000:02:00.1 eno2: Link is up at 1000 Mbps, full duplex
 tg3 0000:02:00.1 eno2: Flow control is off for TX and off for RXDec 05 07:25:32 dc1-cls01 kernel: tg3 0000:02:00.1 eno2: EEE is enabled
 bond0: link status definitely up for interface eno2, 1000 Mbps full dup
 bond0: first active interface up!
@@ -120,27 +44,10 @@ tg3 0000:02:00.1 eno2: Link is down
 tg3 0000:02:00.0 eno1: Link is down
 tg3 0000:02:00.1 eno2: speed changed to 0 for port eno2
 tg3 0000:02:00.0 eno1: speed changed to 0 for port eno1
-</code></pre>
-
-<p>The bond would come up, but then as soon as it did both interfaces would go
+</code></pre><p>The bond would come up, but then as soon as it did both interfaces would go
 down. There appears to be a bug now with getting the MTU from DHCP on a bond
-device.</p>
-
-<p>I added the following to <code>/etc/systemd/network/bond0.network</code> and the problem is
-gone.</p>
-
-<pre><code>[Link]
+device.</p><p>I added the following to <code>/etc/systemd/network/bond0.network</code> and the problem is
+gone.</p><pre><code>[Link]
 MTUBytes=9000
-</code></pre>
-
-<p>I&rsquo;ll be filling a bug with Ubuntu, but I wanted to publish this so that anyone
-else facing this can find a quick answer.</p>
-
-  <p class="small gray pubDate"><time datetime="2019-12-05">2019-12-05</time></p>
-</article>
-</main>
-</div>
-
-</body>
-</html>
-
+</code></pre><p>I&rsquo;ll be filling a bug with Ubuntu, but I wanted to publish this so that anyone
+else facing this can find a quick answer.</p><p class="small gray pubDate"><time datetime=2019-12-05>2019-12-05</time></p></article></main></div></body></html>

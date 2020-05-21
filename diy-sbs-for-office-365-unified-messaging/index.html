@@ -1,80 +1,4 @@
-<!doctype html> 
-<html lang="en-us"> 
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="author" content="Clint Armstrong">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="icon" href="/favicon.png" />
-  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
-
-  
-  <link rel="stylesheet" href="/style.css" />
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-58778705-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-
-</head>
-
-<body class="">
-
-  <div class="header center">
-    <ul class="navbar">
-	
-	
-		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
-	
-	
-	</ul>
-  </div>
-
-  <div class="wrap">
-	
-
-
-<main>
-<article class="post">
-  <h1 class="title"><a href="https://clinta.github.io/diy-sbs-for-office-365-unified-messaging/" title="Building your own Session Boarder Controller for SIP communication with Office 365.">Building your own Session Boarder Controller for SIP communication with Office 365.</a></h1>
-  <p>If you&rsquo;re looking to connect an on-premise VOIP phone system to Office 365 you&rsquo;ll find several documents stating that you must purchase a session border controller, and a list of supported vendors. But if you&rsquo;re the kind of person who would rather take an unsupported approach than install yet another black box on your network, it can be done. In this guide I&rsquo;ll share what I&rsquo;ve learned over the last two weeks in building my own session boarder controller with open source software.</p>
-
-<p>This guide assumes you have some familiarity with SIP and that you can do some of the basic configuration of software like Kamailio and rtpengine. The point of this post is primarily to document the specific configuration needed by Office 365.</p>
-
-<p>To start, you&rsquo;ll need a server with the <a href="http://www.kamailio.org">Kamailio</a> SIP server and the Sipwise <a href="https://github.com/sipwise/rtpengine">rtpengine</a> RTP proxy installed. I&rsquo;ll be referring this server as <code>sbc</code> throughout this guide. The internal address for <code>sbc</code> is 10.0.0.5, the external address is 25.25.25.5.</p>
-
-<p>You will also need a public IP that is natted to your <code>sbc</code> server, and a public DNS record. And you will need an SSL certificate signed by one of <a href="https://support.microsoft.com/en-us/kb/929395">Office 365&rsquo;s supported CA&rsquo;s</a>. The Subject of the certificate must match the DNS record EXACTLY, wildcard certificates will not work. If you attempt to connect with a wildcard certificate you will get 403 forbidden back from Microsoft&rsquo;s SIP server.</p>
-
-<p>Make sure you have a UM Dial plan configured in Office 365, then configure your UM IP Gateway. Use your public DNS entry which matches the subject of your SSL certificate for the address. Once configured, open back up the UM IP Gateway configuration to find your Fowarding address, it will be in the format <guid>.um.outlook.com.</p>
-
-<p>You will need to configure your firewall to allow SIPS and SRTP from Office 365. You can either open your firewall to all <a href="https://support.office.com/en-us/article/Office-365-URLs-and-IP-address-ranges-8548a211-3fe7-47cb-abb1-355ea5aa88a2?ui=en-US&amp;rs=en-US&amp;ad=US">Office 365 IPs</a> or use the IP that your forwarding address currently resolves to and hope it doesn&rsquo;t change. To allow SIPS, make sure that TCP port 5061 is open to your <code>sbc</code> server. To allow SRTP you will need to allow the UDP port range 1024-65535.</p>
-
-<p>In my case the phone system I&rsquo;m proxying to 365 is Cisco Unified Call Manager 8. To connect Call Manager to your <code>sbc</code> server, create a SIP Trunk, be sure that <code>Media Termination Point Required</code> is checked and make sure it is associated with a SIP security profile that uses TCP. For the Destination use the internal IP of your <code>sbc</code> server. Then create a route pattern for Office 365 voicemail that uses this trunk, in my case I&rsquo;m using the numer 87000.</p>
-
-<p>All the steps so far are prerequisites that would be basically the same for any session boarder controller. The next steps are whare you start building your own SBS.</p>
-
-<p>First configure rtpengine. If using the debian packages, edit <code>/etc/defaults/ngcp-rtpengine-daemon</code> otherwise edit your startup script with the same options.</p>
-
-<pre><code>#/etc/defaults/ngcp-rtpengine-daemon
+<!doctype html><html lang=en-us><head><meta charset=utf-8><title></title><meta name=author content="Clint Armstrong"><meta name=description content><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.png><link rel=apple-touch-icon-precomposed href=/apple-touch-icon.png><link rel=stylesheet href=/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-58778705-1','auto');ga('send','pageview');}</script></head><body><div class="header center"><ul class=navbar><li class=navbar><a class=navbar href=/>Posts</a></li><li class=navbar><a class=navbar href=https://twitter.com/clinta>Twitter</a></li><li class=navbar><a class=navbar href=/resume/>Resume</a></li></ul></div><div class=wrap><main><article class=post><h1 class=title><a href=https://clinta.github.io/diy-sbs-for-office-365-unified-messaging/ title="Building your own Session Boarder Controller for SIP communication with Office 365.">Building your own Session Boarder Controller for SIP communication with Office 365.</a></h1><p>If you&rsquo;re looking to connect an on-premise VOIP phone system to Office 365 you&rsquo;ll find several documents stating that you must purchase a session border controller, and a list of supported vendors. But if you&rsquo;re the kind of person who would rather take an unsupported approach than install yet another black box on your network, it can be done. In this guide I&rsquo;ll share what I&rsquo;ve learned over the last two weeks in building my own session boarder controller with open source software.</p><p>This guide assumes you have some familiarity with SIP and that you can do some of the basic configuration of software like Kamailio and rtpengine. The point of this post is primarily to document the specific configuration needed by Office 365.</p><p>To start, you&rsquo;ll need a server with the <a href=http://www.kamailio.org>Kamailio</a> SIP server and the Sipwise <a href=https://github.com/sipwise/rtpengine>rtpengine</a> RTP proxy installed. I&rsquo;ll be referring this server as <code>sbc</code> throughout this guide. The internal address for <code>sbc</code> is 10.0.0.5, the external address is 25.25.25.5.</p><p>You will also need a public IP that is natted to your <code>sbc</code> server, and a public DNS record. And you will need an SSL certificate signed by one of <a href=https://support.microsoft.com/en-us/kb/929395>Office 365&rsquo;s supported CA&rsquo;s</a>. The Subject of the certificate must match the DNS record EXACTLY, wildcard certificates will not work. If you attempt to connect with a wildcard certificate you will get 403 forbidden back from Microsoft&rsquo;s SIP server.</p><p>Make sure you have a UM Dial plan configured in Office 365, then configure your UM IP Gateway. Use your public DNS entry which matches the subject of your SSL certificate for the address. Once configured, open back up the UM IP Gateway configuration to find your Fowarding address, it will be in the format .um.outlook.com.</p><p>You will need to configure your firewall to allow SIPS and SRTP from Office 365. You can either open your firewall to all <a href="https://support.office.com/en-us/article/Office-365-URLs-and-IP-address-ranges-8548a211-3fe7-47cb-abb1-355ea5aa88a2?ui=en-US&rs=en-US&ad=US">Office 365 IPs</a> or use the IP that your forwarding address currently resolves to and hope it doesn&rsquo;t change. To allow SIPS, make sure that TCP port 5061 is open to your <code>sbc</code> server. To allow SRTP you will need to allow the UDP port range 1024-65535.</p><p>In my case the phone system I&rsquo;m proxying to 365 is Cisco Unified Call Manager 8. To connect Call Manager to your <code>sbc</code> server, create a SIP Trunk, be sure that <code>Media Termination Point Required</code> is checked and make sure it is associated with a SIP security profile that uses TCP. For the Destination use the internal IP of your <code>sbc</code> server. Then create a route pattern for Office 365 voicemail that uses this trunk, in my case I&rsquo;m using the numer 87000.</p><p>All the steps so far are prerequisites that would be basically the same for any session boarder controller. The next steps are whare you start building your own SBS.</p><p>First configure rtpengine. If using the debian packages, edit <code>/etc/defaults/ngcp-rtpengine-daemon</code> otherwise edit your startup script with the same options.</p><pre><code>#/etc/defaults/ngcp-rtpengine-daemon
 
 RUN_RTPENGINE=yes
 LISTEN_TCP=25060
@@ -87,15 +11,7 @@ SILENT_TIMEOUT=3600
 PIDFILE=/var/run/ngcp-rtpengine-daemon.pid
 FORK=yes
 TABLE=0
-</code></pre>
-
-<p>The important part here is <code>LISTEN_NG</code> which is how kamailio will communicate with rtpengine, and <code>INTERFACES</code> which specifies which interface rtpengine will listen on as well as how rtpengine will re-write the SDP body in the SIP packets.</p>
-
-<p>For your kamailio configuration, make sure you have the modules for tls, rtpengine and textops enabled. Consult the kamailio <a href="http://kamailio.org/docs/modules/3.4.x/modules/tls.html">tls</a> documentation for how to configure your SSL certificate.</p>
-
-<p>Since I&rsquo;m using kamailio for routing to other SIP trunks as well, I created an SRV record specifically for routing to 365 which I point Call Manager to. I then use the SIP uri to determine which SIP packets to rewrite for 365. The kamailio routing config may look something like this.</p>
-
-<pre><code>#/etc/kamailio/kamailio.cfg
+</code></pre><p>The important part here is <code>LISTEN_NG</code> which is how kamailio will communicate with rtpengine, and <code>INTERFACES</code> which specifies which interface rtpengine will listen on as well as how rtpengine will re-write the SDP body in the SIP packets.</p><p>For your kamailio configuration, make sure you have the modules for tls, rtpengine and textops enabled. Consult the kamailio <a href=http://kamailio.org/docs/modules/3.4.x/modules/tls.html>tls</a> documentation for how to configure your SSL certificate.</p><p>Since I&rsquo;m using kamailio for routing to other SIP trunks as well, I created an SRV record specifically for routing to 365 which I point Call Manager to. I then use the SIP uri to determine which SIP packets to rewrite for 365. The kamailio routing config may look something like this.</p><pre><code>#/etc/kamailio/kamailio.cfg
 request_route {
     if(uri=~'^.*@pstn[0-9]?-o365\.in\.trilliumstaffing\.com.*$') {
         set_rtpengine_set(&quot;0&quot;);
@@ -117,29 +33,7 @@ onreply_route[1] {
     sdp_remove_line_by_prefix(&quot;c=IN IP4 25&quot;);
     subst(&quot;/^(Record-Route.*)25[.]25[.]25[.]5(.*)$/\\10.0.0.5\\2/g&quot;);
 }
-</code></pre>
-
-<p>Don&rsquo;t expect to be able to copy and paste the config above and have it work. As noted earlier, this guide is for people who can manage a kamailio configuration. But this should include the minimum SIP maipulations necessary to make it work.</p>
-
-<p>Part of what makes integrating SIP with Office 365 so difficult is that Microsoft does not public specific guidence on what SIP options they require, this seems to be special information reserved to their SBC partners. Here are some of the specific requirements I&rsquo;ve learned through trial and error.</p>
-
-<ol>
-<li><p>As noted above, the certificate subject must exactly match your DNS and the address in your UM IP gateway. Without this you get a 403 from 365.</p></li>
-
-<li><p>The host portion of the To: header in your SIP packet must be your destination <guid>.um.outlook.com. If this does not match you will get 488 not acceptable here from Microsoft.</p></li>
-
-<li><p>You will also get 488 from Microsoft if you are not offering SRTP</p></li>
-
-<li><p>If you are offering RTCP mutexing in your invite you will get 488.</p></li>
-
-<li><p>If your Invite contains any ICE options you will get 488.</p></li>
-</ol>
-
-<p>There may be other requirements or restrictions that I did not discover, so in the interests of helping others figure out what Office 365 requires I&rsquo;m including the dump of a SIP exchange between my working Kamailio/rtpengine server and Office 365.</p>
-
-<p>Invite with Offer</p>
-
-<pre><code>INVITE sip:87000@df6b236d-056d-416a-8f5f-f2e8e1a0238d.um.outlook.com:5061;transport=tls SIP/2.0
+</code></pre><p>Don&rsquo;t expect to be able to copy and paste the config above and have it work. As noted earlier, this guide is for people who can manage a kamailio configuration. But this should include the minimum SIP maipulations necessary to make it work.</p><p>Part of what makes integrating SIP with Office 365 so difficult is that Microsoft does not public specific guidence on what SIP options they require, this seems to be special information reserved to their SBC partners. Here are some of the specific requirements I&rsquo;ve learned through trial and error.</p><ol><li><p>As noted above, the certificate subject must exactly match your DNS and the address in your UM IP gateway. Without this you get a 403 from 365.</p></li><li><p>The host portion of the To: header in your SIP packet must be your destination .um.outlook.com. If this does not match you will get 488 not acceptable here from Microsoft.</p></li><li><p>You will also get 488 from Microsoft if you are not offering SRTP</p></li><li><p>If you are offering RTCP mutexing in your invite you will get 488.</p></li><li><p>If your Invite contains any ICE options you will get 488.</p></li></ol><p>There may be other requirements or restrictions that I did not discover, so in the interests of helping others figure out what Office 365 requires I&rsquo;m including the dump of a SIP exchange between my working Kamailio/rtpengine server and Office 365.</p><p>Invite with Offer</p><pre><code>INVITE sip:87000@df6b236d-056d-416a-8f5f-f2e8e1a0238d.um.outlook.com:5061;transport=tls SIP/2.0
 Record-Route: &lt;sip:25.25.25.5;transport=tls;r2=on;lr&gt;
 Record-Route: &lt;sip:25.25.25.5;transport=tcp;r2=on;lr&gt;
 To: &lt;sip:87000@&lt;guid&gt;.um.outlook.com&gt;
@@ -179,11 +73,7 @@ a=fmtp:101 0-15
 a=sendrecv
 a=rtcp:31183
 a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:Rt5s9b1WdrBKIoygx4q3Tx8Zog/+Qt1/UTEmxr9x
-</code></pre>
-
-<p>OK with Answer</p>
-
-<pre><code>SIP/2.0 200 OK
+</code></pre><p>OK with Answer</p><pre><code>SIP/2.0 200 OK
 To: &lt;sip:87000@&lt;guid&gt;.um.outlook.com&gt;;tag=ee195713eb
 Via: SIP/2.0/TLS sbc.example.com:5061;received=25.25.25.5;branch=z9hG4bKf5ce.075c1223046356d5878a36157c2736d5.0;i=c
 Via: SIP/2.0/TCP 10.0.0.6:5060;branch=z9hG4bK1fd3fd816943
@@ -222,13 +112,4 @@ a=rtpmap:101 telephone-event/8000
 a=fmtp:101 0-16,36
 a=ptime:20
 a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:FHoHEZk7wM6b/frTeX+fzQ/K0PtuAvfIzRqjol9K
-</code></pre>
-
-  <p class="small gray pubDate"><time datetime="2015-08-24">2015-08-24</time></p>
-</article>
-</main>
-</div>
-
-</body>
-</html>
-
+</code></pre><p class="small gray pubDate"><time datetime=2015-08-24>2015-08-24</time></p></article></main></div></body></html>

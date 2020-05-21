@@ -1,71 +1,5 @@
-<!doctype html> 
-<html lang="en-us"> 
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="author" content="Clint Armstrong">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="icon" href="/favicon.png" />
-  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />
-
-  
-  <link rel="stylesheet" href="/style.css" />
-  
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-58778705-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-
-</head>
-
-<body class="">
-
-  <div class="header center">
-    <ul class="navbar">
-	
-	
-		<li class="navbar"><a class="navbar" href="/">Posts</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="https://twitter.com/clinta">Twitter</a></li>
-	
-	
-	
-		<li class="navbar"><a class="navbar" href="/resume/">Resume</a></li>
-	
-	
-	</ul>
-  </div>
-
-  <div class="wrap">
-	
-
-
-<main>
-<article class="post">
-  <h1 class="title"><a href="https://clinta.github.io/salt-git-nogitfs/" title="Salt git integration without gitfs">Salt git integration without gitfs</a></h1>
-  <p><a href="http://saltstack.com/">SaltStack</a> has some pretty cool git <a href="https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html">integration</a>. Unfortunately it also has quite a few <a href="https://github.com/saltstack/salt/issues?utf8=%E2%9C%93&amp;q=is%3Aissue+is%3Aopen+gitfs">bugs</a>, especially when using gitfs for pillars.</p>
-
-<p>These issues can be annoying at small scale, but they can become very important as you add more minions. To work around these I looked for ways I could simplify our salt/git integration and now that it&rsquo;s complete I couldn&rsquo;t be happier.</p>
-
-<p>With a post-receive hook on my gitlab server and a salt master that is also a minion, the salt server updates it&rsquo;s file root&rsquo;s directory from git without the salt-master process having to do any interfacing with git at all. As a result applying states through our environment of nearly 200 minions is faster and more reliable than it ever was with gitfs.</p>
-
-<p>I even have some features that I never had with gitfs, like automatic environments based on branches. Here&rsquo;s how it works.</p>
-
-<p>My salt master has the following state applied. This state ensures that the salt-master service is running. It gets the list of branches from the git remote and makes sure that that branch is cloned into a directory under <code>/srv/salt/</code>. It also manages a file in <code>/etc/salt/master.d/roots.conf</code> which defines each environment that has been cloned and restarts the salt-master process when the file changes. This uses one git repository for both states and pillars, so states are in the <code>repo/states</code> directory and pillars are in the <code>repo/pillar</code> directory.</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># repo/states/salt-master-git.sls
+<!doctype html><html lang=en-us><head><meta charset=utf-8><title></title><meta name=author content="Clint Armstrong"><meta name=description content><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.png><link rel=apple-touch-icon-precomposed href=/apple-touch-icon.png><link rel=stylesheet href=/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-58778705-1','auto');ga('send','pageview');}</script></head><body><div class="header center"><ul class=navbar><li class=navbar><a class=navbar href=/>Posts</a></li><li class=navbar><a class=navbar href=https://twitter.com/clinta>Twitter</a></li><li class=navbar><a class=navbar href=/resume/>Resume</a></li></ul></div><div class=wrap><main><article class=post><h1 class=title><a href=https://clinta.github.io/salt-git-nogitfs/ title="Salt git integration without gitfs">Salt git integration without gitfs</a></h1><p><a href=http://saltstack.com/>SaltStack</a> has some pretty cool git <a href=https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html>integration</a>. Unfortunately it also has quite a few <a href="https://github.com/saltstack/salt/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+gitfs">bugs</a>, especially when using gitfs for pillars.</p><p>These issues can be annoying at small scale, but they can become very important as you add more minions. To work around these I looked for ways I could simplify our salt/git integration and now that it&rsquo;s complete I couldn&rsquo;t be happier.</p><p>With a post-receive hook on my gitlab server and a salt master that is also a minion, the salt server updates it&rsquo;s file root&rsquo;s directory from git without the salt-master process having to do any interfacing with git at all. As a result applying states through our environment of nearly 200 minions is faster and more reliable than it ever was with gitfs.</p><p>I even have some features that I never had with gitfs, like automatic environments based on branches. Here&rsquo;s how it works.</p><p>My salt master has the following state applied. This state ensures that the salt-master service is running. It gets the list of branches from the git remote and makes sure that that branch is cloned into a directory under <code>/srv/salt/</code>. It also manages a file in <code>/etc/salt/master.d/roots.conf</code> which defines each environment that has been cloned and restarts the salt-master process when the file changes. This uses one git repository for both states and pillars, so states are in the <code>repo/states</code> directory and pillars are in the <code>repo/pillar</code> directory.</p><pre><code class=language-sls data-lang=sls>
+# repo/states/salt-master-git.sls
 
 salt-master:
   service.running:
@@ -76,13 +10,13 @@ salt-master:
 
 # get the list of remote branches
 {% set branches = [] %}
-{% for origin_branch in salt[&#39;git.ls_remote&#39;](remote=&#39;git@gitlab:salt/salt.git&#39;, opts=&#39;--heads&#39;, user=&#39;root&#39;) %}
-  {% set i = branches.append(origin_branch.replace(&#39;refs/heads/&#39;, &#39;&#39;)) %}
+{% for origin_branch in salt['git.ls_remote'](remote='git@gitlab:salt/salt.git', opts='--heads', user='root') %}
+  {% set i = branches.append(origin_branch.replace('refs/heads/', '')) %}
 {% endfor %}
 
 # delete any directories that are no longer remote branches
-{% for dir in salt[&#39;file.find&#39;](&#39;/srv/&#39;, type=&#39;d&#39;, maxdepth=1)
-if dir.startswith(&#39;/srv/salt/&#39;) and dir.split(&#39;/&#39;)[-1] not in branches %}
+{% for dir in salt['file.find']('/srv/', type='d', maxdepth=1)
+if dir.startswith('/srv/salt/') and dir.split('/')[-1] not in branches %}
 {{ dir }}:
   file.absent:
     - require_in:
@@ -116,18 +50,21 @@ salt-repo-{{ branch }}:
     - user: root
     - mode: 644
     - listen_in:
-      - service: salt-master</code></pre></div><div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># repo/states/files/roots.conf
+      - service: salt-master
+
+</code></pre><pre><code class=language-sls data-lang=sls>
+# repo/states/files/roots.conf
 
 {%- set branch_dirs = [] -%}
-{%- for dir in salt[&#39;file.find&#39;](&#39;/srv/&#39;, type=&#39;d&#39;, maxdepth=1) 
-if dir.startswith(&#39;/srv/salt/&#39;) and dir != &#39;/srv/salt/master&#39; -%}
+{%- for dir in salt['file.find']('/srv/', type='d', maxdepth=1) 
+if dir.startswith('/srv/salt/') and dir != '/srv/salt/master' -%}
   {%- set i = branch_dirs.append(dir) -%}
 {%- endfor -%}
 
 file_roots:
   base:
     - /srv/salt/master/states
-{%- for branch in branch_dirs if branch != &#39;master&#39; %}
+{%- for branch in branch_dirs if branch != 'master' %}
   {{ branch }}:
     - {{ branch }}/states
 {%- endfor %}
@@ -135,41 +72,43 @@ file_roots:
 pillar_roots:
   base:
     - /srv/salt/master/pillar
-{%- for branch in branch_dirs if branch != &#39;master&#39; %}
+{%- for branch in branch_dirs if branch != 'master' %}
   {{ branch }}:
     - {{ branch }}/pillar
-{%- endfor %}</code></pre></div>
-<p>With just this and a schedule you already have an okay salt-git integration. But with a little more work you can take it to the next step and make it event driven on git push.</p>
+{%- endfor %}
 
-<p>If you&rsquo;re using gitlab for your salt repository, you can create a post-recieve script by putting a file in <code>/var/opt/gitlab/git-data/repositories/salt/salt.git/custom_hooks/post-receive</code>.</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007020">#!/usr/bin/env bash                                                        
-</span><span style="color:#007020"></span> 
-<span style="color:#007020;font-weight:bold">while</span> <span style="color:#007020">read</span> branch; <span style="color:#007020;font-weight:bold">do</span>                                                      
-        <span style="color:#bb60d5">branchname</span><span style="color:#666">=</span><span style="color:#007020;font-weight:bold">$(</span>cut -d <span style="color:#4070a0">&#34;/&#34;</span> -f <span style="color:#40a070">3</span> <span style="color:#666">&lt;&lt;&lt;</span> <span style="color:#4070a0">&#34;</span><span style="color:#70a0d0;font-style:italic">${</span><span style="color:#bb60d5">branch</span><span style="color:#70a0d0;font-style:italic">}</span><span style="color:#4070a0">&#34;</span><span style="color:#007020;font-weight:bold">)</span>                      
-        sudo salt-call event.send salt/push <span style="color:#bb60d5">branch</span><span style="color:#666">=</span><span style="color:#70a0d0;font-style:italic">${</span><span style="color:#bb60d5">branchname</span><span style="color:#70a0d0;font-style:italic">}</span>           
-<span style="color:#007020;font-weight:bold">done</span>                                                                       </code></pre></div>
-<p>Now in your salt master config, add a reactor:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># /etc/salt/master
+</code></pre><p>With just this and a schedule you already have an okay salt-git integration. But with a little more work you can take it to the next step and make it event driven on git push.</p><p>If you&rsquo;re using gitlab for your salt repository, you can create a post-recieve script by putting a file in <code>/var/opt/gitlab/git-data/repositories/salt/salt.git/custom_hooks/post-receive</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>
+<span style=color:#75715e>#!/usr/bin/env bash</span>                                                        
+ 
+<span style=color:#66d9ef>while</span> read branch; <span style=color:#66d9ef>do</span>                                                      
+        branchname<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>cut -d <span style=color:#e6db74>&#34;/&#34;</span> -f <span style=color:#ae81ff>3</span> <span style=color:#f92672>&lt;&lt;&lt;</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>branch<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>)</span>                      
+        sudo salt-call event.send salt/push branch<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>branchname<span style=color:#e6db74>}</span>           
+<span style=color:#66d9ef>done</span>                                                                       
+
+</code></pre></div><p>Now in your salt master config, add a reactor:</p><pre><code class=language-sls data-lang=sls>
+# /etc/salt/master
 
 reactor:
-  - &#39;salt/push&#39;:
-     - salt://reactor/salt-push.sls</code></pre></div>
-<p>Add the reactor file in your git repo.</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># repo/states/reactor/salt-push.sls
+  - 'salt/push':
+     - salt://reactor/salt-push.sls
+
+</code></pre><p>Add the reactor file in your git repo.</p><pre><code class=language-sls data-lang=sls>
+# repo/states/reactor/salt-push.sls
 
 salt-push:
   local.state.sls:
-    - tgt: &#39;salt-master&#39;
+    - tgt: 'salt-master'
     - expr_form: pcre
     - queue: True
     - kwarg:
         mods: salt.master.salt-git
         pillar:
           salt_git_branches:
-            - {{ data[&#39;data&#39;][&#39;branch&#39;] }}
-        queue: True</code></pre></div>
-<p>And add a bit more logic to the salt-master-git.sls to handle the individual branch being pushed. With this logic if the pillar <code>salt_git_branches</code> is included in the state run, the state will only update that branch. If it is not included, the state will update all branches, and clean up old deleted branches. This saves some time which is important when it&rsquo;s being called by a post-recieve hook.</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sls" data-lang="sls"># repo/states/salt-master-git.sls
+            - {{ data['data']['branch'] }}
+        queue: True
+
+</code></pre><p>And add a bit more logic to the salt-master-git.sls to handle the individual branch being pushed. With this logic if the pillar <code>salt_git_branches</code> is included in the state run, the state will only update that branch. If it is not included, the state will update all branches, and clean up old deleted branches. This saves some time which is important when it&rsquo;s being called by a post-recieve hook.</p><pre><code class=language-sls data-lang=sls>
+# repo/states/salt-master-git.sls
 
 salt-master:
   service.running:
@@ -178,17 +117,17 @@ salt-master:
 /srv/salt:
   file.directory: []
 
-{% set branches = salt[&#39;pillar.get&#39;](&#39;salt_git_branches&#39;,[]) %}
+{% set branches = salt['pillar.get']('salt_git_branches',[]) %}
 
 # if a piller was not passed in, then get the list of branches from remote
 {% if branches == [] %}
-  {% for origin_branch in salt[&#39;git.ls_remote&#39;](remote=&#39;git@gitlab:salt/salt.git&#39;, opts=&#39;--heads&#39;, user=&#39;root&#39;) %}
-    {% set i = branches.append(origin_branch.replace(&#39;refs/heads/&#39;, &#39;&#39;)) %}
+  {% for origin_branch in salt['git.ls_remote'](remote='git@gitlab:salt/salt.git', opts='--heads', user='root') %}
+    {% set i = branches.append(origin_branch.replace('refs/heads/', '')) %}
   {% endfor %}
 
-# Delete directories of deleted branches since we&#39;re looking at all remote branches
-{% for dir in salt[&#39;file.find&#39;](&#39;/srv/&#39;, type=&#39;d&#39;, maxdepth=1)
-if dir.startswith(&#39;/srv/salt/&#39;) and dir.split(&#39;/&#39;)[-1] not in branches %}
+# Delete directories of deleted branches since we're looking at all remote branches
+{% for dir in salt['file.find']('/srv/', type='d', maxdepth=1)
+if dir.startswith('/srv/salt/') and dir.split('/')[-1] not in branches %}
 {{ dir }}:
   file.absent:
     - require_in:
@@ -222,14 +161,6 @@ salt-repo-{{ branch }}:
     - user: root
     - mode: 644
     - listen_in:
-      - service: salt-master</code></pre></div>
-<p>Now enjoy the best of both worlds. Automatic integration between salt and git and the reliability and speed of a simple file_roots configuration.</p>
+      - service: salt-master
 
-  <p class="small gray pubDate"><time datetime="2015-12-15">2015-12-15</time></p>
-</article>
-</main>
-</div>
-
-</body>
-</html>
-
+</code></pre><p>Now enjoy the best of both worlds. Automatic integration between salt and git and the reliability and speed of a simple file_roots configuration.</p><p class="small gray pubDate"><time datetime=2015-12-15>2015-12-15</time></p></article></main></div></body></html>
