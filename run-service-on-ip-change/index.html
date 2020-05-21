@@ -1,0 +1,41 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><title></title><meta name=author content="Clint Armstrong"><meta name=description content><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.png><link rel=apple-touch-icon-precomposed href=/apple-touch-icon.png><link rel=stylesheet href=/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-58778705-1','auto');ga('send','pageview');}</script></head><body><div class="header center"><ul class=navbar><li class=navbar><a class=navbar href=/>Posts</a></li><li class=navbar><a class=navbar href=https://twitter.com/clinta>Twitter</a></li><li class=navbar><a class=navbar href=/resume/>Resume</a></li></ul></div><div class=wrap><main><article class=post><h1 class=title><a href=https://clinta.github.io/run-service-on-ip-change/ title="Run a SystemD service on IP Address Change">Run a SystemD service on IP Address Change</a></h1><p>Ever needed to run a command anytime an IP address changes? IP addresses don&rsquo;t
+change often on IPv4 networks, but IPv6 changes things and makes addresses more
+dynamic, so the ability to run a command every time your machine gets a new IP
+address can be very useful on dual stack networks. Here&rsquo;s how I accomplished
+this with a simple SystemD service and target.</p><pre><code># /etc/systemd/system/ip-change-mon.service
+
+[Unit]
+Description=IP Change Monitor
+Wants=network.target
+After=network-online.target
+
+[Service]
+ExecStart=:/bin/bash -c &quot;ip mon addr | sed -nu -r
+\'s/.*[[:digit:]]+:[[:space:]]+([^[:space:]]+).*/\\1/p\' | while read iface; do
+systemctl restart ip-changed@${iface}.target; done&quot;
+
+[Install]
+WantedBy=multi-user.target default.target
+</code></pre><p>That command is a little cryptic because of the layers of escaping to make it
+work well with systemd. Written as a bash script it&rsquo;d look something like this:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#/bin/bash</span>
+
+ip mon addr | sed -nu -r <span style=color:#ae81ff>\&#39;</span>s/.*<span style=color:#f92672>[[</span>:digit:<span style=color:#f92672>]]</span>+:<span style=color:#f92672>[[</span>:space:<span style=color:#f92672>]]</span>+<span style=color:#f92672>([</span>^<span style=color:#f92672>[</span>:space:<span style=color:#f92672>]]</span>+<span style=color:#f92672>)</span>.*/<span style=color:#ae81ff>\\</span>1/p<span style=color:#ae81ff>\&#39;</span> | <span style=color:#66d9ef>while</span> read iface; <span style=color:#66d9ef>do</span>
+  systemctl restart ip-changed@<span style=color:#e6db74>${</span>iface<span style=color:#e6db74>}</span>.target
+<span style=color:#66d9ef>done</span>
+</code></pre></div><p><code>ip monitor address</code> is a the command watching for ip address changes. If you
+run this command by itself you get output that looks like this:</p><pre><code>1: eth0    inet 192.168.10.15/24 scope global secondary eth0
+       valid_lft forever preferred_lft forever
+Deleted 7: eth0    inet 192.168.10.15/24 scope global secondary eth0
+       valid_lft forever preferred_lft forever
+</code></pre><p>The sed command strips out everything except the interface name. Then read loops
+over each event and restarts a target for that interface.</p><p>The target file is very simple and exists to be used by other units.</p><pre><code># /etc/systemd/system/ip-changed@.target 
+
+[Unit]
+Description=IP Address changed on %i
+</code></pre><p>Now just enable and start the monitor:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e># systemctl enable --now ip-change-mon.service</span>
+</code></pre></div><p>Now in any systemd unit you want to run when the IP changes simply add these
+options to the <code>[Unit]</code> section.</p><pre><code>PartOf=ip-changed@eth0.target
+Before=ip-changed@eth0.target
+</code></pre><p>Whenever ip-change-mon detects and ip address change it will restart the target,
+and because the unit you want to run is <code>PartOf</code> that target, your unit will
+restart too.</p><p class="small gray pubDate"><time datetime=2020-05-21>2020-05-21</time></p></article></main></div></body></html>
