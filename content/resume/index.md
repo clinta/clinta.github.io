@@ -56,7 +56,7 @@ in Go and Python.
 
 {{< resPage break="1" >}}
 
-{{< resSection "Work Experience (continued)" "print">}}
+{{< resSection "Work Experience (continued)" "onlyPrint">}}
 2008 - 2011
 :    **Desktop Configuration Administrator** Liberty University, Lynchburg, VA
 :    Managed the centralized configuration of over 5000 workstations across
