@@ -24,7 +24,7 @@ in Go and Python.
 
 {{< resSection "Work Experience" >}}
 01/2015 - Present
-:    **Systems Engineer** Trillium Staffing, Kalamazoo, MI
+:    **DevOps Engineer** Trillium Staffing, Kalamazoo, MI
 :    Head engineer responsible for networking, servers and cloud services.
      * Facilitated a corporate big-data initiative building an open source,
          hyperconverged cluster on top of [Nomad](https://www.nomadproject.io/),
