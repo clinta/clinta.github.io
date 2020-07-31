@@ -108,5 +108,8 @@ See my complete portfolio of open source work at https://github.com/clinta/.
 
 **[salt](https://github.com/saltstack/salt/pulls?q=is%3Apr+author%3Aclinta)**
 :    Wrote the [x509 module](https://docs.saltstack.com/en/latest/ref/states/all/salt.states.x509.html) and contributed several bug fixes.
+
+**[containernetworking/plugins (CNI Networking)](https://github.com/containernetworking/plugins/pulls?q=is%3Apr+author%3Aclinta)**
+:    Added functionality for managing mac addresses of connected containers
 {{< /resSection >}}
 {{< /resPage >}}
