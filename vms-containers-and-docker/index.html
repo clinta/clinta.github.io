@@ -6,20 +6,20 @@ based on my experience over the last several years using these technologies and
 writing programs to make use of them. Though many parts of this are simplified,
 my hope is that it is all technically accurate. If you find something that
 isn&rsquo;t please open an <a href=https://github.com/clinta/clinta.github.io/issues>issue</a>
-and I&rsquo;d love to discuss it and learn more.</p><h2 id=what-is-a-computer->What is a computer?</h2><p>Since containers and vms all try to simulate a computer, it seems appropriate
+and I&rsquo;d love to discuss it and learn more.</p><h2 id=what-is-a-computer>What is a computer?</h2><p>Since containers and vms all try to simulate a computer, it seems appropriate
 to start with a simplified answer to the question &ldquo;What is a computer?&rdquo; For our
 purposes, a computer is a device that is capable of running software written in
-x86 machine code. Lets look at what code it runs, step by step.</p><h3 id=firmware->Firmware</h3><p>The first bit of software that any computer runs is the firmware. This software
+x86 machine code. Lets look at what code it runs, step by step.</p><h3 id=firmware>Firmware</h3><p>The first bit of software that any computer runs is the firmware. This software
 is burned onto a chip on the motherboard. It&rsquo;s purpose is to provide a common
 interface that an operating system can use to talk to the hardware in the
 computer. On older systems the interface that this software provides is the
-BIOS. On newer systems it is EFI.</p><h3 id=bootloader->Bootloader</h3><p>After a computer boots and the firmware initializes the devices it searches for
+BIOS. On newer systems it is EFI.</p><h3 id=bootloader>Bootloader</h3><p>After a computer boots and the firmware initializes the devices it searches for
 a bootloader on the configured boot device. When this bootloader is found it is
 executed. This bootloader is a very small piece of software, it&rsquo;s only job is
-to load the operating system kernel.</p><h3 id=kernel->Kernel</h3><p>The kernel is the core of the computers operating system. It is responsible for
+to load the operating system kernel.</p><h3 id=kernel>Kernel</h3><p>The kernel is the core of the computers operating system. It is responsible for
 dividing cpu time between the various user processes that are running in the
 operating system and it provides an interface for user processes to talk to
-hardware.</p><h3 id=user-processes->User Processes</h3><p>All other processes on the computer are user processes. They cannot run unless
+hardware.</p><h3 id=user-processes>User Processes</h3><p>All other processes on the computer are user processes. They cannot run unless
 the kernel schedules time for them on the CPU. They cannot access
 hardware unless the kernel gives them access. Most user processes don&rsquo;t access
 hardware directly. When a user process wants to write a file, it typically does
@@ -28,11 +28,11 @@ kernel knows what filesystem is on the disk and how to send the right commands
 to the disk. When a user process wants to talk on the network, it does not send
 data directly to the network card, and process incoming packets, it asks the
 kernel for a socket and the kernel does the hard work of determining which
-packets need to be sent back to this process and which packets go elsewhere.</p><h3 id=init->Init</h3><p>On unix based systems there is a special user process called init. It is the
+packets need to be sent back to this process and which packets go elsewhere.</p><h3 id=init>Init</h3><p>On unix based systems there is a special user process called init. It is the
 first process executed by the kernel and it is responsible for launching all
-other user processes.</p><h3 id=operating-system->Operating System</h3><p>An operating system is a kernel and a collection of user processes that runs on
+other user processes.</p><h3 id=operating-system>Operating System</h3><p>An operating system is a kernel and a collection of user processes that runs on
 a computer.</p><p>Now that we have established the basics of what a computer is, we can talk
-about how different technologies simulate a computer.</p><h2 id=what-is-a-virtual-machine->What is a Virtual Machine?</h2><p>A virtual machine is a simulation of an entire computer.</p><p>A hypervisor is the software that runs the simulation. A type 1 hypervisor is
+about how different technologies simulate a computer.</p><h2 id=what-is-a-virtual-machine>What is a Virtual Machine?</h2><p>A virtual machine is a simulation of an entire computer.</p><p>A hypervisor is the software that runs the simulation. A type 1 hypervisor is
 an operating system who&rsquo;s entire purpose is to run VMs. VMWare Vsphere is an
 example of a type 1 hypervisor. A type 2 hypervisor is a program that runs vms
 and runs on an existing operating system. VirtualBox is an example of a type 2
@@ -51,7 +51,7 @@ received by the hypervisor. Since the virtual disk is really a file, the
 hypervisor must then ask it&rsquo;s kernel to write the file. The hypervisor kernel
 then sends scsi commands to the physical disk.</p><p>This is a non-trivial amount of overhead, especially if you only have the VM
 because you want to run a specific user process in it. To avoid this overhead,
-while still providing a level of isolation, containers are a good solution.</p><h2 id=what-is-a-container->What is a container?</h2><p>In normal operation, user processes running on a computer can communicate with
+while still providing a level of isolation, containers are a good solution.</p><h2 id=what-is-a-container>What is a container?</h2><p>In normal operation, user processes running on a computer can communicate with
 one another through a variety of different methods, and they can all manipulate
 the hardware of the computer in a way that can affect one another. Containers
 are a way of isolating user processes to prevent this. If a process is not in a
@@ -61,27 +61,27 @@ with other processes using the inter-process communication capabilities
 provided by the kernel.</p><p>Containers can prevent some or all of this behavior depending on the
 configuration. This is how containers can provide the isolation benefits of a
 VM without the overhead of running two kernels. Different container
-technologies do this in different ways.</p><h3 id=chroot->chroot</h3><p><a href=https://www.freebsd.org/cgi/man.cgi?chroot(8)>Chroot</a> is the oldest container
+technologies do this in different ways.</p><h3 id=chroot>chroot</h3><p><a href=https://www.freebsd.org/cgi/man.cgi?chroot(8)>Chroot</a> is the oldest container
 technology. In unix the root is the highest directory level accessible. Chroot
 changes the root for the current process to be some lower level directory,
 which prevents access to any files outside of the chroot. Note that this only
 contains filesystem access, it does nothing to limit network access, or other
-kernel APIs that processes in the chroot can call.</p><h3 id=freebsd-jails->FreeBSD Jails</h3><p>FreeBSD jails build on chroot to create more complete container isolation. By
+kernel APIs that processes in the chroot can call.</p><h3 id=freebsd-jails>FreeBSD Jails</h3><p>FreeBSD jails build on chroot to create more complete container isolation. By
 default they limit the kernel APIs that jailed processes can call and they
 isolate jailed processes to only utilizing permitted IP addresses on the NIC.
 Jails expect to have an operating system in the jail with everything except the
 kernel. When the jail starts, init will be launched which will launch other
-processes.</p><h3 id=linux-namespaces->Linux Namespaces</h3><p><a href=https://en.wikipedia.org/wiki/Linux_namespaces>Linux Namespaces</a> provide
+processes.</p><h3 id=linux-namespaces>Linux Namespaces</h3><p><a href=https://en.wikipedia.org/wiki/Linux_namespaces>Linux Namespaces</a> provide
 isolation for specific resources. By putting a process into a namespace, it no
 longer has visibility to the resources in other namespaces. The mount namespace
 prevents access to mountpoints in other namespaces. The pid namespace prevents
 visibility to process IDs running in other namespaces. The network namespace
 prevents visibility of network devices in other namespaces. By combining
 different namespaces the level of containerization for a process can be
-customized.</p><h4 id=systemd-nspawnd->systemd-nspawnd</h4><p><a href=https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html>Systemd-nspawnd</a>
+customized.</p><h4 id=systemd-nspawnd>systemd-nspawnd</h4><p><a href=https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html>Systemd-nspawnd</a>
 starts a container in a directory using linux namespaces to provide isolation.
 Like FreeBSD jails, nspawnd expects to run an init process inside the container
-which will launch other processes.</p><h4 id=docker->Docker</h4><p>Docker also uses linux namespaces for isolation, but the typical docker
+which will launch other processes.</p><h4 id=docker>Docker</h4><p>Docker also uses linux namespaces for isolation, but the typical docker
 container does not run an init process. Instead docker is intended to run
 microservices where only a single process in the container is running. If you
 are running a docker container running nginx for example, the only process
