@@ -18,7 +18,7 @@
 
 <body class="{{ with .Site.Params.pageLayoutClass }}{{ . }}{{ end }}">
 
-  <div class="header center">
+  <div class="header center noPrint">
     <ul class="navbar">
 	{{ range .Site.Params.headerlinks }}
 	{{ range $k, $v := . }}

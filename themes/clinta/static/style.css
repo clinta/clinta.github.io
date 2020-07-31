@@ -110,3 +110,13 @@ li.navbar a.navbar {
 li.navbar a.navbar:hover {
     background-color: #111;
 }
+
+
+
+.onlyPrint {display:none;}
+.noPrint {display:block;}
+
+@media print {
+    .noPrint {display:none;}
+    .onlyPrint {display:block;}
+}

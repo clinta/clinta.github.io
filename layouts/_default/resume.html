@@ -1,0 +1,11 @@
+{{ partial "head.html" . }}
+<!-- <main class="posts"> -->
+<link rel="stylesheet" type="text/css" href="/css/resume.css" />
+
+<main>
+<article class="post">
+  {{ .Content }}
+  <p class="small gray pubDate"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time></p>
+</article>
+</main>
+{{ partial "foot.html" . }}

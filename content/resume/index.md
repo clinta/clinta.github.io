@@ -2,14 +2,13 @@
 layout: single
 title: Clint Armstrong
 email: clint@clintarmstrong.net
+layout: resume
 permalink: /resume/
 date: 2019-06-05
 blackfriday:
   fractions: false
 # Be sure and update the pdf when updating this
 ---
-
-<link rel="stylesheet" type="text/css" href="/css/resume.css" />
 
 {{< span class="pdfLink">}}[Download](/resume.pdf "Download PDF"){{< /span >}}
 
