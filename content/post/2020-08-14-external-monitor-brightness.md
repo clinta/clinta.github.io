@@ -43,6 +43,7 @@ SUBSYSTEM=="i2c-dev", ACTION=="add",\
 	ENV{SYSTEMD_WANTS}+="ddcci@$kernel.service"
 ```
 5. Reload udev rules `sudo udevadm control --reload-rules && sudo udevadm trigger`
+6. Load the `i2c-dev` module: `sudo modprobe i2c-dev`
 
 If this worked you should now have devices in `/sys/class/backlight` and any
 tool that controls backlights should work.
