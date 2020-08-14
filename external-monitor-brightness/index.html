@@ -1,0 +1,27 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><title></title><meta name=author content="Clint Armstrong"><meta name=description content><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.png><link rel=apple-touch-icon-precomposed href=/apple-touch-icon.png><link rel=stylesheet href=/style.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-58778705-1','auto');ga('send','pageview');}</script></head><body><div class="header center noPrint"><ul class=navbar><li class=navbar><a class=navbar href=/>Posts</a></li><li class=navbar><a class=navbar href=https://twitter.com/clinta>Twitter</a></li><li class=navbar><a class=navbar href=/resume/>Resume</a></li></ul></div><div class=wrap><main><article class=post><h1 class=title><a href=https://clinta.github.io/external-monitor-brightness/ title="Control External Monitor Brightness">Control External Monitor Brightness</a></h1><p>External monitors can be controlled from linux via the
+<a href=https://en.wikipedia.org/wiki/Display_Data_Channel#DDC.2FCI>DDC/CI</a> interface.
+There is some great guidence on doing this in in the
+<a href=https://wiki.archlinux.org/index.php/backlight#External_monitorshttps://wiki.archlinux.org/index.php/backlight#External_monitors>ArchWiki</a>,
+but there are some problems on Nvidia that can be solved with workarounds listed
+in this
+<a href=https://gitlab.com/ddcci-driver-linux/ddcci-driver-linux/-/issues/7>issue</a>.</p><p>Here&rsquo;s a step by step to getting it working on Arch.</p><ol><li>Install <a href="https://www.archlinux.org/packages/?name=ddcutil">ddcutil</a> and <a href=https://aur.archlinux.org/packages/ddcci-driver-linux-dkms/>ddcci-driver-linux-dkms</a>.</li><li>Add <code>i2c-dev</code> to <code>/etc/modules-load.d/modules.conf</code>.</li><li>Add a ddcci service by creating the following in
+<code>/etc/systemd/system/ddcci@.service</code>:</li></ol><pre><code>[Unit]
+Description=ddcci handler
+After=graphical.target
+Before=shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'echo Trying to attach ddcci to %i &amp;&amp; success=0 &amp;&amp; i=0 &amp;&amp; id=$(echo %i | cut -d &quot;-&quot; -f 2) &amp;&amp; while ((success &lt; 1)) &amp;&amp; ((i++ &lt; 5)); do /usr/bin/ddcutil getvcp 10 -b $id &amp;&amp; { success=1 &amp;&amp; echo ddcci 0x37 /sys/bus/i2c/devices/%i/new_device &amp;&amp; echo &quot;ddcci attached to %i&quot;; } || sleep 5; done'
+Restart=no
+</code></pre><ol start=4><li>Add a udev rule to load this service on attachment of the Nvidida i2c adapter
+by creating <code>/etc/udev/rules.d/99-ddcci.rules</code> with the following content:</li></ol><pre><code>SUBSYSTEM==&quot;i2c-dev&quot;, ACTION==&quot;add&quot;,\
+	ATTR{name}==&quot;NVIDIA i2c adapter*&quot;,\
+	TAG+=&quot;ddcci&quot;,\
+	TAG+=&quot;systemd&quot;,\
+	ENV{SYSTEMD_WANTS}+=&quot;ddcci@$kernel.service&quot;
+</code></pre><ol start=5><li>Reload udev rules <code>sudo udevadm control --reload-rules && sudo udevadm trigger</code></li></ol><p>If this worked you should now have devices in <code>/sys/class/backlight</code> and any
+tool that controls backlights should work.</p><p>But some tools do not work well with multiple monitors. If you want a script
+that can be mapped to a hotkey to increase or decrease brightness, keep reading.</p><p>Install <a href="https://www.archlinux.org/packages/?name=brightnessctl">brightnessctl</a>
+then map the following to your preferred hotkeys.</p><p>Increase brightness: <code>bash -c 'brightnessctl -l -c backlight -m | cut -d , -f1 | while IFS= read -r dev; do brightnessctl -d $dev s 5+; done'</code></p><p>Decrease brightness: <code>bash -c 'brightnessctl -l -c backlight -m | cut -d , -f1 | while IFS= read -r dev; do brightnessctl -d $dev s 5-; done'</code></p><p class="small gray pubDate"><time datetime=2020-08-14>2020-08-14</time></p></article></main></div></body></html>
