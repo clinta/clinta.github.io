@@ -21,7 +21,7 @@ by creating <code>/etc/udev/rules.d/99-ddcci.rules</code> with the following con
 	TAG+=&quot;ddcci&quot;,\
 	TAG+=&quot;systemd&quot;,\
 	ENV{SYSTEMD_WANTS}+=&quot;ddcci@$kernel.service&quot;
-</code></pre><ol start=5><li>Reload udev rules <code>sudo udevadm control --reload-rules && sudo udevadm trigger</code></li></ol><p>If this worked you should now have devices in <code>/sys/class/backlight</code> and any
+</code></pre><ol start=5><li>Reload udev rules <code>sudo udevadm control --reload-rules && sudo udevadm trigger</code></li><li>Load the <code>i2c-dev</code> module: <code>sudo modprobe i2c-dev</code></li></ol><p>If this worked you should now have devices in <code>/sys/class/backlight</code> and any
 tool that controls backlights should work.</p><p>But some tools do not work well with multiple monitors. If you want a script
 that can be mapped to a hotkey to increase or decrease brightness, keep reading.</p><p>Install <a href="https://www.archlinux.org/packages/?name=brightnessctl">brightnessctl</a>
 then map the following to your preferred hotkeys.</p><p>Increase brightness: <code>bash -c 'brightnessctl -l -c backlight -m | cut -d , -f1 | while IFS= read -r dev; do brightnessctl -d $dev s 5+; done'</code></p><p>Decrease brightness: <code>bash -c 'brightnessctl -l -c backlight -m | cut -d , -f1 | while IFS= read -r dev; do brightnessctl -d $dev s 5-; done'</code></p><p class="small gray pubDate"><time datetime=2020-08-14>2020-08-14</time></p></article></main></div></body></html>
