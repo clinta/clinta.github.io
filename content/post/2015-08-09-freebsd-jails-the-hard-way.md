@@ -201,8 +201,8 @@ mkdir skeleton
 ln -s skeleton/etc etc
 ln -s skeleton/home home
 ln -s skeleton/root root
-ln -s skeleton/usr/local usr/local
-ln -s skeleton/usr/ports/distfiles usr/ports/distfiles
+ln -s  ../skeleton/usr/local usr/local
+ln -s  ../../skeleton/usr/ports/distfiles usr/ports/distfiles
 ln -s skeleton/tmp tmp
 ln -s skeleton/var var
 ```
