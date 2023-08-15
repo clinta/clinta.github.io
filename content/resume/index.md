@@ -23,7 +23,7 @@ in Go, Python and Rust.
 {{< /resSection >}}
 
 {{< resSection "Work Experience" >}}
-10/2020 - Present
+11/2020 - Present
 :    **Director of Decentralized Storage** W3BCLOUD, Las Vegas, NV (Remote)
 :    Head engineer responsible for storage and networking
      * Automated deployment and operations using Ansible and custom management
