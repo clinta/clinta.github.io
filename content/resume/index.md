@@ -4,7 +4,7 @@ title: Clint Armstrong
 email: clint@clintarmstrong.net
 layout: resume
 permalink: /resume/
-date: 2019-06-05
+date: 2023-08-15
 blackfriday:
   fractions: false
 # Be sure and update the pdf when updating this
@@ -19,11 +19,35 @@ IT Systems and Operations engineer with expertise in building and maintaining
 business critical infrastructure in a variety of environments. Utilizing open
 source software I build reliable systems and networks that empower businesses to
 be more agile and do more with less. Programming experience building solutions
-in Go and Python.
+in Go, Python and Rust.
 {{< /resSection >}}
 
 {{< resSection "Work Experience" >}}
-01/2015 - Present
+10/2020 - Present
+:    **Director of Decentralized Storage** W3BCLOUD, Las Vegas, NV (Remote)
+:    Head engineer responsible for storage and networking
+     * Automated deployment and operations using Ansible and custom management
+       sofware written in Go
+     * Coordianted multiple datacenter deployment projects, from datacenter
+       contract negotations through to final turn-up
+     * Designed, deployed and sole operations engineer for a 20PiB storage
+       cluster participating in the Filecoin network
+       * Multiple storage backends and protocols including Ceph, ZFS and NFS
+       * Filecoin operations included cluster of over 100 high performance GPUs
+       runnning cryptographic operations.
+       * Low level CPU scheduling optimizations for CPU bound cryptographic operations
+       * Multiple contributions to the filecoin project to optimize our
+       deployment
+     * Designed and operated large network of GPUs for blockchain validation
+       * Peak network provided performant network booting for over 20,000
+         machines across 2 datacenters
+       * Built a cost efficient network utilizing commodity linux servers as
+         routers, and budget layer 2 switches
+       * Built tooling to automate naming and locating machines using LLDP
+       * Provided secure network segmentation and VPN access for engineers using
+         open source tools
+
+01/2015 - 10/2020
 :    **DevOps Engineer** Trillium Staffing, Kalamazoo, MI
 :    Head engineer responsible for networking, servers and cloud services.
      * Facilitated a corporate big-data initiative building an open source,
@@ -80,6 +104,14 @@ in Go and Python.
 {{< resSection "Open Source" >}}
 See my complete portfolio of open source work at https://github.com/clinta/.
 :    
+
+**[filecoin lotus](https://github.com/filecoin-project/lotus/commits?author=clinta)**
+:    The official filecoin implementation. Contributed improvements to worker
+     scheduling.
+
+**[filecoin rust proofs](https://github.com/filecoin-project/rust-fil-proofs//commits?author=clinta)**
+:    Storage proofs for the filecoin network. Contributed improvements to CPU
+     core scheduling to make prooving compatible with systemd resource limits.
 
 **[vxrouter](https://github.com/TrilliumIT/vxrouter)**
 :    A docker network and IPAM plugin that connects containers to VXLANs using
