@@ -9,3 +9,5 @@ Gemfile.lock
 node_modules
 package.json
 public
+.hugo_build.lock
+static/resume.pdf
