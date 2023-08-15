@@ -50,7 +50,7 @@ jobs:
       - name: Install wkhtmltopdf
         run: |
           wget -O ${{ runner.temp }}/wkhtmltopdf.deb https://github.com/wkhtmltopdf/packaging/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox_${WKHTMLTOPDF_VERSION}.jammy_amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/wkhtmltopdf.deb
+          && sudo apt install ${{ runner.temp }}/wkhtmltopdf.deb
       - name: Generate Serverless Pages
         env:
           # For maximum backward compatibility with Hugo modules
