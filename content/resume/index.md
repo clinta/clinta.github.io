@@ -39,8 +39,7 @@ in Go, Python and Rust.
        * Multiple contributions to the filecoin project to optimize our
        deployment
      * Designed and operated large network of GPUs for blockchain validation
-       * Peak network provided performant network booting for over 20,000
-         machines across 2 datacenters
+       * Implemnted network booting for over 20,000 machines across 2 datacenters
        * Built a cost efficient network utilizing commodity linux servers as
          routers, and budget layer 2 switches
        * Built tooling to automate naming and locating machines using LLDP
